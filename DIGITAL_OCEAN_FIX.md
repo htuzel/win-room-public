@@ -1,33 +1,33 @@
-# Digital Ocean Build Hatası - Çözüm Özeti
+# Digital Ocean Build Error - Solution Summary
 
-## Yapılan Değişiklikler
+## Changes Made
 
-### 1. ✅ Error Handling Sayfaları (Inline Styles)
-- **`/app/error.tsx`** - Runtime error handler (Tailwind yerine inline CSS)
-- **`/app/not-found.tsx`** - 404 page (Tailwind yerine inline CSS)  
-- **`/app/global-error.tsx`** - Global error boundary (Tailwind yerine inline CSS)
+### 1. ✅ Error Handling Pages (Inline Styles)
+- **`/app/error.tsx`** - Runtime error handler (inline CSS instead of Tailwind)
+- **`/app/not-found.tsx`** - 404 page (inline CSS instead of Tailwind)
+- **`/app/global-error.tsx`** - Global error boundary (inline CSS instead of Tailwind)
 
-**Neden?** Tailwind class'ları error page'lerde prerender sırasında sorun yaratıyordu.
+**Why?** Tailwind classes were causing issues during prerender in error pages.
 
-### 2. ✅ Next.js Config Güncellendi
+### 2. ✅ Next.js Config Updated
 `next.config.mjs`:
 ```js
 {
-  output: 'standalone',           // Docker/container için
+  output: 'standalone',           // For Docker/container
   reactStrictMode: true,
   compress: true,
   experimental: {
-    optimizePackageImports: [...] // Optimizasyon
+    optimizePackageImports: [...] // Optimization
   },
   webpack: {...}                  // Client-side fallbacks
 }
 ```
 
 ### 3. ✅ Docker Ignore
-`.dockerignore` oluşturuldu:
-- Build artifacts (.next, node_modules) ignore
-- Environment files ignore
-- Cache temizliği
+`.dockerignore` created:
+- Build artifacts (.next, node_modules) ignored
+- Environment files ignored
+- Cache cleanup
 
 ### 4. ✅ Digital Ocean App Config
 `.do/app.yaml`:
@@ -39,22 +39,22 @@ output: standalone
 ```
 
 ### 5. ✅ Deployment Guide
-`DEPLOYMENT.md` - Sorun giderme ve deployment adımları
+`DEPLOYMENT.md` - Troubleshooting and deployment steps
 
-## Digital Ocean'da Yapılması Gerekenler
+## What Needs to Be Done on Digital Ocean
 
-### Adım 1: Build Cache Temizle
+### Step 1: Clear Build Cache
 Digital Ocean Dashboard → Settings → "Clear build cache"
 
-### Adım 2: App Spec Kontrol
+### Step 2: Check App Spec
 ```yaml
 build_command: npm run build
 run_command: npm start
 ```
 
-**DİKKAT:** `npm run export` KULLANMAYIN!
+**WARNING:** DO NOT USE `npm run export`!
 
-### Adım 3: Environment Variables
+### Step 3: Environment Variables
 ```
 NODE_ENV=production
 NEXT_TELEMETRY_DISABLED=1
@@ -62,12 +62,12 @@ DATABASE_URL=postgresql://...
 JWT_SECRET=your-secret
 ```
 
-### Adım 4: Redeploy
-Git push veya manual redeploy yapın.
+### Step 4: Redeploy
+Git push or manual redeploy.
 
-## Sorun Devam Ederse
+## If Issue Persists
 
-### Seçenek 1: Dockerfile Kullan
+### Option 1: Use Dockerfile
 ```dockerfile
 FROM node:18-alpine
 WORKDIR /app
@@ -78,28 +78,28 @@ RUN npm run build
 CMD ["npm", "start"]
 ```
 
-### Seçenek 2: Build Override
-Digital Ocean'da "Override Build Command":
+### Option 2: Build Override
+In Digital Ocean "Override Build Command":
 ```bash
 npm ci && npm run build
 ```
 
-### Seçenek 3: Output Format
-`next.config.mjs` içinde:
+### Option 3: Output Format
+In `next.config.mjs`:
 ```js
-output: 'standalone'  // ✅ Doğru
-// output: 'export'   // ❌ Yanlış!
+output: 'standalone'  // ✅ Correct
+// output: 'export'   // ❌ Wrong!
 ```
 
-## Kontrol Listesi
+## Checklist
 
-- [ ] `.next` klasörü .dockerignore'da
-- [ ] Build command = `npm run build` 
+- [ ] `.next` folder in .dockerignore
+- [ ] Build command = `npm run build`
 - [ ] Run command = `npm start`
-- [ ] `output: 'standalone'` next.config'de
-- [ ] Environment variables ayarlandı
-- [ ] Build cache temizlendi
-- [ ] Health check çalışıyor: `/api/health`
+- [ ] `output: 'standalone'` in next.config
+- [ ] Environment variables set
+- [ ] Build cache cleared
+- [ ] Health check working: `/api/health`
 
 ## Test
 
@@ -110,8 +110,8 @@ npm run build
 npm start
 ```
 
-Build başarılı olmalı! ✅
+Build should succeed! ✅
 
 ---
 
-**Not:** Bu değişiklikler ile local build %100 çalışıyor. Digital Ocean'da aynı build command'ı kullandığınızdan emin olun.
+**Note:** With these changes, local build works 100%. Make sure you use the same build command on Digital Ocean.

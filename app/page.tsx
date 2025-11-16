@@ -635,7 +635,7 @@ export default function Dashboard() {
     setAudioUnlocking(true);
     const unlocked = await unlockAudio();
     if (!unlocked) {
-      alert('Tarayıcı sesi şu anda açamadı, lütfen tekrar deneyin.');
+      alert('Browser could not enable sound, please try again.');
     }
     setAudioUnlocking(false);
   };
@@ -831,15 +831,15 @@ export default function Dashboard() {
           {!audioUnlocked && (
             <div className="flex flex-wrap items-center justify-between gap-4 rounded-2xl border border-amber-400/40 bg-amber-500/10 px-5 py-4 text-sm text-foreground/80">
               <div>
-                <p className="font-semibold text-foreground">Sesleri etkinleştir</p>
-                <p className="text-xs text-foreground/60">Claim, streak ve jackpot uyarılarını duyabilmek için tarayıcıya izin ver.</p>
+                <p className="font-semibold text-foreground">Enable Sounds</p>
+                <p className="text-xs text-foreground/60">Allow browser to hear claim, streak, and jackpot notifications.</p>
               </div>
               <button
                 onClick={handleUnlockAudio}
                 disabled={audioUnlocking}
                 className="rounded-lg border border-amber-400 bg-amber-400/10 px-4 py-2 text-xs font-semibold uppercase tracking-wide text-amber-100 hover:bg-amber-400/20 disabled:opacity-50"
               >
-                {audioUnlocking ? 'Etkinleştiriliyor...' : 'Sesleri Aç'}
+                {audioUnlocking ? 'Enabling...' : 'Enable Sounds'}
               </button>
             </div>
           )}
@@ -880,7 +880,7 @@ export default function Dashboard() {
                     ? 'bg-accent/20 text-accent border-accent/40 hover:bg-accent/30'
                     : 'bg-surface border-border text-foreground/40 hover:bg-background'
                 }`}
-                title={audioEnabled ? 'Sesi Kapat' : 'Sesi Aç'}
+                title={audioEnabled ? 'Mute' : 'Unmute'}
               >
                 {audioEnabled ? '🔊' : '🔇'}
               </button>
@@ -889,13 +889,13 @@ export default function Dashboard() {
                 onClick={() => router.push('/recent-sales')}
                 className="px-4 py-2 bg-amber-500/20 text-amber-400 border border-amber-400/40 font-medium rounded-lg hover:bg-amber-500/30 transition-colors"
               >
-                Son 120h
+                Last 120h
               </button>
               <button
                 onClick={() => router.push('/my-sales')}
                 className="px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-400/40 font-medium rounded-lg hover:bg-emerald-500/30 transition-colors"
               >
-                Benim Satışlarım
+                My Sales
               </button>
               <button
                 onClick={() => router.push('/installments')}
@@ -949,50 +949,50 @@ export default function Dashboard() {
                 <p className="mt-2 text-2xl font-bold text-foreground">{metrics.wins}</p>
                 {metrics.change && (
                   <p className={`text-xs font-semibold ${metrics.change.wins >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {metrics.change.wins >= 0 ? '↑' : '↓'} {Math.abs(metrics.change.wins).toFixed(1)}% vs önceki dönem
+                    {metrics.change.wins >= 0 ? '↑' : '↓'} {Math.abs(metrics.change.wins).toFixed(1)}% vs previous period
                   </p>
                 )}
-                <p className="text-xs text-foreground/50">Toplam claim sayın.</p>
+                <p className="text-xs text-foreground/50">Your total claim count.</p>
               </div>
               <div className="rounded-2xl border border-border/50 bg-background/40 p-4">
                 <p className="text-xs uppercase tracking-[0.45em] text-foreground/40">Revenue</p>
                 <p className="mt-2 text-2xl font-bold text-foreground">${metrics.revenue_usd.toFixed(0)}</p>
                 {metrics.change && (
                   <p className={`text-xs font-semibold ${metrics.change.revenue_usd >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {metrics.change.revenue_usd >= 0 ? '↑' : '↓'} {Math.abs(metrics.change.revenue_usd).toFixed(1)}% vs önceki dönem
+                    {metrics.change.revenue_usd >= 0 ? '↑' : '↓'} {Math.abs(metrics.change.revenue_usd).toFixed(1)}% vs previous period
                   </p>
                 )}
-                <p className="text-xs text-foreground/50">Sadece sen görürsün.</p>
+                <p className="text-xs text-foreground/50">Only you can see this.</p>
               </div>
               <div className="rounded-2xl border border-border/50 bg-background/40 p-4">
                 <p className="text-xs uppercase tracking-[0.45em] text-foreground/40">Margin</p>
                 <p className="mt-2 text-2xl font-bold text-foreground">${metrics.margin_amount_usd.toFixed(0)}</p>
                 {metrics.change && (
                   <p className={`text-xs font-semibold ${metrics.change.margin_amount_usd >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {metrics.change.margin_amount_usd >= 0 ? '↑' : '↓'} {Math.abs(metrics.change.margin_amount_usd).toFixed(1)}% vs önceki dönem
+                    {metrics.change.margin_amount_usd >= 0 ? '↑' : '↓'} {Math.abs(metrics.change.margin_amount_usd).toFixed(1)}% vs previous period
                   </p>
                 )}
-                <p className="text-xs text-foreground/50">Net katkın.</p>
+                <p className="text-xs text-foreground/50">Your net contribution.</p>
               </div>
               <div className="rounded-2xl border border-border/50 bg-background/40 p-4">
                 <p className="text-xs uppercase tracking-[0.45em] text-foreground/40">Avg %</p>
                 <p className="mt-2 text-2xl font-bold text-foreground">{(metrics.avg_margin_percent * 100).toFixed(1)}%</p>
                 {metrics.change && (
                   <p className={`text-xs font-semibold ${metrics.change.avg_margin_percent >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {metrics.change.avg_margin_percent >= 0 ? '↑' : '↓'} {Math.abs(metrics.change.avg_margin_percent).toFixed(1)}% vs önceki dönem
+                    {metrics.change.avg_margin_percent >= 0 ? '↑' : '↓'} {Math.abs(metrics.change.avg_margin_percent).toFixed(1)}% vs previous period
                   </p>
                 )}
-                <p className="text-xs text-foreground/50">Kalite skorun.</p>
+                <p className="text-xs text-foreground/50">Your quality score.</p>
               </div>
               <div className="rounded-2xl border border-border/50 bg-background/40 p-4">
                 <p className="text-xs uppercase tracking-[0.45em] text-foreground/40">Leads</p>
                 <p className="mt-2 text-2xl font-bold text-foreground">{metrics.leads_assigned ?? 0}</p>
                 {metrics.change && metrics.change.leads_assigned !== undefined && (
                   <p className={`text-xs font-semibold ${metrics.change.leads_assigned >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {metrics.change.leads_assigned >= 0 ? '↑' : '↓'} {Math.abs(metrics.change.leads_assigned).toFixed(1)}% vs önceki dönem
+                    {metrics.change.leads_assigned >= 0 ? '↑' : '↓'} {Math.abs(metrics.change.leads_assigned).toFixed(1)}% vs previous period
                   </p>
                 )}
-                <p className="text-xs text-foreground/50">24h/haftalık lead atanması.</p>
+                <p className="text-xs text-foreground/50">24h/weekly lead assignment.</p>
               </div>
               <div className="rounded-2xl border border-border/50 bg-background/40 p-4">
                 <p className="text-xs uppercase tracking-[0.45em] text-foreground/40">Conversion</p>
@@ -1001,10 +1001,10 @@ export default function Dashboard() {
                 </p>
                 {metrics.change && metrics.change.conversion_rate !== undefined && (
                   <p className={`text-xs font-semibold ${metrics.change.conversion_rate >= 0 ? 'text-emerald-400' : 'text-rose-400'}`}>
-                    {metrics.change.conversion_rate >= 0 ? '↑' : '↓'} {Math.abs(metrics.change.conversion_rate).toFixed(1)}% vs önceki dönem
+                    {metrics.change.conversion_rate >= 0 ? '↑' : '↓'} {Math.abs(metrics.change.conversion_rate).toFixed(1)}% vs previous period
                   </p>
                 )}
-                <p className="text-xs text-foreground/50">Wins / Leads oranı.</p>
+                <p className="text-xs text-foreground/50">Wins / Leads ratio.</p>
               </div>
             </div>
           )}
@@ -1015,7 +1015,7 @@ export default function Dashboard() {
             <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
               <div>
                 <h2 className="text-xl font-bold text-foreground">Live Queue</h2>
-                <p className="text-sm text-foreground/50">Claim edilmemiş tüm satışlar. Email ile filtrele.</p>
+                <p className="text-sm text-foreground/50">All unclaimed sales. Filter by email.</p>
               </div>
               <div className="flex items-center gap-3">
                 {user && ['sales_lead', 'admin', 'finance'].includes(user.role) && (
@@ -1057,7 +1057,7 @@ export default function Dashboard() {
               <div className="relative">
                 <input
                   type="text"
-                  placeholder="Email veya isim ile ara..."
+                  placeholder="Search by email or name..."
                   value={queueEmailFilter}
                   onChange={(e) => setQueueEmailFilter(e.target.value)}
                   className="w-full rounded-lg border border-border bg-surface px-4 py-2 pl-10 text-foreground placeholder-foreground/40 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
@@ -1079,7 +1079,7 @@ export default function Dashboard() {
 
                 return filteredQueue.length === 0 ? (
                   <div className="bg-surface border border-border rounded-lg p-8 text-center text-foreground/40">
-                    {queueEmailFilter ? 'Filtreye uygun satış bulunamadı.' : 'No pending sales'}
+                    {queueEmailFilter ? 'No sales matching filter found.' : 'No pending sales'}
                   </div>
                 ) : (
                   filteredQueue.map((item) => (

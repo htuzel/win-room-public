@@ -2,25 +2,25 @@
 
 **Privacy-first, gamified, transparent and fair sales room with real-time updates.**
 
-⚡ **Quick Start**: Tüm proje dokümantasyonuna [`PROJECT.md`](./PROJECT.md) başvurun.
+⚡ **Quick Start**: Refer to [`PROJECT.md`](./PROJECT.md) for complete project documentation.
 
 ---
 
-## 📖 Dokümantasyon
+## 📖 Documentation
 
-| Belge | Açıklama |
-|-------|----------|
-| **[PROJECT.md](./PROJECT.md)** | 📚 **ANA DOKÜMANTASYON** - Proje taslağı, mimarı, API, deployment, troubleshooting |
-| [TSD.md](./TSD.md) | 🛠️ Teknik spesifikasyonlar, veri modeli detayları, hesaplama kuralları |
-| [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) | 📖 Detaylı DigitalOcean deployment adımları |
-| [DEPLOYMENT_QUICK_START.md](./DEPLOYMENT_QUICK_START.md) | ⚡ 5 dakikalık hızlı deployment |
-| [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) | ✅ Pre/post deployment kontrol listesi |
+| Document | Description |
+|----------|-------------|
+| **[PROJECT.md](./PROJECT.md)** | 📚 **MAIN DOCUMENTATION** - Project overview, architecture, API, deployment, troubleshooting |
+| [TSD.md](./TSD.md) | 🛠️ Technical specifications, data model details, calculation rules |
+| [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) | 📖 Detailed DigitalOcean deployment steps |
+| [DEPLOYMENT_QUICK_START.md](./DEPLOYMENT_QUICK_START.md) | ⚡ 5-minute quick deployment |
+| [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) | ✅ Pre/post deployment checklist |
 
 ---
 
-## 🚀 Hızlı Başlangıç
+## 🚀 Quick Start
 
-### Yerel Çalıştırma (3 Terminal)
+### Local Development (3 Terminals)
 
 ```bash
 # Terminal 1: Next.js App
@@ -41,23 +41,23 @@ npm run dev:worker
 git push origin main
 
 # 2. DigitalOcean App Platform → Create App → 3 Components
-# Bkz: DEPLOYMENT_QUICK_START.md
+# See: DEPLOYMENT_QUICK_START.md
 
-# 3. Database setup (ilk kez)
+# 3. Database setup (first time)
 npm run admin:create
 ```
 
 ---
 
-## 🎯 Özet
+## 🎯 Overview
 
-- **Privacy-First**: Kullanıcılar kendi satışlarını görmek, başkaları için sadece bar+rank
+- **Privacy-First**: Users see their own sales, others see only bar+rank
 - **Claim System**: Mandatory claim (first_sales, remarketing, upgrade, installment)
-- **Objections**: İtiraz yönetimi
-- **Personal Goals**: Kişisel hedefler tracking
-- **Margin Tracking**: Otomatik marj hesaplama
-- **Real-time**: WebSocket ile anlık updates
-- **Dark Theme**: Profesyonel dark UI
+- **Objections**: Objection management system
+- **Personal Goals**: Personal goal tracking
+- **Margin Tracking**: Automatic margin calculation
+- **Real-time**: Instant updates via WebSocket
+- **Dark Theme**: Professional dark UI
 
 ---
 
@@ -70,15 +70,15 @@ npm run admin:create
 
 ---
 
-## 📚 Daha Fazla Bilgi
+## 📚 More Information
 
-👉 **Tüm detaylar için [`PROJECT.md`](./PROJECT.md) başvurun**
+👉 **Refer to [`PROJECT.md`](./PROJECT.md) for all details**
 
-- Kurulum ve çalıştırma
+- Installation and setup
 - API endpoints
 - WebSocket events
-- Gizlilik ve güvenlik kuralları
-- Deployment prosesi
+- Privacy and security rules
+- Deployment process
 - Troubleshooting
 
 ## 📄 License

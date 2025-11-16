@@ -58,7 +58,7 @@ export function ReactionBar({ summary = [], onReact, compact, className = '', va
             ? `${userList.slice(0, 4).map((user) => user.seller_id).join(', ')}${
                 userList.length > 4 ? ` +${userList.length - 4}` : ''
               }`
-            : 'İlk sen dene!';
+            : 'Be the first!';
 
         return (
           <div key={emoji} className="relative group/reaction">

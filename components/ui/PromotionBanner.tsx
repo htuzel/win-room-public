@@ -3,30 +3,30 @@
 // Usage Examples:
 //
 // <PromotionBanner
-//   title="Black Friday Başladı! 🔥"
-//   message="Şov zamanı! Bugün özel indirimler var."
+//   title="Black Friday Started! 🔥"
+//   message="Showtime! Special discounts today."
 //   variant="promo"
 //   icon="🎯"
 //   visible={true}
 // />
 //
 // <PromotionBanner
-//   title="Hedef: $50K"
-//   message="Takım hedefine sadece $5K kaldı!"
+//   title="Goal: $50K"
+//   message="Only $5K left until team goal!"
 //   variant="success"
 //   icon="🏆"
 // />
 //
 // <PromotionBanner
-//   title="Yeni Özellik"
-//   message="Taksit sistemi aktif! Artık taksitli satışları takip edebilirsiniz."
+//   title="New Feature"
+//   message="Installment system active! You can now track installment sales."
 //   variant="info"
 //   icon="✨"
 // />
 //
 // <PromotionBanner
-//   title="Dikkat!"
-//   message="Bugün saat 18:00'de sistem bakımı olacak."
+//   title="Attention!"
+//   message="System maintenance will occur today at 18:00."
 //   variant="warning"
 //   icon="⚠️"
 // />

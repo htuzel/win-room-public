@@ -23,7 +23,7 @@ export function PersonalGoalsPanel({ goals, loading = false }: PersonalGoalsPane
         </span>
       </div>
       <p className="mb-4 text-sm text-foreground/50">
-        Sadece sen görüyorsun. Kişisel hedeflerin.
+        Only you can see these. Your personal goals.
       </p>
       <div className="space-y-3">
         {goals.map((goal) => (

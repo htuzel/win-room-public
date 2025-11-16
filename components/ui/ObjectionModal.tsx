@@ -13,10 +13,10 @@ interface ObjectionModalProps {
 }
 
 const objectionReasons: Array<{ value: ObjectionReason; label: string }> = [
-  { value: 'wrong_owner', label: 'Wrong Owner - Başka satıcının satışı' },
-  { value: 'duplicate', label: 'Duplicate - Tekrar satış' },
-  { value: 'refund', label: 'Refund - İade edildi' },
-  { value: 'other', label: 'Other - Diğer' },
+  { value: 'wrong_owner', label: 'Wrong Owner - Another seller\'s sale' },
+  { value: 'duplicate', label: 'Duplicate - Repeat sale' },
+  { value: 'refund', label: 'Refund - Returned' },
+  { value: 'other', label: 'Other' },
 ];
 
 export function ObjectionModal({

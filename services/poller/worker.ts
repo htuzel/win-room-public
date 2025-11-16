@@ -266,7 +266,7 @@ async function processSubscription(subs: any) {
             type: 'jackpot',
             sellerId: null,
             title: 'Jackpot',
-            description: `Yüksek paket satışı: #${subs.id}`,
+            description: `High-value package sale: #${subs.id}`,
             payload: { revenue_usd: metrics.revenue_usd },
             dedupeKey: jackpotRows[0]?.id ? `event:${jackpotRows[0].id}` : `jackpot:${subs.id}`,
           });
@@ -785,7 +785,7 @@ async function updateProgressCache() {
           type: PERSONAL_GOAL_META.type,
           sellerId: goal.seller_id,
           title: PERSONAL_GOAL_META.title,
-          description: `${goal.seller_id} kişisel hedefini tamamladı.`,
+          description: `${goal.seller_id} completed their personal goal.`,
           payload: {
             goalId: goal.goal_id,
             goalType: goal.target_type,

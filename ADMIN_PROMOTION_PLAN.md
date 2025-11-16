@@ -1,35 +1,35 @@
-# 📢 Admin Promotion Panel - İmplementasyon Planı
+# 📢 Admin Promotion Panel - Implementation Plan
 
-## 🎯 Şu Anki Durum
+## 🎯 Current State
 
-**Manuel Yönetim**: Admin `lib/config/promotions.ts` dosyasını düzenliyor.
+**Manual Management**: Admin edits `lib/config/promotions.ts` file.
 
 ```typescript
 export const currentPromotion: PromotionConfig = {
   title: 'Black Friday! 🔥',
-  message: 'Şov zamanı!',
+  message: 'Showtime!',
   variant: 'promo',
   icon: '🎯',
   visible: true,
 };
 ```
 
-## ✅ Avantajlar
-- ✅ Hızlı ve basit
-- ✅ Code deployment gerektirmiyor
-- ✅ Hemen çalışıyor
+## ✅ Advantages
+- ✅ Fast and simple
+- ✅ No code deployment required
+- ✅ Works immediately
 - ✅ Developer-friendly
 
-## ❌ Dezavantajlar
-- ❌ Teknik bilgi gerekiyor
-- ❌ File access gerekiyor
-- ❌ Non-technical admin kullanamıyor
+## ❌ Disadvantages
+- ❌ Requires technical knowledge
+- ❌ Requires file access
+- ❌ Non-technical admins cannot use it
 
 ---
 
-## 🚀 Gelecek: Admin Panel Entegrasyonu
+## 🚀 Future: Admin Panel Integration
 
-### Opsiyon 1: Database'e Taşıma (Önerilen)
+### Option 1: Move to Database (Recommended)
 
 #### Database Schema
 ```sql
@@ -45,41 +45,41 @@ CREATE TABLE promotions (
   updated_at TIMESTAMP DEFAULT NOW()
 );
 
--- Sadece 1 aktif promotion olabilir
+-- Only 1 active promotion allowed
 CREATE UNIQUE INDEX idx_active_promotion ON promotions (visible) WHERE visible = true;
 ```
 
 #### API Endpoints
 ```
-GET  /api/admin/promotions/current  → Aktif promotion'ı getir
-POST /api/admin/promotions          → Yeni promotion oluştur
-PUT  /api/admin/promotions/:id      → Güncelle
-DELETE /api/admin/promotions/:id    → Sil
+GET  /api/admin/promotions/current  → Get active promotion
+POST /api/admin/promotions          → Create new promotion
+PUT  /api/admin/promotions/:id      → Update
+DELETE /api/admin/promotions/:id    → Delete
 ```
 
 #### Admin Panel UI
-`/admin/promotions` sayfası ekle:
+Add `/admin/promotions` page:
 
 ```tsx
 <AdminPromotionPanel>
-  <input name="title" placeholder="Başlık" />
-  <textarea name="message" placeholder="Mesaj" />
+  <input name="title" placeholder="Title" />
+  <textarea name="message" placeholder="Message" />
   <select name="variant">
-    <option value="promo">Promo (Mor/Pembe)</option>
-    <option value="success">Success (Yeşil)</option>
-    <option value="info">Info (Mavi)</option>
-    <option value="warning">Warning (Turuncu)</option>
+    <option value="promo">Promo (Purple/Pink)</option>
+    <option value="success">Success (Green)</option>
+    <option value="info">Info (Blue)</option>
+    <option value="warning">Warning (Orange)</option>
   </select>
   <input name="icon" placeholder="Emoji (🎯)" />
-  <toggle name="visible" label="Aktif" />
-  <button>Kaydet</button>
+  <toggle name="visible" label="Active" />
+  <button>Save</button>
 </AdminPromotionPanel>
 
 {/* Preview */}
 <PromotionBanner {...previewData} />
 ```
 
-#### Client-Side Değişiklik
+#### Client-Side Changes
 ```diff
 - import { currentPromotion } from '@/lib/config/promotions';
 + const [promotion, setPromotion] = useState(null);
@@ -99,37 +99,37 @@ DELETE /api/admin/promotions/:id    → Sil
 
 ---
 
-### Opsiyon 2: Config + Admin UI (Hybrid)
+### Option 2: Config + Admin UI (Hybrid)
 
-Config dosyası kalır ama admin panel'den düzenlenebilir.
+Config file remains but can be edited through admin panel.
 
 #### API Endpoint
 ```
 POST /api/admin/promotions/update
-  → promotions.ts dosyasını günceller (fs.writeFile)
+  → Updates promotions.ts file (fs.writeFile)
 ```
 
-**Avantaj**: Database'e gerek yok
-**Dezavantaj**: File write permissions gerekir, multiple instance'da sorunlu
+**Advantage**: No database needed
+**Disadvantage**: Requires file write permissions, problematic with multiple instances
 
 ---
 
-## 📊 Önerilen İmplementasyon Sırası
+## 📊 Recommended Implementation Order
 
-### Phase 1: Database (1-2 gün)
-1. ✅ Migration yaz (`promotions` table)
-2. ✅ API routes oluştur
-3. ✅ Admin panel UI ekle
-4. ✅ Dashboard'da API'den çek
+### Phase 1: Database (1-2 days)
+1. ✅ Write migration (`promotions` table)
+2. ✅ Create API routes
+3. ✅ Add admin panel UI
+4. ✅ Fetch from API in dashboard
 
-### Phase 2: Admin Features (1 gün)
-1. ✅ Live preview ekle
-2. ✅ History/geçmiş promotions
-3. ✅ Template library (hazır örnekler)
-4. ✅ Schedule (başlangıç/bitiş tarihleri) - **opsiyonel**
+### Phase 2: Admin Features (1 day)
+1. ✅ Add live preview
+2. ✅ History/past promotions
+3. ✅ Template library (ready examples)
+4. ✅ Schedule (start/end dates) - **optional**
 
-### Phase 3: Polish (0.5 gün)
-1. ✅ Emoji picker ekle
+### Phase 3: Polish (0.5 day)
+1. ✅ Add emoji picker
 2. ✅ Color preview
 3. ✅ Responsive UI
 
@@ -139,23 +139,23 @@ POST /api/admin/promotions/update
 
 ```
 ┌─────────────────────────────────────────────┐
-│  📢 Promotion Banner Yönetimi               │
+│  📢 Promotion Banner Management             │
 ├─────────────────────────────────────────────┤
 │                                             │
-│  Başlık *                                   │
+│  Title *                                    │
 │  ┌─────────────────────────────────────┐   │
-│  │ Black Friday Başladı! 🔥            │   │
+│  │ Black Friday Started! 🔥            │   │
 │  └─────────────────────────────────────┘   │
 │                                             │
-│  Mesaj *                                    │
+│  Message *                                  │
 │  ┌─────────────────────────────────────┐   │
-│  │ Şov zamanı! Bugün özel indirimler   │   │
-│  │ var, hızlı karar alın.              │   │
+│  │ Showtime! Today we have special     │   │
+│  │ discounts, decide quickly.          │   │
 │  └─────────────────────────────────────┘   │
 │                                             │
-│  Tema *                                     │
+│  Theme *                                    │
 │  ┌─────────────────────────────────────┐   │
-│  │ 🎀 Promo (Mor/Pembe)          ▼    │   │
+│  │ 🎀 Promo (Purple/Pink)          ▼  │   │
 │  └─────────────────────────────────────┘   │
 │     💚 Success  💙 Info  🧡 Warning        │
 │                                             │
@@ -164,12 +164,12 @@ POST /api/admin/promotions/update
 │  │  🎯   │                                  │
 │  └───────┘                                  │
 │                                             │
-│  ☑ Aktif (Banner'ı göster)                 │
+│  ☑ Active (Show banner)                    │
 │                                             │
-│  [Önizle]  [Kaydet ve Yayınla]             │
+│  [Preview]  [Save and Publish]             │
 │                                             │
 ├─────────────────────────────────────────────┤
-│  📋 Önizleme                                │
+│  📋 Preview                                 │
 ├─────────────────────────────────────────────┤
 │                                             │
 │  <PromotionBanner preview />                │
@@ -179,15 +179,15 @@ POST /api/admin/promotions/update
 
 ---
 
-## 💡 Hızlı Başlangıç (Manuel → Database)
+## 💡 Quick Start (Manual → Database)
 
-### 1. Migration Oluştur
+### 1. Create Migration
 ```bash
-# Yeni migration dosyası
+# New migration file
 touch migrations/XXX_create_promotions_table.sql
 ```
 
-### 2. API Route Ekle
+### 2. Add API Route
 ```bash
 # Admin API
 touch app/api/admin/promotions/route.ts
@@ -196,24 +196,24 @@ touch app/api/admin/promotions/current/route.ts
 
 ### 3. Admin Panel
 ```bash
-# Admin sayfası
+# Admin page
 touch app/admin/promotions/page.tsx
 ```
 
-### 4. Dashboard Güncelle
+### 4. Update Dashboard
 ```bash
-# app/page.tsx içinde API'den çek
+# Fetch from API in app/page.tsx
 ```
 
 ---
 
-## 🎯 Sonuç
+## 🎯 Conclusion
 
-**Şu an**: Manuel config dosyası (hızlı, basit)
-**İleride**: Database + Admin panel (professional, scalable)
+**Current**: Manual config file (fast, simple)
+**Future**: Database + Admin panel (professional, scalable)
 
-**Öneri**: Şimdilik manuel kalsın, zamanla admin panel ekleriz.
+**Recommendation**: Keep manual for now, add admin panel over time.
 
 ---
 
-**İletişim**: Bu dosya implementation roadmap'idir. Detay için projeyi inceleyin.
+**Contact**: This file is an implementation roadmap. See the project for details.

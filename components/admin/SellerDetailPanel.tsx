@@ -90,7 +90,7 @@ const renderChangeLabel = (value?: number | null) => {
   const tone = value >= 0 ? 'text-emerald-400' : 'text-rose-400';
   return (
     <span className={`text-[11px] font-semibold ${tone}`}>
-      {arrow} {Math.abs(value).toFixed(1)}% vs önceki dönem
+      {arrow} {Math.abs(value).toFixed(1)}% vs previous period
     </span>
   );
 };
@@ -147,42 +147,42 @@ export function SellerDetailPanel({
                 value: metrics?.current.wins ?? 0,
                 formatter: (val: number) => val.toString(),
                 change: metrics?.change.wins,
-                helper: 'Toplam satış adedi',
+                helper: 'Total number of sales',
               },
               {
                 label: 'Revenue',
                 value: metrics?.current.revenue_usd ?? 0,
                 formatter: (val: number) => formatUSD(val),
                 change: metrics?.change.revenue_usd,
-                helper: 'USD cinsinden gelir',
+                helper: 'Revenue in USD',
               },
               {
                 label: 'Margin',
                 value: metrics?.current.margin_amount_usd ?? 0,
                 formatter: (val: number) => formatUSD(val),
                 change: metrics?.change.margin_amount_usd,
-                helper: 'Net katkı USD',
+                helper: 'Net contribution USD',
               },
               {
                 label: 'Avg %',
                 value: (metrics?.current.avg_margin_percent ?? 0) * 100,
                 formatter: (val: number) => formatPercent(val),
                 change: metrics?.change.avg_margin_percent,
-                helper: 'Ortalama marj',
+                helper: 'Average margin',
               },
               {
                 label: 'Assigned Leads',
                 value: metrics?.current.leads_assigned ?? 0,
                 formatter: (val: number) => val.toString(),
                 change: metrics?.change.leads_assigned,
-                helper: 'Pipedrive üzerinden gelen lead sayısı',
+                helper: 'Number of leads from Pipedrive',
               },
               {
                 label: 'Conversion',
                 value: (metrics?.current.conversion_rate ?? 0) * 100,
                 formatter: (val: number) => formatPercent(val),
                 change: metrics?.change.conversion_rate,
-                helper: 'Wins / Leads oranı',
+                helper: 'Wins / Leads ratio',
               },
             ].map((card) => (
               <div key={card.label} className="rounded-2xl border border-border/60 bg-background/70 p-4">
@@ -199,7 +199,7 @@ export function SellerDetailPanel({
             <div className="flex items-center justify-between border-b border-border px-4 py-3">
               <div>
                 <p className="text-sm font-semibold text-foreground">Sales ({sales.length})</p>
-                <p className="text-xs text-foreground/50">Seçilen dönemdeki satışlar</p>
+                <p className="text-xs text-foreground/50">Sales in selected period</p>
               </div>
             </div>
             <div className="max-h-[480px] overflow-auto">
@@ -209,7 +209,7 @@ export function SellerDetailPanel({
                 </div>
               ) : sales.length === 0 ? (
                 <div className="flex items-center justify-center py-12 text-sm text-foreground/50">
-                  Bu periyotta satış bulunamadı.
+                  No sales found in this period.
                 </div>
               ) : (
                 <table className="min-w-full divide-y divide-border text-sm">
@@ -237,7 +237,7 @@ export function SellerDetailPanel({
                             {formatDateTime(sale.queue_created_at)}
                           </div>
                           <div className="text-xs text-foreground/50">
-                            (Lead kuyruğa girdi)
+                            (Lead entered queue)
                           </div>
                         </td>
                         <td className="px-4 py-3 text-foreground/80">
@@ -245,7 +245,7 @@ export function SellerDetailPanel({
                             {formatDateTime(sale.resolved_at)}
                           </div>
                           <div className="text-xs text-foreground/50">
-                            (Claim edildi)
+                            (Claimed)
                           </div>
                         </td>
                         <td className="px-4 py-3">

@@ -42,7 +42,7 @@ export async function POST(
     // Allow resubmission for pending, overdue, or rejected payments
     if (!['pending', 'overdue', 'rejected'].includes(payment.status)) {
       return NextResponse.json(
-        { error: `Ödeme yalnızca 'pending', 'overdue' veya 'rejected' durumlarında gönderilebilir. Mevcut durum: ${payment.status}` },
+        { error: `Payments can only be submitted when status is 'pending', 'overdue', or 'rejected'. Current status: ${payment.status}` },
         { status: 400 }
       );
     }
@@ -61,12 +61,12 @@ export async function POST(
     const errorMsg = (error as any)?.message || '';
 
     if (errorMsg === 'PAYMENT_NOT_FOUND_OR_ACCESS_DENIED') {
-      return NextResponse.json({ error: 'Payment bulunamadı veya erişim yetkiniz yok' }, { status: 404 });
+      return NextResponse.json({ error: 'Payment not found or access denied' }, { status: 404 });
     }
     if (errorMsg.startsWith('PLAN_')) {
       const [, status] = errorMsg.split('_');
       return NextResponse.json({
-        error: `Plan ${status.toLowerCase()} durumunda - ödeme gönderilemez`
+        error: `Plan is ${status.toLowerCase()} - payment cannot be submitted`
       }, { status: 400 });
     }
     return NextResponse.json({ error: 'Failed to submit payment' }, { status: 500 });

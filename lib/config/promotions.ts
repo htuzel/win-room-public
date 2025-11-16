@@ -1,119 +1,119 @@
 // Win Room v2.0 - Promotion Banner Configuration
 // ==============================================
 //
-// 📝 NASIL KULLANILIR:
+// 📝 HOW TO USE:
 //
-// 1. Aşağıdaki "currentPromotion" objesini düzenle
-// 2. Değişiklikleri kaydet
-// 3. Sayfa otomatik refresh olur, banner güncellenir
+// 1. Edit the "currentPromotion" object below.
+// 2. Save your changes.
+// 3. The page auto-refreshes and updates the banner.
 //
-// 💡 İPUCU: Alttaki örneklerden kopyala-yapıştır yapabilirsin!
+// 💡 TIP: Copy-paste from the examples below!
 //
 // ==============================================
 
 export interface PromotionConfig {
-  title: string;      // Başlık (uppercase görünür)
-  message: string;    // Mesaj metni
-  variant: 'promo' | 'info' | 'success' | 'warning';  // Renk teması
-  icon: string;       // Emoji (🎯, 🔥, ✨, 🏆, ⚠️, 💰, 🎉, vb.)
-  visible: boolean;   // true = göster, false = gizle
+  title: string;      // Title (appears uppercase)
+  message: string;    // Banner content
+  variant: 'promo' | 'info' | 'success' | 'warning';  // Color theme
+  icon: string;       // Emoji (🎯, 🔥, ✨, 🏆, ⚠️, 💰, 🎉, etc.)
+  visible: boolean;   // true = show, false = hide
 }
 
 // ============================================
-// BURADAN PROMOTION'I DEĞİŞTİRİN
+// UPDATE THE PROMOTION BELOW
 // ============================================
 
 export const currentPromotion: PromotionConfig = {
-  title: 'Black Friday Başladı! 🔥',
-  message: 'Şov zamanı! Bugün özel indirimler var, hızlı karar alıp müşterilerinizi kazanın. En çok satan kazanır!',
+  title: 'Black Friday Kickoff! 🔥',
+  message: 'It is showtime! Special discounts are live today—move fast and win every customer. Top seller takes the crown!',
   variant: 'promo',
   icon: '🎯',
   visible: true,
 };
 
 // ============================================
-// VARIANT ÖRNEKLERİ (Renk Temaları)
+// VARIANT EXAMPLES (Color Themes)
 // ============================================
 //
-// 'promo'    → Mor/pembe gradient (Kampanyalar, özel günler)
-// 'success'  → Yeşil gradient (Başarılar, hedef yaklaşımları)
-// 'info'     → Mavi gradient (Bilgilendirmeler, yeni özellikler)
-// 'warning'  → Turuncu/sarı gradient (Dikkat çeken duyurular)
+// 'promo'    → Purple/pink gradient (campaigns, special days)
+// 'success'  → Green gradient (achievements, nearing goals)
+// 'info'     → Blue gradient (announcements, new features)
+// 'warning'  → Orange/yellow gradient (heads-up alerts)
 
 // ============================================
-// ÖRNEK PROMOTION'LAR (Kopyala-yapıştır)
+// SAMPLE PROMOTIONS (copy & paste)
 // ============================================
 
 /*
 // Black Friday
 {
-  title: 'Black Friday Başladı! 🔥',
-  message: 'Şov zamanı! Bugün özel indirimler var, hızlı karar alıp müşterilerinizi kazanın.',
+  title: 'Black Friday Kickoff! 🔥',
+  message: 'Showtime! Special deals are live today—move fast and win customers.',
   variant: 'promo',
   icon: '🎯',
   visible: true,
 }
 
-// Yılbaşı Kampanyası
+// New Year Campaign
 {
-  title: 'Yılbaşı Kampanyası 🎄',
-  message: 'Yeni yıla özel fırsatlar! Müşterilerinize harika teklifler sunun.',
+  title: 'New Year Campaign 🎄',
+  message: 'New year specials! Give your customers outstanding offers.',
   variant: 'promo',
   icon: '🎅',
   visible: true,
 }
 
-// Hedef Yaklaşıyor
+// Goal Incoming
 {
-  title: 'Hedef Yaklaşıyor! 🏆',
-  message: 'Takım hedefine sadece $5K kaldı! Son bir push yapalım!',
+  title: 'Goal Incoming! 🏆',
+  message: 'Only $5K left for the team goal! One final push.',
   variant: 'success',
   icon: '🚀',
   visible: true,
 }
 
-// Yeni Özellik Duyurusu
+// New Feature Announcement
 {
-  title: 'Yeni Özellik ✨',
-  message: 'Taksit sistemi aktif! Artık taksitli satışları kolayca takip edebilirsiniz.',
+  title: 'New Feature ✨',
+  message: 'Installments are live! Track installment sales easily.',
   variant: 'info',
   icon: '🆕',
   visible: true,
 }
 
-// Sistem Bakımı
+// System Maintenance
 {
-  title: 'Dikkat! Sistem Bakımı ⚠️',
-  message: 'Bugün saat 18:00\'de kısa süreli bakım olacak. Lütfen işlemlerinizi tamamlayın.',
+  title: 'Heads-up! System Maintenance ⚠️',
+  message: 'Short maintenance window at 18:00 today. Please finish your tasks.',
   variant: 'warning',
   icon: '🔧',
   visible: true,
 }
 
-// Motivasyon
+// Motivation Boost
 {
-  title: 'Harika Gidiyorsunuz! 💪',
-  message: 'Bu hafta rekor kırıyoruz! Devam edin, en iyi performansınızı gösterin.',
+  title: "You're Crushing It! 💪",
+  message: 'We are breaking records this week! Keep pushing your best.',
   variant: 'success',
   icon: '⭐',
   visible: true,
 }
 
-// Hafta Sonu Özel
+// Weekend Special
 {
-  title: 'Hafta Sonu Özel 🎉',
-  message: 'Cumartesi-Pazar ekstra bonuslar var! Hafta sonu satışlarını kaçırmayın.',
+  title: 'Weekend Special 🎉',
+  message: 'Extra bonuses on Saturday-Sunday! Do not miss the weekend sales.',
   variant: 'promo',
   icon: '💰',
   visible: true,
 }
 
-// Banner'ı Gizle
+// Hide the Banner
 {
   title: '',
   message: '',
   variant: 'info',
   icon: '',
-  visible: false,  // ← Bu satırı true/false yaparak banner'ı göster/gizle
+  visible: false,  // ← Toggle true/false to show or hide the banner
 }
 */

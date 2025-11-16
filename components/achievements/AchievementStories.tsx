@@ -93,7 +93,7 @@ export function AchievementStories({ achievements, className = '', onReplay, rea
       <div className="mb-3 flex items-center justify-between">
         <div>
           <p className="text-xs uppercase tracking-[0.4em] text-foreground/40">Latest Highlights</p>
-          <p className="text-sm text-foreground/70">Son başarılar • hover ile detay gör - tıklayarak yeniden oynayabilirsin</p>
+          <p className="text-sm text-foreground/70">Recent achievements • hover for details - click to replay</p>
         </div>
       </div>
       <div className="flex gap-1 overflow-x-auto pb-2">

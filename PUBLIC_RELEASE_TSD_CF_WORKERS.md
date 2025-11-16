@@ -1395,14 +1395,11 @@ Or connect Git repository for automatic deployments.
 
 **Find Turkish strings**:
 ```bash
-rg -i "satış|ürün|taksit|ödeme|müşteri" app/ components/ src/
+rg -i "[\u011F\u00FC\u015F\u0131\u00F6\u00E7\u011E\u00DC\u015E\u0130\u00D6\u00C7]" app/ components/ src/
 ```
 
 **Replace with English**:
-- `satış` → `sale`
-- `ürün` → `product`
-- `taksit` → `installment` (then delete installment code)
-- `müşteri` → `customer`
+- Replace the old sale/product/installment/customer terms with their English equivalents across UI and APIs.
 
 ### G2. Centralize English Strings
 
@@ -1439,7 +1436,7 @@ module.exports = {
     'no-restricted-syntax': [
       'error',
       {
-        selector: 'Literal[value=/[ğüşıöçĞÜŞİÖÇ]/]',
+        selector: 'Literal[value=/[\\u011F\\u00FC\\u015F\\u0131\\u00F6\\u00E7\\u011E\\u00DC\\u015E\\u0130\\u00D6\\u00C7]/]',
         message: 'Turkish characters not allowed. Use English strings from lib/copy.ts',
       },
     ],
@@ -1474,7 +1471,7 @@ Delete all routes under `src/api/routes/installments.ts`, `finance.ts`, etc.
 . "$(dirname "$0")/_/husky.sh"
 
 # Block Turkish strings
-if git diff --cached --name-only | grep -E '\.(ts|tsx|js|jsx)$' | xargs grep -E '[ğüşıöçĞÜŞİÖÇ]'; then
+if git diff --cached --name-only | grep -E '\.(ts|tsx|js|jsx)$' | xargs grep -E '[\u011F\u00FC\u015F\u0131\u00F6\u00E7\u011E\u00DC\u015E\u0130\u00D6\u00C7]'; then
   echo "ERROR: Turkish characters found in staged files"
   echo "Please use English strings from lib/copy.ts"
   exit 1
@@ -1840,7 +1837,7 @@ pg_dump $DATABASE_URL > backup-$(date +%Y%m%d).sql
 - [ ] Zero TypeScript errors: `npm run typecheck`
 - [ ] All tests passing: `npm test`
 - [ ] Load test passed: 100+ RPS sustained
-- [ ] No Turkish strings: `rg -i 'satış|ürün' app/` returns 0
+- [ ] No Turkish strings: `rg -i '[\u011F\u00FC\u015F\u0131\u00F6\u00E7\u011E\u00DC\u015E\u0130\u00D6\u00C7]' app/` returns 0
 - [ ] Finance modules deleted: `ls app/routes/installments` fails
 - [ ] Product catalog tested: Create product, margin auto-calculated
 - [ ] Multi-tenancy tested: Create 2 tenants, data isolated

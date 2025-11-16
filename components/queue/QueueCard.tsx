@@ -49,7 +49,7 @@ function classifyTTS(tts?: string) {
   if (totalHours < 72) {
     return { label: 'Steady', badge: 'bg-sky-500/15 text-sky-200' };
   }
-  return { label: 'Maraton', badge: 'bg-amber-500/15 text-amber-200' };
+  return { label: 'Marathon', badge: 'bg-amber-500/15 text-amber-200' };
 }
 
 export function QueueCard({
@@ -237,22 +237,22 @@ export function QueueCard({
 
           <div className="rounded-xl border border-border/40 bg-background/30 p-2">
             <div className="flex items-center justify-between">
-              <p className="text-[10px] uppercase tracking-wider text-foreground/40">Ekonomi (USD)</p>
+              <p className="text-[10px] uppercase tracking-wider text-foreground/40">Economics (USD)</p>
               <p className="text-xs font-semibold text-foreground">
                 {marginPercentDisplay}
               </p>
             </div>
             <dl className="mt-1.5 space-y-1 text-[11px] text-foreground/70">
               <div className="flex items-center justify-between">
-                <dt className="uppercase text-foreground/50">Satış</dt>
+                <dt className="uppercase text-foreground/50">Sales</dt>
                 <dd className="font-semibold text-foreground">{revenueDisplay}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="uppercase text-foreground/50">Maliyet</dt>
+                <dt className="uppercase text-foreground/50">Cost</dt>
                 <dd className="text-foreground/80">{costDisplay}</dd>
               </div>
               <div className="flex items-center justify-between">
-                <dt className="uppercase text-foreground/50">Marj</dt>
+                <dt className="uppercase text-foreground/50">Margin</dt>
                 <dd className="font-semibold text-foreground">{marginAmountDisplay}</dd>
               </div>
             </dl>

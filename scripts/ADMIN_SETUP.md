@@ -1,33 +1,33 @@
 # 🔐 Win Room v2.0 - Admin User Setup Guide
 
-Bu guide ilk admin kullanıcınızı oluşturmanıza yardımcı olur.
+This guide helps you create your first admin user.
 
 ---
 
-## 🎯 Üç Yöntem
+## 🎯 Three Methods
 
-### 1️⃣ TypeScript Script (ÖNERİLEN - En Kolay) ⭐
+### 1️⃣ TypeScript Script (RECOMMENDED - Easiest) ⭐
 
 **Interactive Mode:**
 ```bash
 npx tsx scripts/create-admin.ts
 ```
 
-Sırayla soracak:
-- Seller ID (örn: `admin`)
-- Display Name (örn: `Admin User`)
-- Email (örn: `admin@example.com`)
-- Password (min 8 karakter)
+Will ask in sequence:
+- Seller ID (e.g., `admin`)
+- Display Name (e.g., `Admin User`)
+- Email (e.g., `admin@example.com`)
+- Password (min 8 characters)
 - Confirm Password
 - Role (admin/finance/sales_lead/sales)
-- Pipedrive Owner ID (opsiyonel)
+- Pipedrive Owner ID (optional)
 
-**Quick Mode (varsayılan değerlerle):**
+**Quick Mode (with default values):**
 ```bash
 npx tsx scripts/create-admin.ts --quick
 ```
 
-Sadece password sorar, diğerleri otomatik:
+Only asks for password, others are automatic:
 - Seller ID: `admin`
 - Display Name: `Admin`
 - Email: `admin@winroom.local`
@@ -35,21 +35,21 @@ Sadece password sorar, diğerleri otomatik:
 
 ---
 
-### 2️⃣ Node.js Script (SQL için hash oluştur)
+### 2️⃣ Node.js Script (Generate hash for SQL)
 
-**Adım 1: Password hash oluştur**
+**Step 1: Generate password hash**
 ```bash
 node scripts/hash-password.js
-# Veya direkt:
+# Or directly:
 node scripts/hash-password.js MySecretPassword123
 ```
 
-**Adım 2: SQL çalıştır**
+**Step 2: Run SQL**
 
-`scripts/create-admin.sql` dosyasını aç ve:
-1. `'YOUR_HASHED_PASSWORD_HERE'` yerine yukarıdaki hash'i yapıştır
-2. Diğer değerleri düzenle (email, display_name, vb.)
-3. SQL'i çalıştır:
+Open the `scripts/create-admin.sql` file and:
+1. Replace `'YOUR_HASHED_PASSWORD_HERE'` with the hash from above
+2. Edit other values (email, display_name, etc.)
+3. Run the SQL:
 
 ```bash
 psql $DATABASE_URL -f scripts/create-admin.sql
@@ -57,16 +57,16 @@ psql $DATABASE_URL -f scripts/create-admin.sql
 
 ---
 
-### 3️⃣ Manuel SQL (psql console)
+### 3️⃣ Manual SQL (psql console)
 
 ```bash
-# psql'e bağlan
+# Connect to psql
 psql $DATABASE_URL
 
-# Hash oluştur (başka bir terminal'de)
+# Generate hash (in another terminal)
 node -e "const bcrypt = require('bcryptjs'); bcrypt.hash('YOUR_PASSWORD', 10).then(console.log);"
 
-# SQL çalıştır (hash'i yapıştır)
+# Run SQL (paste the hash)
 INSERT INTO wr.sellers (
   seller_id,
   display_name,
@@ -78,7 +78,7 @@ INSERT INTO wr.sellers (
   'admin',
   'Admin User',
   'admin@example.com',
-  '$2a$10$... [HASH_BURAYA]',
+  '$2a$10$... [HASH_HERE]',
   'admin',
   true
 );
@@ -86,17 +86,17 @@ INSERT INTO wr.sellers (
 
 ---
 
-## 👥 Birden Fazla Admin
+## 👥 Multiple Admins
 
-### Yöntem 1: Script'i tekrar çalıştır
+### Method 1: Run script again
 ```bash
 npx tsx scripts/create-admin.ts
-# Farklı email ve seller_id kullan
+# Use different email and seller_id
 ```
 
-### Yöntem 2: SQL ile toplu ekle
+### Method 2: Bulk insert with SQL
 ```sql
--- Önce password'leri hash'le
+-- First hash the passwords
 -- Hash 1: node scripts/hash-password.js Password1
 -- Hash 2: node scripts/hash-password.js Password2
 
@@ -109,20 +109,20 @@ VALUES
 
 ---
 
-## 🔑 Roller ve Yetkiler
+## 🔑 Roles and Permissions
 
-| Role | Yetki Seviyesi | Açıklama |
-|------|----------------|----------|
-| **admin** | 🔴 Full Access | Tüm yönetim işlemleri, goals, objections, exclusions |
-| **finance** | 🔴 Full Access | Admin ile aynı (finansal veriler dahil) |
-| **sales_lead** | 🟡 Team Access | Ekip filtreleri, kendi ve ekibinin verileri |
-| **sales** | 🟢 Personal Only | Sadece kendi satışları, bar-only leaderboard |
+| Role | Permission Level | Description |
+|------|-----------------|-------------|
+| **admin** | 🔴 Full Access | All management operations, goals, objections, exclusions |
+| **finance** | 🔴 Full Access | Same as admin (including financial data) |
+| **sales_lead** | 🟡 Team Access | Team filters, own and team's data |
+| **sales** | 🟢 Personal Only | Only own sales, bar-only leaderboard |
 
 ---
 
-## ✅ Doğrulama
+## ✅ Verification
 
-### Admin oluşturuldu mu kontrol et:
+### Check if admin was created:
 
 ```sql
 SELECT
@@ -136,14 +136,14 @@ FROM wr.sellers
 WHERE role IN ('admin', 'finance');
 ```
 
-Beklenen çıktı:
+Expected output:
 ```
  seller_id | display_name |        email         | role  | is_active | has_password
 -----------+--------------+----------------------+-------+-----------+--------------
  admin     | Admin User   | admin@example.com    | admin | t         | t
 ```
 
-### Login testi:
+### Login test:
 
 **Local development:**
 ```bash
@@ -155,7 +155,7 @@ curl -X POST http://localhost:3000/api/auth/login \
   }'
 ```
 
-Beklenen yanıt:
+Expected response:
 ```json
 {
   "success": true,
@@ -180,15 +180,15 @@ curl -X POST https://your-app.ondigitalocean.app/api/auth/login \
 
 ---
 
-## 🔒 Güvenlik Best Practices
+## 🔒 Security Best Practices
 
-### 1. Güçlü Password Kullan
+### 1. Use Strong Password
 ```
 ✅ GOOD: MyS3cur3P@ssw0rd!2025
 ❌ BAD:  admin123
 ```
 
-### 2. Production Email Kullan
+### 2. Use Production Email
 ```
 ✅ GOOD: admin@yourcompany.com
 ❌ BAD:  admin@example.com
@@ -198,29 +198,29 @@ curl -X POST https://your-app.ondigitalocean.app/api/auth/login \
 
 **Development:**
 ```bash
-# Local için basit credentials OK
+# Simple credentials OK for local
 npx tsx scripts/create-admin.ts --quick
 # Email: admin@winroom.local
-# Password: [seçtiğin güçlü password]
+# Password: [your chosen strong password]
 ```
 
 **Production:**
 ```bash
-# Production için strong credentials ZORUNLU
+# Strong credentials REQUIRED for production
 npx tsx scripts/create-admin.ts
 # Email: admin@yourcompany.com
-# Password: [strong password generator kullan]
+# Password: [use strong password generator]
 ```
 
 ### 4. Password Rotation
 
-Production'da admin password'ünü düzenli değiştir:
+Rotate admin password regularly in production:
 
 ```sql
--- Yeni hash oluştur
+-- Generate new hash
 -- node scripts/hash-password.js NewPassword123
 
--- Password güncelle
+-- Update password
 UPDATE wr.sellers
 SET password_hash = '$2a$10$NEW_HASH_HERE'
 WHERE seller_id = 'admin';
@@ -230,16 +230,16 @@ WHERE seller_id = 'admin';
 
 ## 🐛 Troubleshooting
 
-### "User already exists" hatası
+### "User already exists" error
 
 ```sql
--- Mevcut kullanıcıyı kontrol et
+-- Check existing user
 SELECT * FROM wr.sellers WHERE email = 'admin@example.com';
 
--- Silmek istersen (DİKKAT!)
+-- Delete if you want (CAREFUL!)
 DELETE FROM wr.sellers WHERE seller_id = 'admin';
 
--- Veya güncelle
+-- Or update
 UPDATE wr.sellers
 SET password_hash = '$2a$10$NEW_HASH',
     role = 'admin',
@@ -247,39 +247,39 @@ SET password_hash = '$2a$10$NEW_HASH',
 WHERE seller_id = 'admin';
 ```
 
-### "Invalid credentials" login hatası
+### "Invalid credentials" login error
 
-**Sebep 1: Password yanlış**
-- Password'ü doğru girdiğinden emin ol
+**Reason 1: Wrong password**
+- Make sure you entered the password correctly
 - Case-sensitive!
 
-**Sebep 2: Hash doğru değil**
+**Reason 2: Hash is incorrect**
 ```sql
--- Password hash var mı?
+-- Does password hash exist?
 SELECT password_hash IS NOT NULL as has_password
 FROM wr.sellers WHERE seller_id = 'admin';
 
--- Yoksa yeniden oluştur
+-- If not, recreate
 UPDATE wr.sellers
 SET password_hash = '$2a$10$NEW_HASH'
 WHERE seller_id = 'admin';
 ```
 
-**Sebep 3: Email lowercase değil**
+**Reason 3: Email not lowercase**
 ```sql
--- Email'i kontrol et
+-- Check email
 SELECT email FROM wr.sellers WHERE seller_id = 'admin';
 
--- Lowercase'e çevir
+-- Convert to lowercase
 UPDATE wr.sellers
 SET email = LOWER(email)
 WHERE seller_id = 'admin';
 ```
 
-### "Account is inactive" hatası
+### "Account is inactive" error
 
 ```sql
--- Kullanıcıyı aktif et
+-- Activate user
 UPDATE wr.sellers
 SET is_active = true
 WHERE seller_id = 'admin';
@@ -287,35 +287,35 @@ WHERE seller_id = 'admin';
 
 ---
 
-## 📝 Örnek Senaryolar
+## 📝 Example Scenarios
 
-### Senaryo 1: İlk kurulum (development)
+### Scenario 1: Initial setup (development)
 
 ```bash
-# 1. Database migration'ları çalıştır
+# 1. Run database migrations
 psql $DATABASE_URL -f scripts/db/01_create_schema.sql
 psql $DATABASE_URL -f scripts/db/02_create_tables.sql
 psql $DATABASE_URL -f scripts/db/03_create_functions.sql
 psql $DATABASE_URL -f scripts/db/04_add_auth_fields.sql
 
-# 2. Admin oluştur
+# 2. Create admin
 npx tsx scripts/create-admin.ts --quick
-# Password: [seçtiğin güçlü password]
+# Password: [your chosen strong password]
 
-# 3. Test et
+# 3. Test
 npm run dev
 # Browser: http://localhost:3000/login
 # Email: admin@winroom.local
-# Password: [bir üstte belirlediğin password]
+# Password: [the password you set above]
 ```
 
-### Senaryo 2: Production deployment
+### Scenario 2: Production deployment
 
 ```bash
-# 1. Production database'e bağlan
+# 1. Connect to production database
 export DATABASE_URL="postgresql://user:pass@prod-host:5432/db"
 
-# 2. Strong credentials ile admin oluştur
+# 2. Create admin with strong credentials
 npx tsx scripts/create-admin.ts
 
 # Seller ID: admin
@@ -324,13 +324,13 @@ npx tsx scripts/create-admin.ts
 # Password: [use password manager generated]
 # Role: admin
 
-# 3. Doğrula
+# 3. Verify
 curl -X POST https://your-app.ondigitalocean.app/api/auth/login \
   -H "Content-Type: application/json" \
   -d '{"email":"admin@yourcompany.com","password":"..."}'
 ```
 
-### Senaryo 3: Birden fazla admin + finance ekibi
+### Scenario 3: Multiple admins + finance team
 
 ```bash
 # Admin 1
@@ -354,23 +354,23 @@ npx tsx scripts/create-admin.ts
 
 ## 🚀 Deployment Checklist
 
-Production'a deploy etmeden önce:
+Before deploying to production:
 
-- [ ] Database migration'lar çalıştırıldı
-- [ ] `04_add_auth_fields.sql` çalıştırıldı (role ve password_hash kolonları eklendi)
-- [ ] En az 1 admin user oluşturuldu
-- [ ] Admin credentials test edildi (login çalışıyor)
-- [ ] Production JWT_SECRET güçlü bir değer (`.env.production.template`)
-- [ ] Admin password güçlü (min 12 karakter, özel karakterler)
-- [ ] Production email kullanıldı (gerçek domain)
-- [ ] Credentials güvenli bir yerde saklandı (password manager)
+- [ ] Database migrations are run
+- [ ] `04_add_auth_fields.sql` is run (role and password_hash columns added)
+- [ ] At least 1 admin user is created
+- [ ] Admin credentials tested (login works)
+- [ ] Production JWT_SECRET is a strong value (`.env.production.template`)
+- [ ] Admin password is strong (min 12 characters, special characters)
+- [ ] Production email is used (real domain)
+- [ ] Credentials are saved securely (password manager)
 
 ---
 
-## 📚 İlgili Dosyalar
+## 📚 Related Files
 
 - **Script**: `scripts/create-admin.ts` - TypeScript interactive script
-- **SQL Template**: `scripts/create-admin.sql` - Manuel SQL template
+- **SQL Template**: `scripts/create-admin.sql` - Manual SQL template
 - **Hash Tool**: `scripts/hash-password.js` - Password hash generator
 - **Migration**: `scripts/db/04_add_auth_fields.sql` - Auth fields migration
 - **Login API**: `app/api/auth/login/route.ts` - Login endpoint
@@ -378,31 +378,31 @@ Production'a deploy etmeden önce:
 
 ---
 
-## ❓ Sorular
+## ❓ Questions
 
-**S: Development'ta password olmadan login olabilir miyim?**
+**Q: Can I login without password in development?**
 
-A: Evet! `password_hash = NULL` ise development mode'da login çalışır:
+A: Yes! If `password_hash = NULL`, login works in development mode:
 ```sql
 INSERT INTO wr.sellers (seller_id, display_name, email, role, is_active)
 VALUES ('dev', 'Dev User', 'dev@test.local', 'admin', true);
--- password_hash yok, herhangi bir password ile login olur
+-- No password_hash, login works with any password
 ```
 
-**S: Email unique mi?**
+**Q: Is email unique?**
 
-A: Evet, email unique constraint var. Aynı email ile 2 kullanıcı oluşturamazsın.
+A: Yes, there is a unique constraint on email. You cannot create 2 users with the same email.
 
-**S: Seller ID değiştirilebilir mi?**
+**Q: Can seller ID be changed?**
 
-A: Hayır, seller_id primary key. Değiştirmek yerine yeni kullanıcı oluştur.
+A: No, seller_id is the primary key. Create a new user instead of changing it.
 
-**S: Password'ü nasıl sıfırlarım?**
+**Q: How do I reset password?**
 
-A: Yeni hash oluştur ve UPDATE:
+A: Generate new hash and UPDATE:
 ```bash
 node scripts/hash-password.js NewPassword123
-# Hash'i kopyala
+# Copy the hash
 
 psql $DATABASE_URL
 UPDATE wr.sellers SET password_hash = '$2a$10$...' WHERE seller_id = 'admin';
@@ -410,14 +410,14 @@ UPDATE wr.sellers SET password_hash = '$2a$10$...' WHERE seller_id = 'admin';
 
 ---
 
-## 🎉 Hazırsın!
+## 🎉 You're Ready!
 
-Artık admin kullanıcını oluşturdun ve sisteme giriş yapabilirsin!
+You've now created your admin user and can log in to the system!
 
 **Next Steps:**
-1. 🔓 Login yap: `/login`
-2. 👥 Sales users ekle
-3. 🎯 Goals ayarla
-4. 📊 Dashboard'u kontrol et
+1. 🔓 Log in: `/login`
+2. 👥 Add sales users
+3. 🎯 Set goals
+4. 📊 Check the dashboard
 
 **Happy selling! 🚀**

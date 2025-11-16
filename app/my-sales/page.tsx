@@ -178,7 +178,7 @@ export default function MySalesPage() {
               onClick={() => router.push('/recent-sales')}
               className="px-4 py-2 bg-surface border border-border text-foreground font-medium rounded-lg hover:bg-background transition-colors"
             >
-              Tüm Satışlar  (120h)
+              All Sales (120h)
             </button>
             <button
               onClick={() => router.push('/installments')}
@@ -199,27 +199,27 @@ export default function MySalesPage() {
 
         {/* Page Title & Stats */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-foreground mb-2">Benim Satışlarım</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">My Sales</h2>
           <p className="text-foreground/60 mb-4">
-            Claim ettiğiniz tüm satışlar (tarih sırasına göre).
+            All sales you claimed (in chronological order).
           </p>
 
           {/* Stats Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mt-4">
             <div className="rounded-2xl border border-border/40 bg-surface/60 p-5">
-              <p className="text-xs uppercase tracking-widest text-foreground/50 mb-2">Toplam Satış</p>
+              <p className="text-xs uppercase tracking-widest text-foreground/50 mb-2">Total Sales</p>
               <p className="text-3xl font-bold text-foreground">{stats.total_sales}</p>
             </div>
             <div className="rounded-2xl border border-border/40 bg-surface/60 p-5">
-              <p className="text-xs uppercase tracking-widest text-foreground/50 mb-2">Toplam Gelir</p>
+              <p className="text-xs uppercase tracking-widest text-foreground/50 mb-2">Total Revenue</p>
               <p className="text-3xl font-bold text-success">{formatUSD(stats.total_revenue)}</p>
             </div>
             <div className="rounded-2xl border border-border/40 bg-surface/60 p-5">
-              <p className="text-xs uppercase tracking-widest text-foreground/50 mb-2">Toplam Kar</p>
+              <p className="text-xs uppercase tracking-widest text-foreground/50 mb-2">Total Margin</p>
               <p className="text-3xl font-bold text-emerald-300">{formatUSD(stats.total_margin)}</p>
             </div>
             <div className="rounded-2xl border border-border/40 bg-surface/60 p-5">
-              <p className="text-xs uppercase tracking-widest text-foreground/50 mb-2">Ort. Kar %</p>
+              <p className="text-xs uppercase tracking-widest text-foreground/50 mb-2">Avg Margin %</p>
               <p className="text-3xl font-bold text-accent">{formatPercent(stats.avg_margin_percent)}</p>
             </div>
           </div>
@@ -230,7 +230,7 @@ export default function MySalesPage() {
           <div className="relative max-w-md">
             <input
               type="text"
-              placeholder="Müşteri email veya isim ile ara..."
+              placeholder="Search by customer email or name..."
               value={emailFilter}
               onChange={(e) => setEmailFilter(e.target.value)}
               className="w-full rounded-lg border border-border bg-surface px-4 py-2 pl-10 text-foreground placeholder-foreground/40 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
@@ -249,7 +249,7 @@ export default function MySalesPage() {
         ) : sales.length === 0 ? (
           <div className="rounded-2xl border border-border/60 bg-surface/90 p-12 text-center">
             <p className="text-lg text-foreground/60">
-              {emailFilter ? 'Filtreye uygun satış bulunamadı.' : 'Henüz claim ettiğiniz satış bulunamadı.'}
+              {emailFilter ? 'No sales matching filter found.' : 'No claimed sales found yet.'}
             </p>
           </div>
         ) : (
@@ -275,7 +275,7 @@ export default function MySalesPage() {
             {pagination.totalPages > 1 && (
               <div className="mt-8 flex items-center justify-between rounded-2xl border border-border/60 bg-surface/90 p-4">
                 <div className="text-sm text-foreground/60">
-                  Sayfa {pagination.page} / {pagination.totalPages} ({pagination.totalCount} toplam satış)
+                  Page {pagination.page} / {pagination.totalPages} ({pagination.totalCount} total sales)
                 </div>
                 <div className="flex items-center gap-2">
                   <button
@@ -283,14 +283,14 @@ export default function MySalesPage() {
                     disabled={page === 1}
                     className="px-4 py-2 rounded-lg border border-border bg-surface text-foreground font-medium hover:bg-background transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    ← Önceki
+                    ← Previous
                   </button>
                   <button
                     onClick={() => setPage((p) => Math.min(pagination.totalPages, p + 1))}
                     disabled={page === pagination.totalPages}
                     className="px-4 py-2 rounded-lg border border-border bg-surface text-foreground font-medium hover:bg-background transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    Sonraki →
+                    Next →
                   </button>
                 </div>
               </div>

@@ -46,7 +46,7 @@ export function TeamChat({ messages, onSend, disabled, loading, className = '', 
         </div>
         <div className="flex-1">
           <p className="text-sm font-bold text-foreground tracking-tight">Team Pulse</p>
-          <p className="text-[10px] text-foreground/50">Son sohbetler</p>
+          <p className="text-[10px] text-foreground/50">Recent chats</p>
         </div>
       </div>
 
@@ -67,8 +67,8 @@ export function TeamChat({ messages, onSend, disabled, loading, className = '', 
         )}
         {!loading && orderedMessages.length === 0 && (
           <div className="text-center py-8">
-            <p className="text-xs text-foreground/40">Henüz mesaj yok</p>
-            <p className="text-[10px] text-foreground/30 mt-1">İlk mesajı gönder! 🚀</p>
+            <p className="text-xs text-foreground/40">No messages yet</p>
+            <p className="text-[10px] text-foreground/30 mt-1">Send the first message! 🚀</p>
           </div>
         )}
         {!loading && orderedMessages.map((message) => {
@@ -117,7 +117,7 @@ export function TeamChat({ messages, onSend, disabled, loading, className = '', 
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
             maxLength={300}
-            placeholder="Mesaj gönder..."
+            placeholder="Send message..."
             className="w-full rounded-lg border border-border/40 bg-background/80 px-3 py-2.5 text-sm text-foreground placeholder:text-foreground/40 focus:outline-none focus:border-accent/50 focus:ring-2 focus:ring-accent/20 resize-none transition-all"
             rows={2}
             disabled={disabled || sending}
@@ -131,7 +131,7 @@ export function TeamChat({ messages, onSend, disabled, loading, className = '', 
           disabled={disabled || sending || !draft.trim()}
           className="w-full rounded-lg bg-gradient-to-r from-accent to-accent/90 px-4 py-2 text-xs font-bold uppercase tracking-wider text-black hover:from-accent/90 hover:to-accent/80 disabled:opacity-50 disabled:cursor-not-allowed transition-all shadow-lg shadow-accent/20 hover:shadow-accent/30"
         >
-          {sending ? '⏳ Gönderiliyor...' : '🚀 Gönder'}
+          {sending ? '⏳ Sending...' : '🚀 Send'}
         </button>
       </form>
     </div>

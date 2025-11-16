@@ -80,16 +80,16 @@ function classifyTTS(tts?: string) {
   if (totalHours < 72) {
     return { label: 'Steady', badge: 'bg-sky-500/15 text-sky-200' };
   }
-  return { label: 'Maraton', badge: 'bg-amber-500/15 text-amber-200' };
+  return { label: 'Marathon', badge: 'bg-amber-500/15 text-amber-200' };
 }
 
 function getTimeSince(date: string) {
   const diff = Date.now() - new Date(date).getTime();
   const hours = Math.floor(diff / (1000 * 60 * 60));
-  if (hours < 1) return 'Az önce';
-  if (hours < 24) return `${hours} saat önce`;
+  if (hours < 1) return 'Just now';
+  if (hours < 24) return `${hours} hours ago`;
   const days = Math.floor(hours / 24);
-  return `${days} gün önce`;
+  return `${days} days ago`;
 }
 
 export function RecentSaleCard({
@@ -278,21 +278,21 @@ export function RecentSaleCard({
                   disabled={disabled}
                   className="whitespace-nowrap rounded-lg bg-amber-500/20 px-3 py-2 text-xs font-semibold text-amber-200 transition hover:bg-amber-500/30 disabled:opacity-50 disabled:cursor-not-allowed border border-amber-400/30"
                 >
-                  İtiraz Et
+                  Raise Objection
                 </button>
               ) : isOwnClaim ? (
                 <div className="whitespace-nowrap rounded-lg bg-accent/10 px-3 py-2 text-xs font-semibold text-accent border border-accent/30">
-                  Senin Claim'in
+                  Your Claim
                 </div>
               ) : sale.has_objection ? (
                 <div className="whitespace-nowrap rounded-lg bg-rose-500/10 px-3 py-2 text-xs font-semibold text-rose-200 border border-rose-400/30">
-                  İtiraz Var
+                  Has Objection
                 </div>
               ) : null}
             </>
           )}
 
-          <div className="text-[10px] text-foreground/50 text-right">120h içinde</div>
+          <div className="text-[10px] text-foreground/50 text-right">Within 120h</div>
           {onReact && (
             <ReactionBar summary={reactions} onReact={onReact} compact className="justify-end" />
           )}
@@ -301,7 +301,7 @@ export function RecentSaleCard({
 
       {sale.has_objection && sale.objection_status && (
         <div className="rounded-lg border border-amber-400/30 bg-amber-500/10 px-3 py-2 text-xs">
-          <span className="font-semibold text-amber-200">İtiraz Durumu:</span>{' '}
+          <span className="font-semibold text-amber-200">Objection Status:</span>{' '}
           <span className="text-amber-100/80">{sale.objection_status}</span>
         </div>
       )}

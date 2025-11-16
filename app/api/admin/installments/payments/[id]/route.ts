@@ -67,7 +67,7 @@ export async function PATCH(
       // PLAN_FROZEN_CANNOT_CONFIRM, PLAN_CANCELLED_CANNOT_SUBMIT, etc.
       const [, status, action] = errorMsg.split('_');
       return NextResponse.json({
-        error: `Plan ${status.toLowerCase()} durumunda - işlem yapılamaz`
+        error: `Plan is ${status.toLowerCase()} - action not allowed`
       }, { status: 400 });
     }
     return NextResponse.json({ error: 'Failed to update payment' }, { status: 500 });

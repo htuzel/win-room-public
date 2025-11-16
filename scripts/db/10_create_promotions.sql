@@ -28,8 +28,8 @@ CREATE INDEX idx_promotions_visible ON wr.promotions (visible) WHERE visible = t
 -- Insert default promotion
 INSERT INTO wr.promotions (title, message, variant, icon, visible, created_by)
 VALUES (
-  'Black Friday Başladı! 🔥',
-  'Şov zamanı! Bugün özel indirimler var, hızlı karar alıp müşterilerinizi kazanın. En çok satan kazanır!',
+  'Black Friday Kickoff! 🔥',
+  'It is showtime! Special discounts are live today—move fast and win every customer. Top seller takes the crown!',
   'promo',
   '🎯',
   true,

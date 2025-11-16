@@ -1,164 +1,164 @@
 # ✅ Win Room v2.0 - Deployment Checklist
 
-Deployment öncesi ve sonrası kontrol listesi.
+Pre-deployment and post-deployment checklist.
 
 ---
 
-## 📋 PRE-DEPLOYMENT (Deployment Öncesi)
+## 📋 PRE-DEPLOYMENT
 
-### Repository Hazırlığı
-- [ ] Git repository oluşturuldu (GitHub/GitLab)
-- [ ] `.gitignore` dosyası `.env` içeriyor
-- [ ] `.env` dosyası commit edilmemiş
-- [ ] Son değişiklikler commit edildi ve push edildi
-- [ ] `main` branch güncel
+### Repository Preparation
+- [ ] Git repository created (GitHub/GitLab)
+- [ ] `.gitignore` file includes `.env`
+- [ ] `.env` file not committed
+- [ ] Latest changes committed and pushed
+- [ ] `main` branch up to date
 
-### Kod Kontrolü
-- [ ] `package.json` scripts doğru:
+### Code Review
+- [ ] `package.json` scripts correct:
   - [ ] `"build": "next build"`
   - [ ] `"start": "next start"`
   - [ ] `"start:socket": "tsx services/socket/server.ts"`
   - [ ] `"start:worker": "tsx services/poller/worker.ts"`
-- [ ] Health check endpoint var: `app/api/health/route.ts`
-- [ ] TypeScript hataları yok: `npm run build` başarılı
-- [ ] Linter temiz: `npm run lint` başarılı
+- [ ] Health check endpoint exists: `app/api/health/route.ts`
+- [ ] No TypeScript errors: `npm run build` successful
+- [ ] Linter clean: `npm run lint` successful
 
-### Database Hazırlığı
-- [ ] PostgreSQL database oluşturuldu (DigitalOcean)
-- [ ] Database connection string hazır
-- [ ] `wr` schema oluşturuldu:
-  - [ ] `scripts/db/01_create_schema.sql` çalıştırıldı
-  - [ ] `scripts/db/02_create_tables.sql` çalıştırıldı
-  - [ ] `scripts/db/03_create_functions.sql` çalıştırıldı
-- [ ] Test data eklendi (sellers, etc.)
-- [ ] Database Trusted Sources ayarlandı (App Platform eklenecek)
+### Database Preparation
+- [ ] PostgreSQL database created (DigitalOcean)
+- [ ] Database connection string ready
+- [ ] `wr` schema created:
+  - [ ] `scripts/db/01_create_schema.sql` executed
+  - [ ] `scripts/db/02_create_tables.sql` executed
+  - [ ] `scripts/db/03_create_functions.sql` executed
+- [ ] Test data added (sellers, etc.)
+- [ ] Database Trusted Sources configured (App Platform to be added)
 
-### Environment Variables Hazırlığı
-- [ ] `.env.production.template` kontrol edildi
-- [ ] Production JWT secret hazırlandı (strong random string)
-- [ ] Database credentials doğru
-- [ ] Socket port ayarı doğru (3001)
-- [ ] CORS origins belirlendi
+### Environment Variables Preparation
+- [ ] `.env.production.template` reviewed
+- [ ] Production JWT secret prepared (strong random string)
+- [ ] Database credentials correct
+- [ ] Socket port setting correct (3001)
+- [ ] CORS origins defined
 
 ---
 
-## 🚀 DEPLOYMENT (Deployment Sırasında)
+## 🚀 DEPLOYMENT
 
 ### DigitalOcean App Platform Setup
-- [ ] App Platform'a gidildi
-- [ ] "Create App" tıklandı
-- [ ] GitHub repository bağlandı
-- [ ] Branch seçildi: `main`
-- [ ] Autodeploy aktif edildi
+- [ ] Navigated to App Platform
+- [ ] Clicked "Create App"
+- [ ] Connected GitHub repository
+- [ ] Selected branch: `main`
+- [ ] Enabled autodeploy
 
 ### Component 1: Web Service
 - [ ] Component name: `web`
-- [ ] Type: `Web Service` seçildi
+- [ ] Type: Selected `Web Service`
 - [ ] Build command: `npm install && npm run build`
 - [ ] Run command: `npm start`
 - [ ] HTTP Port: `3000`
 - [ ] HTTP Route: `/`
 - [ ] Health check path: `/api/health`
-- [ ] Instance size seçildi (Basic/Professional)
-- [ ] Environment variables eklendi (hepsi)
+- [ ] Selected instance size (Basic/Professional)
+- [ ] Added environment variables (all)
 
 ### Component 2: Socket.IO Worker
 - [ ] Component name: `socket-server`
-- [ ] Type: `Worker` seçildi
+- [ ] Type: Selected `Worker`
 - [ ] Build command: `npm install`
 - [ ] Run command: `npm run start:socket`
-- [ ] Instance size seçildi (Basic)
-- [ ] Environment variables eklendi (hepsi)
-- [ ] `SOCKET_CORS_ORIGIN` eklendi (web URL)
+- [ ] Selected instance size (Basic)
+- [ ] Added environment variables (all)
+- [ ] Added `SOCKET_CORS_ORIGIN` (web URL)
 
 ### Component 3: Poller Worker
 - [ ] Component name: `poller-worker`
-- [ ] Type: `Worker` seçildi
+- [ ] Type: Selected `Worker`
 - [ ] Build command: `npm install`
 - [ ] Run command: `npm run start:worker`
-- [ ] Instance size seçildi (Basic)
-- [ ] Environment variables eklendi (hepsi)
+- [ ] Selected instance size (Basic)
+- [ ] Added environment variables (all)
 
 ### Final Steps
-- [ ] Tüm ayarlar gözden geçirildi
-- [ ] "Create Resources" tıklandı
-- [ ] Deployment başladı
+- [ ] All settings reviewed
+- [ ] Clicked "Create Resources"
+- [ ] Deployment started
 
 ---
 
-## ⏱️ DEPLOYMENT PROGRESS (İlerleme Takibi)
+## ⏱️ DEPLOYMENT PROGRESS
 
 ### Build Phase
 - [ ] Web component building... ✅
 - [ ] Socket-server component building... ✅
 - [ ] Poller-worker component building... ✅
-- [ ] Build errors yok
+- [ ] No build errors
 
 ### Deploy Phase
-- [ ] Containers oluşturuluyor...
+- [ ] Creating containers...
 - [ ] Web service deployed ✅
 - [ ] Socket server deployed ✅
 - [ ] Poller worker deployed ✅
 
 ### Health Checks
 - [ ] Web health check passing ✅
-- [ ] App "Live" durumunda ✅
+- [ ] App status "Live" ✅
 
 ### Database Connection
-- [ ] Database Trusted Sources güncellendi
-- [ ] App Platform IP range eklendi
-- [ ] Test connection başarılı
+- [ ] Database Trusted Sources updated
+- [ ] App Platform IP range added
+- [ ] Test connection successful
 
 ---
 
-## ✅ POST-DEPLOYMENT (Deployment Sonrası)
+## ✅ POST-DEPLOYMENT
 
-### Temel Testler
-- [ ] App URL açılıyor: `https://win-room-xxxxx.ondigitalocean.app`
-- [ ] Health check çalışıyor: `/api/health` → `{"status":"ok"}`
-- [ ] 404 hatası yok (Next.js routing çalışıyor)
-- [ ] Login sayfası açılıyor: `/login`
+### Basic Tests
+- [ ] App URL opens: `https://win-room-xxxxx.ondigitalocean.app`
+- [ ] Health check working: `/api/health` → `{"status":"ok"}`
+- [ ] No 404 errors (Next.js routing working)
+- [ ] Login page opens: `/login`
 
-### Component Logs Kontrolü
+### Component Logs Review
 
 #### Web Component:
-- [ ] Logs açıldı: `Components → web → Runtime Logs`
-- [ ] Beklenen çıktı görüldü:
+- [ ] Logs opened: `Components → web → Runtime Logs`
+- [ ] Expected output seen:
   ```
   ready - started server on 0.0.0.0:3000
   ```
-- [ ] Error yok
-- [ ] Warning'ler normal (eğer varsa)
+- [ ] No errors
+- [ ] Warnings normal (if any)
 
 #### Socket Server:
-- [ ] Logs açıldı: `Components → socket-server → Runtime Logs`
-- [ ] Beklenen çıktı görüldü:
+- [ ] Logs opened: `Components → socket-server → Runtime Logs`
+- [ ] Expected output seen:
   ```
   [Socket] Server listening on port 3001
   [Socket] CORS origins: https://...
   [Socket] Ready to accept connections
   [Socket] Starting event polling from ID: 0
   ```
-- [ ] Error yok
-- [ ] Database bağlantısı başarılı
+- [ ] No errors
+- [ ] Database connection successful
 
 #### Poller Worker:
-- [ ] Logs açıldı: `Components → poller-worker → Runtime Logs`
-- [ ] Beklenen çıktı görüldü:
+- [ ] Logs opened: `Components → poller-worker → Runtime Logs`
+- [ ] Expected output seen:
   ```
   [Poller] Worker started
   [Poller] Polling interval: 2000ms
   [Poller] Connected to database
   ```
-- [ ] Error yok
-- [ ] Polling başladı
+- [ ] No errors
+- [ ] Polling started
 
 ### Functional Tests
 
 #### API Endpoints:
 - [ ] `GET /api/health` → 200 OK
-- [ ] `GET /api/queue` → Authentication error (beklenen)
-- [ ] `POST /api/login` → Çalışıyor (test user ile)
+- [ ] `GET /api/queue` → Authentication error (expected)
+- [ ] `POST /api/login` → Working (with test user)
 
 #### Socket.IO:
 - [ ] Browser console test:
@@ -166,16 +166,16 @@ Deployment öncesi ve sonrası kontrol listesi.
   const socket = io('https://win-room-xxxxx.ondigitalocean.app');
   socket.on('connect', () => console.log('Connected!'));
   ```
-- [ ] Connection başarılı
-- [ ] Event broadcast çalışıyor
+- [ ] Connection successful
+- [ ] Event broadcast working
 
 #### Database:
-- [ ] Web app'den database okuyabiliyor
-- [ ] Poller worker database'e yazabiliyor
-- [ ] Events table'a data yazılıyor
+- [ ] Web app can read from database
+- [ ] Poller worker can write to database
+- [ ] Data being written to events table
 
 ### Performance Tests
-- [ ] Page load time < 3 saniye
+- [ ] Page load time < 3 seconds
 - [ ] API response time < 500ms
 - [ ] Socket.IO latency < 100ms
 - [ ] Memory usage normal (< 80%)
@@ -183,85 +183,85 @@ Deployment öncesi ve sonrası kontrol listesi.
 
 ---
 
-## 🔧 CONFIGURATION (Son Ayarlar)
+## 🔧 CONFIGURATION
 
-### Domain Setup (Opsiyonel)
-- [ ] Custom domain eklendi
-- [ ] DNS CNAME kaydı eklendi
-- [ ] SSL certificate oluşturuldu
-- [ ] Domain üzerinden erişim çalışıyor
+### Domain Setup (Optional)
+- [ ] Custom domain added
+- [ ] DNS CNAME record added
+- [ ] SSL certificate created
+- [ ] Access through domain working
 
 ### Security
-- [ ] Production JWT secret değiştirildi
-- [ ] CORS origins production domain'e set edildi
-- [ ] Database password güvenli
-- [ ] Environment variables şifrelendi (SECRET type)
+- [ ] Production JWT secret changed
+- [ ] CORS origins set to production domain
+- [ ] Database password secure
+- [ ] Environment variables encrypted (SECRET type)
 
 ### Monitoring
-- [ ] Metrics açıldı: `Insights` tab
-- [ ] CPU/Memory kullanımı izleniyor
-- [ ] Alerts kuruldu (opsiyonel):
+- [ ] Metrics opened: `Insights` tab
+- [ ] CPU/Memory usage monitored
+- [ ] Alerts configured (optional):
   - [ ] CPU > 80%
   - [ ] Memory > 80%
   - [ ] Health check fails
-- [ ] Email/Slack notification ayarlandı
+- [ ] Email/Slack notification configured
 
-### Scaling (Production için)
-- [ ] Auto-scaling aktif edildi (opsiyonel)
-- [ ] Min/Max instance sayısı ayarlandı
-- [ ] CPU threshold belirlendi
-- [ ] Load balancing çalışıyor
+### Scaling (For Production)
+- [ ] Auto-scaling enabled (optional)
+- [ ] Min/Max instance count configured
+- [ ] CPU threshold defined
+- [ ] Load balancing working
 
 ---
 
-## 📊 VERIFICATION (Doğrulama)
+## 📊 VERIFICATION
 
 ### End-to-End Test
-- [ ] Login yapılabildi
-- [ ] Queue görüntüleniyor
-- [ ] Claim işlemi çalışıyor
-- [ ] Leaderboard güncelleniyor
-- [ ] Real-time updates geliyor (Socket.IO)
-- [ ] Personal goals görünüyor
-- [ ] Admin panel erişilebilir (admin kullanıcı ile)
+- [ ] Can log in
+- [ ] Queue displaying
+- [ ] Claim operation working
+- [ ] Leaderboard updating
+- [ ] Real-time updates arriving (Socket.IO)
+- [ ] Personal goals visible
+- [ ] Admin panel accessible (with admin user)
 
 ### Data Flow Test
-- [ ] Poller yeni subscription'ları buluyor
-- [ ] Queue'ya ekleniyor
-- [ ] Event oluşturuluyor
-- [ ] Socket.IO broadcast yapıyor
-- [ ] Frontend'de gösteriliyor
+- [ ] Poller finding new subscriptions
+- [ ] Adding to queue
+- [ ] Creating events
+- [ ] Socket.IO broadcasting
+- [ ] Displaying on frontend
 
 ### Error Handling
-- [ ] 404 sayfası düzgün
-- [ ] 500 hatası loglanıyor
-- [ ] Authentication hataları düzgün
-- [ ] Rate limiting çalışıyor
-- [ ] Database connection retry çalışıyor
+- [ ] 404 page proper
+- [ ] 500 errors logged
+- [ ] Authentication errors proper
+- [ ] Rate limiting working
+- [ ] Database connection retry working
 
 ---
 
 ## 🎉 DEPLOYMENT COMPLETE!
 
-Tüm checklistler tamamlandıysa, deployment başarılı! 🚀
+If all checklists are completed, deployment is successful! 🚀
 
-### Sonraki Adımlar:
-1. 📊 Metrics'i günlük izle
-2. 📝 Logs'u kontrol et
-3. 🐛 Bug rapor sistemini kur
-4. 📈 Performance optimize et
-5. 🔒 Security audit yap
-6. 👥 Kullanıcı eğitimi ver
-7. 📚 Documentation güncelle
+### Next Steps:
+1. 📊 Monitor metrics daily
+2. 📝 Check logs
+3. 🐛 Set up bug reporting system
+4. 📈 Optimize performance
+5. 🔒 Conduct security audit
+6. 👥 Provide user training
+7. 📚 Update documentation
 
 ---
 
 ## 📞 Support
 
-Sorun olursa:
-1. Logs kontrol et (her component için)
-2. `DEPLOYMENT_GUIDE.md` → Troubleshooting bölümüne bak
-3. DigitalOcean support ticket aç
+If there are issues:
+1. Check logs (for each component)
+2. See `DEPLOYMENT_GUIDE.md` → Troubleshooting section
+3. Open DigitalOcean support ticket
 
 **App Status**: https://cloud.digitalocean.com/apps/[app-id]
 

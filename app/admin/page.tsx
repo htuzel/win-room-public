@@ -326,7 +326,7 @@ useEffect(() => {
 
     const pipedriveOwnerNumeric = Number(createForm.pipedrive_owner_id);
     if (!Number.isFinite(pipedriveOwnerNumeric) || pipedriveOwnerNumeric <= 0) {
-      setCreateError('Pipedrive Owner ID zorunlu ve pozitif bir sayı olmalı.');
+      setCreateError('Pipedrive Owner ID is required and must be a positive number.');
       setCreateLoading(false);
       return;
     }
@@ -391,7 +391,7 @@ useEffect(() => {
     if (payload.pipedrive_owner_id !== undefined) {
       const numeric = Number(payload.pipedrive_owner_id);
       if (!Number.isFinite(numeric) || numeric <= 0) {
-        alert('Pipedrive Owner ID zorunlu ve pozitif bir sayı olmalı.');
+        alert('Pipedrive Owner ID is required and must be a positive number.');
         return;
       }
       payload = { ...payload, pipedrive_owner_id: numeric };
@@ -734,7 +734,7 @@ useEffect(() => {
 
   const handleSaveClaim = async (claimId: number) => {
     if (editClaimData.claim_type === 'installment' && !editingInstallmentReady) {
-      alert('Installment claim için önce plan oluşturmalısın.');
+      alert('Create the installment plan before saving this claim.');
       return;
     }
     try {
@@ -1372,7 +1372,7 @@ useEffect(() => {
                         required
                       />
                       <p className="mt-1 text-xs text-foreground/50">
-                        pipedrive_users tablosundaki owner_id ile birebir eşleşmeli.
+                        Must match the owner_id in the pipedrive_users table exactly.
                       </p>
                     </div>
                   </div>
@@ -1682,7 +1682,7 @@ useEffect(() => {
             <div className="grid gap-6 md:grid-cols-2">
               <div className="rounded-2xl border border-border bg-surface p-6">
                 <h2 className="text-lg font-semibold text-foreground">Create Global Goal</h2>
-                <p className="text-sm text-foreground/50 mb-4">Görünürlük: satış yüzdesi veya admin-only.</p>
+                <p className="text-sm text-foreground/50 mb-4">Visibility: percent-only for sales or admin-only.</p>
                 <form onSubmit={handleCreateGlobalGoal} className="space-y-4">
                   <div className="grid grid-cols-2 gap-4">
                     <div>
@@ -1767,7 +1767,7 @@ useEffect(() => {
 
               <div className="rounded-2xl border border-border bg-surface p-6">
                 <h2 className="text-lg font-semibold text-foreground">Create Personal Goal</h2>
-                <p className="text-sm text-foreground/50 mb-4">Sadece ilgili satışçı görebilir.</p>
+                <p className="text-sm text-foreground/50 mb-4">Only the selected seller can see this.</p>
                 <form onSubmit={handleCreatePersonalGoal} className="space-y-4">
                   <div>
                     <label className="block text-xs uppercase tracking-[0.3em] text-foreground/40 mb-2">Seller *</label>
@@ -2019,7 +2019,7 @@ useEffect(() => {
                             </div>
                             {claim.queue_is_manual && (
                               <span className="text-xs text-foreground/60">
-                                Açan: {claim.queue_created_by || claim.queue_created_by_email || 'Manual'}
+                                Opened by: {claim.queue_created_by || claim.queue_created_by_email || 'Manual'}
                               </span>
                             )}
                           </div>
@@ -2260,7 +2260,7 @@ useEffect(() => {
                                   Installment plan required before saving this claim.
                                 </p>
                                 <p className="text-xs text-foreground/60">
-                                  Taksit sayısı ve ödeme tarihlerini gir. Plan oluşturulduğunda claim kaydedilebilir.
+                                  Enter the number of installments and payment dates. Once the plan is created you can save the claim.
                                 </p>
                                 <InstallmentPlanBuilder
                                   subscriptionId={claim.subscription_id}
@@ -2419,7 +2419,7 @@ useEffect(() => {
                             </div>
                             {item.created_by_name || item.created_by_email || item.created_by ? (
                               <span className="text-xs text-foreground/60">
-                                Açan: {item.created_by_name || item.created_by_email || item.created_by}
+                                Opened by: {item.created_by_name || item.created_by_email || item.created_by}
                               </span>
                             ) : null}
                           </div>

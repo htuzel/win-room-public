@@ -212,7 +212,7 @@ export function QueueFinanceModal({
           {formData.finance_status === 'installment' && (
             <div className="space-y-3 rounded-xl border border-border/40 bg-surface/30 p-4">
               <div className="flex flex-wrap items-center justify-between gap-3">
-                <label className="text-sm font-semibold text-foreground">Taksit Bilgisi</label>
+                <label className="text-sm font-semibold text-foreground">Installment Information</label>
                 {activePlanId && (
                   <a
                     className="text-xs font-semibold text-accent underline"
@@ -220,12 +220,12 @@ export function QueueFinanceModal({
                     target="_blank"
                     rel="noreferrer"
                   >
-                    Planı Görüntüle #{activePlanId}
+                    View Plan #{activePlanId}
                   </a>
                 )}
               </div>
               <label className="text-xs font-semibold text-foreground/70">
-                Taksit Sayısı
+                Number of Installments
                 <input
                   type="number"
                   min={2}
@@ -252,7 +252,7 @@ export function QueueFinanceModal({
 
               {!token && (
                 <p className="text-xs text-rose-400">
-                  Token bulunamadı; plan oluşturmak için sayfayı yenileyin.
+                  Token not found; please refresh the page to create a plan.
                 </p>
               )}
             </div>

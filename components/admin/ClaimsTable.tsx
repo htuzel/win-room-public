@@ -214,7 +214,7 @@ export function ClaimsTable({ token }: ClaimsTableProps) {
                       </div>
                       {isManual && (
                         <span className="text-xs text-foreground/60">
-                          Açan: {manualCreator || 'Manual'}
+                          Created by: {manualCreator || 'Manual'}
                         </span>
                       )}
                     </div>

@@ -1,35 +1,35 @@
 # Digital Ocean Deployment Guide
 
-## Build Hatası Çözümleri
+## Build Error Solutions
 
-### `<Html>` Import Hatası
+### `<Html>` Import Error
 
-Eğer Digital Ocean'da build sırasında şu hatayı alıyorsanız:
+If you get this error during build on Digital Ocean:
 ```
 Error: <Html> should not be imported outside of pages/_document.
 ```
 
-**Çözüm 1: App Spec'i Kontrol Edin**
-Digital Ocean App Platform'da App Spec'inizi kontrol edin:
+**Solution 1: Check App Spec**
+Check your App Spec in Digital Ocean App Platform:
 - Build Command: `npm run build` (NOT `npm run export`)
 - Run Command: `npm start`
 
-**Çözüm 2: Build Cache'i Temizleyin**
-Digital Ocean dashboard'da:
+**Solution 2: Clear Build Cache**
+In Digital Ocean dashboard:
 1. Settings > App-Level Build Phase
-2. "Clear build cache" butonuna tıklayın
-3. Yeniden deploy edin
+2. Click "Clear build cache" button
+3. Redeploy
 
-**Çözüm 3: Environment Variables**
-Şu environment variable'ı ekleyin:
+**Solution 3: Environment Variables**
+Add these environment variables:
 ```
 NEXT_TELEMETRY_DISABLED=1
 NODE_ENV=production
 ```
 
-## Deployment Adımları
+## Deployment Steps
 
-1. **GitHub'a Push**
+1. **Push to GitHub**
    ```bash
    git add .
    git commit -m "Deploy: Win Room v2.0"
@@ -37,28 +37,28 @@ NODE_ENV=production
    ```
 
 2. **Digital Ocean App Platform**
-   - Otomatik deploy başlayacak
-   - Build loglarını kontrol edin
+   - Auto-deploy will start
+   - Check build logs
    - Health check: `/api/health`
 
-3. **Environment Variables Ayarlayın**
+3. **Set Environment Variables**
    ```
    DATABASE_URL=postgresql://...
    JWT_SECRET=your-secret-key
    NODE_ENV=production
    ```
 
-## Sorun Giderme
+## Troubleshooting
 
-### Build Başarılı Ama Çalışmıyor
-- Environment variables'ları kontrol edin
-- Database connection'ı test edin
-- Health check endpoint'ini test edin: `/api/health`
+### Build Succeeds But Not Running
+- Check environment variables
+- Test database connection
+- Test health check endpoint: `/api/health`
 
 ### Hydration Errors
-- Bu hatalar düzeltildi
-- Eğer devam ederse, browser cache'ini temizleyin
+- These errors have been fixed
+- If they persist, clear browser cache
 
 ### Database Connection Errors
-- DATABASE_URL'in doğru olduğundan emin olun
-- Database'in Digital Ocean network'ünde erişilebilir olduğunu kontrol edin
+- Make sure DATABASE_URL is correct
+- Check that database is accessible from Digital Ocean network

@@ -1,19 +1,19 @@
 # ⚡ Quick Admin Creation Guide
 
-3 komutla admin oluştur!
+Create admin in 3 commands!
 
 ---
 
-## 🚀 En Hızlı Yol (Quick Mode)
+## 🚀 Fastest Way (Quick Mode)
 
 ```bash
 npm run admin:create:quick
 ```
 
-**Soracağı tek şey:**
-- Password gir (min 8 karakter)
+**Only thing it will ask:**
+- Enter password (min 8 characters)
 
-**Otomatik oluşturulacaklar:**
+**Will be created automatically:**
 - Seller ID: `admin`
 - Display Name: `Admin`
 - Email: `admin@winroom.local`
@@ -21,39 +21,39 @@ npm run admin:create:quick
 
 ---
 
-## 🎯 Interactive Mode (Tüm detayları kendin belirle)
+## 🎯 Interactive Mode (Specify all details yourself)
 
 ```bash
 npm run admin:create
 ```
 
-**Soracakları:**
-1. Seller ID (örn: `admin`, `john`)
-2. Display Name (örn: `Admin User`, `John Doe`)
-3. Email (örn: `admin@example.com`)
-4. Password (min 8 karakter)
+**What it will ask:**
+1. Seller ID (e.g., `admin`, `john`)
+2. Display Name (e.g., `Admin User`, `John Doe`)
+3. Email (e.g., `admin@example.com`)
+4. Password (min 8 characters)
 5. Confirm Password
 6. Role (`admin` / `finance` / `sales_lead` / `sales`)
-7. Pipedrive Owner ID (opsiyonel, Enter ile geç)
+7. Pipedrive Owner ID (optional, press Enter to skip)
 
 ---
 
-## 🔑 Password Hash Oluştur (SQL için)
+## 🔑 Generate Password Hash (for SQL)
 
 ```bash
 npm run hash-password YOUR_PASSWORD
 ```
 
-veya interactive:
+or interactive:
 
 ```bash
 npm run hash-password
-# Password soracak
+# Will ask for password
 ```
 
 ---
 
-## ✅ Test Et
+## ✅ Test It
 
 ### Login API test:
 
@@ -68,27 +68,27 @@ curl -X POST http://localhost:3000/api/auth/login \
 
 ### Browser test:
 
-1. Git: http://localhost:3000/login
+1. Go to: http://localhost:3000/login
 2. Email: `admin@winroom.local`
-3. Password: `[girdiğin password]`
+3. Password: `[the password you entered]`
 
 ---
 
-## 📝 Örnek Kullanımlar
+## 📝 Example Uses
 
-### Development (Hızlı Setup)
+### Development (Quick Setup)
 ```bash
 npm run admin:create:quick
-# Password: [seçtiğin güçlü password]
+# Password: [your chosen strong password]
 ```
 
-### Production (Güvenli)
+### Production (Secure)
 ```bash
 npm run admin:create
 # Seller ID: admin
 # Display Name: Company Admin
 # Email: admin@yourcompany.com
-# Password: [güçlü password]
+# Password: [strong password]
 # Role: admin
 ```
 
@@ -98,7 +98,7 @@ npm run admin:create
 # Seller ID: finance1
 # Display Name: Finance Manager
 # Email: finance@company.com
-# Password: [güçlü password]
+# Password: [strong password]
 # Role: finance
 ```
 
@@ -108,47 +108,47 @@ npm run admin:create
 # Seller ID: lead1
 # Display Name: Sales Lead
 # Email: lead@company.com
-# Password: [güçlü password]
+# Password: [strong password]
 # Role: sales_lead
 ```
 
 ---
 
-## 🔒 Roller
+## 🔒 Roles
 
-| Role | Yetki |
-|------|-------|
-| `admin` | Tüm yetkiler |
-| `finance` | Tüm yetkiler (admin ile aynı) |
-| `sales_lead` | Ekip yönetimi + kendi satışları |
-| `sales` | Sadece kendi satışları |
+| Role | Permissions |
+|------|-------------|
+| `admin` | All permissions |
+| `finance` | All permissions (same as admin) |
+| `sales_lead` | Team management + own sales |
+| `sales` | Only own sales |
 
 ---
 
-## 🐛 Sorun Giderme
+## 🐛 Troubleshooting
 
 **"User already exists"**
 ```sql
 DELETE FROM wr.sellers WHERE seller_id = 'admin';
--- Sonra tekrar çalıştır
+-- Then run again
 ```
 
 **"Invalid credentials"**
-- Password doğru mu? (case-sensitive!)
-- Email lowercase mu?
+- Is password correct? (case-sensitive!)
+- Is email lowercase?
 
-**Database bağlantı hatası**
+**Database connection error**
 ```bash
-# .env dosyasında DATABASE_URL doğru mu?
+# Is DATABASE_URL correct in .env file?
 cat .env | grep DATABASE_URL
 ```
 
 ---
 
-## 📚 Detaylı Guide
+## 📚 Detailed Guide
 
-Daha fazla bilgi için: `scripts/ADMIN_SETUP.md`
+For more information: `scripts/ADMIN_SETUP.md`
 
 ---
 
-**Hepsi bu kadar! 🎉**
+**That's it! 🎉**

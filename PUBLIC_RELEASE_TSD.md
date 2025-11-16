@@ -588,7 +588,7 @@ D5. Acceptance Criteria
 Objective: Ensure all user-facing content is English and consistent.
 
 E1. String Audit
-  - [ ] Run `rg "\".*[ğüşöçİı].*\""` and `rg \"\\b(?:claim|satış)\\b\"` to find Turkish strings.  
+  - [ ] Run `rg "\".*[\\u011F\\u00FC\\u015F\\u0131\\u00F6\\u00E7\\u011E\\u00DC\\u015E\\u0130\\u00D6\\u00C7].*\""` and `rg "[[:^ascii:]]"` to find non-English strings.  
   - [ ] Check `public/` assets (images, audio cues) for Turkish text.
 
 E2. Copy Centralization

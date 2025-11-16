@@ -46,7 +46,7 @@ export default function InstallmentsPage() {
 
 function InstallmentsPageFallback() {
   return (
-    <div className="p-6 text-sm text-foreground/60">Installments yükleniyor...</div>
+    <div className="p-6 text-sm text-foreground/60">Loading installments...</div>
   );
 }
 
@@ -114,7 +114,7 @@ function InstallmentsPageContent() {
       });
       if (!res.ok) {
         const error = await res.json();
-        alert(error.error || 'Planlar yüklenemedi');
+        alert(error.error || 'Failed to load plans');
         setPlans([]);
         return;
       }
@@ -137,7 +137,7 @@ function InstallmentsPageContent() {
         });
         const data = await res.json();
         if (!res.ok) {
-          alert(data.error || 'Plan alınamadı');
+          alert(data.error || 'Failed to fetch plan');
           return;
         }
         setSelectedPlan(data.plan);
@@ -186,7 +186,7 @@ function InstallmentsPageContent() {
       });
       const data = await res.json();
       if (!res.ok) {
-        alert(data.error || 'İşlem başarısız');
+        alert(data.error || 'Action failed');
         return;
       }
       setActionModal(null);
@@ -194,7 +194,7 @@ function InstallmentsPageContent() {
       await refreshSelectedPlan();
     } catch (error) {
       console.error('Payment action error', error);
-      alert('İşlem başarısız');
+      alert('Action failed');
     } finally {
       setActionLoading(false);
     }
@@ -214,7 +214,7 @@ function InstallmentsPageContent() {
       });
       const data = await res.json();
       if (!res.ok) {
-        alert(data.error || 'Status güncellenemedi');
+        alert(data.error || 'Failed to update status');
         return;
       }
       setSelectedPlan(data.plan);
@@ -222,7 +222,7 @@ function InstallmentsPageContent() {
       await fetchSummary();
     } catch (error) {
       console.error('Status action error', error);
-      alert('Status güncellenemedi');
+      alert('Failed to update status');
     } finally {
       setStatusLoading(false);
     }
@@ -269,12 +269,12 @@ function InstallmentsPageContent() {
 
   const renderSummaryCards = () => (
     <div className="grid gap-4 sm:grid-cols-3 lg:grid-cols-6">
-      <SummaryCard title="Aktif" value={summary?.total_active || 0} accent="text-foreground" />
-      <SummaryCard title="Bekleyen Onay" value={summary?.review_needed || 0} accent="text-amber-400" />
-      <SummaryCard title="Geciken" value={summary?.overdue || 0} accent="text-rose-400" />
-      <SummaryCard title="Tolerans" value={summary?.tolerance_active || 0} accent="text-sky-300" />
-      <SummaryCard title="Dondurulmuş" value={summary?.total_frozen || 0} accent="text-indigo-300" />
-      <SummaryCard title="Tamamlanan" value={summary?.total_completed || 0} accent="text-emerald-300" />
+      <SummaryCard title="Active" value={summary?.total_active || 0} accent="text-foreground" />
+      <SummaryCard title="Review Needed" value={summary?.review_needed || 0} accent="text-amber-400" />
+      <SummaryCard title="Overdue" value={summary?.overdue || 0} accent="text-rose-400" />
+      <SummaryCard title="Tolerance" value={summary?.tolerance_active || 0} accent="text-sky-300" />
+      <SummaryCard title="Frozen" value={summary?.total_frozen || 0} accent="text-indigo-300" />
+      <SummaryCard title="Completed" value={summary?.total_completed || 0} accent="text-emerald-300" />
     </div>
   );
 
@@ -283,14 +283,14 @@ function InstallmentsPageContent() {
       <div className="flex flex-wrap items-center justify-between gap-4">
         <div>
           <h1 className="text-2xl font-semibold text-foreground">Installments</h1>
-          <p className="text-sm text-foreground/60">Finance ve admin ekipleri için taksit vadesi takibi</p>
+          <p className="text-sm text-foreground/60">Installment payment tracking for finance and admin teams</p>
         </div>
         <button
           className="rounded-lg border border-border px-3 py-2 text-sm text-foreground/80 hover:bg-surface"
           onClick={() => fetchPlans()}
           disabled={loadingPlans}
         >
-          Yenile
+          Refresh
         </button>
       </div>
 
@@ -314,7 +314,7 @@ function InstallmentsPageContent() {
         </div>
         <input
           type="text"
-          placeholder="Ara (müşteri / subscription)"
+          placeholder="Search (customer / subscription)"
           value={search}
           onChange={(e) => setSearch(e.target.value)}
           className="w-full max-w-xs rounded-lg border border-border bg-background/70 px-3 py-2 text-sm"
@@ -326,26 +326,26 @@ function InstallmentsPageContent() {
           <thead className="bg-surface/80 text-foreground/60">
             <tr>
               <th className="px-4 py-3">Subscription</th>
-              <th className="px-4 py-3">Müşteri</th>
-              <th className="px-4 py-3">Durum</th>
-              <th className="px-4 py-3">Ödendi</th>
+              <th className="px-4 py-3">Customer</th>
+              <th className="px-4 py-3">Status</th>
+              <th className="px-4 py-3">Paid</th>
               <th className="px-4 py-3">Review</th>
-              <th className="px-4 py-3">Gecikme</th>
-              <th className="px-4 py-3 text-right">Aksiyon</th>
+              <th className="px-4 py-3">Overdue</th>
+              <th className="px-4 py-3 text-right">Action</th>
             </tr>
           </thead>
           <tbody>
             {plans.length === 0 && !loadingPlans && (
               <tr>
                 <td colSpan={7} className="px-4 py-6 text-center text-sm text-foreground/60">
-                  Kayıt bulunamadı
+                  No records found
                 </td>
               </tr>
             )}
             {loadingPlans && (
               <tr>
                 <td colSpan={7} className="px-4 py-6 text-center text-sm text-foreground/60">
-                  Yükleniyor...
+                  Loading...
                 </td>
               </tr>
             )}
@@ -367,7 +367,7 @@ function InstallmentsPageContent() {
                     className="rounded-lg border border-border px-3 py-1 text-xs font-semibold uppercase tracking-wide text-foreground/80 hover:bg-foreground/10"
                     onClick={() => openPlanDrawer(plan.id)}
                   >
-                    Görüntüle
+                    View
                   </button>
                 </td>
               </tr>
@@ -450,10 +450,10 @@ function PlanDrawer({ plan, onClose, onStatusAction, openActionModal, statusLoad
         <div className="flex items-start justify-between">
           <div>
             <p className="text-xs uppercase tracking-widest text-foreground/50">Subscription #{plan.subscription_id}</p>
-            <h2 className="text-2xl font-semibold text-foreground">{plan.customer_name || 'Müşteri'}</h2>
-            <p className="text-sm text-foreground/60">{plan.total_installments} taksit • {plan.currency}</p>
+            <h2 className="text-2xl font-semibold text-foreground">{plan.customer_name || 'Customer'}</h2>
+            <p className="text-sm text-foreground/60">{plan.total_installments} installments • {plan.currency}</p>
           </div>
-          <button onClick={onClose} className="rounded-lg border border-border px-3 py-1 text-sm text-foreground/60">Kapat</button>
+          <button onClick={onClose} className="rounded-lg border border-border px-3 py-1 text-sm text-foreground/60">Close</button>
         </div>
 
         <div className="mt-4 flex flex-wrap gap-2">
@@ -467,7 +467,7 @@ function PlanDrawer({ plan, onClose, onStatusAction, openActionModal, statusLoad
           <button
             className="rounded-lg border border-rose-400 px-3 py-1 text-xs font-semibold text-rose-300 hover:bg-rose-500/10"
             onClick={() => {
-              const reason = window.prompt('İptal sebebi?');
+              const reason = window.prompt('Cancellation reason?');
               if (reason) onStatusAction('cancel', reason);
             }}
           >
@@ -483,46 +483,46 @@ function PlanDrawer({ plan, onClose, onStatusAction, openActionModal, statusLoad
             >
               <div className="flex flex-wrap items-center justify-between gap-2">
                 <div>
-                  <p className="text-xs text-foreground/60">Taksit #{payment.payment_number}</p>
+                  <p className="text-xs text-foreground/60">Installment #{payment.payment_number}</p>
                   <p className="text-lg font-semibold text-foreground">
                     {payment.amount ? `$${Number(payment.amount).toFixed(2)}` : '—'}
                   </p>
-                  <p className="text-xs text-foreground/50">Vade: {payment.due_date}</p>
+                  <p className="text-xs text-foreground/50">Due: {payment.due_date}</p>
                 </div>
                 <div className="text-right">
                   <span className={`rounded-full px-3 py-1 text-xs font-semibold ${statusTone(payment.status)}`}>
                     {payment.status}
                   </span>
                   {payment.tolerance_until && (
-                    <p className="text-[10px] text-sky-300">Tolerans: {payment.tolerance_until}</p>
+                    <p className="text-[10px] text-sky-300">Tolerance until: {payment.tolerance_until}</p>
                   )}
                 </div>
               </div>
-              {payment.notes && <p className="mt-2 text-xs text-foreground/70">Not: {payment.notes}</p>}
+              {payment.notes && <p className="mt-2 text-xs text-foreground/70">Note: {payment.notes}</p>}
               <div className="mt-3 flex flex-wrap gap-2">
                 <button
                   className="rounded-lg border border-emerald-400 px-3 py-1 text-xs font-semibold text-emerald-300"
                   onClick={() => openActionModal(payment, 'confirm')}
                 >
-                  Onayla
+                  Confirm
                 </button>
                 <button
                   className="rounded-lg border border-rose-400 px-3 py-1 text-xs font-semibold text-rose-300"
                   onClick={() => openActionModal(payment, 'reject')}
                 >
-                  Reddet
+                  Reject
                 </button>
                 <button
                   className="rounded-lg border border-sky-400 px-3 py-1 text-xs font-semibold text-sky-300"
                   onClick={() => openActionModal(payment, 'tolerance')}
                 >
-                  Tolerans
+                  Tolerance
                 </button>
                 <button
                   className="rounded-lg border border-border px-3 py-1 text-xs font-semibold text-foreground/70"
                   onClick={() => openActionModal(payment, 'note')}
                 >
-                  Not Ekle
+                  Add Note
                 </button>
               </div>
             </div>
@@ -606,23 +606,23 @@ interface ActionModalProps {
 
 function ActionModal({ payment, type, payload, onChange, onClose, onSubmit, loading }: ActionModalProps) {
   const titleMap: Record<ActionType, string> = {
-    confirm: 'Ödemeyi Onayla',
-    reject: 'Ödemeyi Reddet',
-    tolerance: 'Tolerans Ver',
-    note: 'Not Ekle',
+    confirm: 'Confirm Payment',
+    reject: 'Reject Payment',
+    tolerance: 'Grant Tolerance',
+    note: 'Add Note',
   };
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
       <div className="w-full max-w-md rounded-2xl border border-border/40 bg-background p-6">
         <h3 className="text-xl font-semibold text-foreground">{titleMap[type]}</h3>
-        <p className="mt-1 text-sm text-foreground/60">Taksit #{payment.payment_number} · {payment.due_date}</p>
+        <p className="mt-1 text-sm text-foreground/60">Installment #{payment.payment_number} · {payment.due_date}</p>
 
         <div className="mt-4 space-y-3">
           {type === 'confirm' && (
             <>
               <label className="text-xs text-foreground/60">
-                Ödenen Tutar
+                Amount Paid
                 <input
                   type="number"
                   step="0.01"
@@ -632,7 +632,7 @@ function ActionModal({ payment, type, payload, onChange, onClose, onSubmit, load
                 />
               </label>
               <label className="text-xs text-foreground/60">
-                Kanal
+                Channel
                 <input
                   type="text"
                   value={payload.payment_channel || ''}
@@ -645,7 +645,7 @@ function ActionModal({ payment, type, payload, onChange, onClose, onSubmit, load
 
           {type === 'reject' && (
             <label className="text-xs text-foreground/60">
-              Sebep
+              Reason
               <textarea
                 value={payload.reason || ''}
                 onChange={(e) => onChange({ ...payload, reason: e.target.value })}
@@ -658,7 +658,7 @@ function ActionModal({ payment, type, payload, onChange, onClose, onSubmit, load
           {type === 'tolerance' && (
             <>
               <label className="text-xs text-foreground/60">
-                Yeni Son Tarih
+                New Due Date
                 <input
                   type="date"
                   value={payload.tolerance_until || ''}
@@ -667,7 +667,7 @@ function ActionModal({ payment, type, payload, onChange, onClose, onSubmit, load
                 />
               </label>
               <label className="text-xs text-foreground/60">
-                Açıklama
+                Description
                 <textarea
                   rows={2}
                   value={payload.tolerance_reason || ''}
@@ -680,7 +680,7 @@ function ActionModal({ payment, type, payload, onChange, onClose, onSubmit, load
 
           {type === 'note' && (
             <label className="text-xs text-foreground/60">
-              Not
+              Note
               <textarea
                 rows={3}
                 value={payload.note || ''}
@@ -696,14 +696,14 @@ function ActionModal({ payment, type, payload, onChange, onClose, onSubmit, load
             className="flex-1 rounded-lg border border-border px-4 py-2 text-sm text-foreground/80"
             onClick={onClose}
           >
-            İptal
+            Cancel
           </button>
           <button
             className="flex-1 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-black disabled:opacity-50"
             onClick={onSubmit}
             disabled={loading}
           >
-            {loading ? 'Gönderiliyor...' : 'Onayla'}
+            {loading ? 'Submitting...' : 'Confirm'}
           </button>
         </div>
       </div>

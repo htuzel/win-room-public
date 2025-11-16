@@ -49,7 +49,7 @@ export function InstallmentPlanBuilder({
 
   const handleGenerateSchedule = () => {
     if (!firstDueDate) {
-      alert('İlk vade tarihini girin');
+      alert('Enter the first due date');
       return;
     }
 
@@ -96,7 +96,7 @@ export function InstallmentPlanBuilder({
     }
 
     if (!schedule.length) {
-      alert('Lütfen taksit planını oluşturun');
+      alert('Please create the installment plan');
       return;
     }
 
@@ -104,7 +104,7 @@ export function InstallmentPlanBuilder({
     if (totalAmount) {
       const parsed = parseFloat(totalAmount);
       if (!Number.isFinite(parsed) || parsed <= 0) {
-        alert('Lütfen geçerli bir toplam tutar girin (pozitif sayı)');
+        alert('Please enter a valid total amount (positive number)');
         return;
       }
     }
@@ -112,7 +112,7 @@ export function InstallmentPlanBuilder({
     // Validate each payment amount
     for (const payment of schedule) {
       if (payment.amount !== undefined && (payment.amount <= 0 || !Number.isFinite(payment.amount))) {
-        alert(`Taksit #${payment.payment_number}: Lütfen geçerli bir tutar girin`);
+        alert(`Installment #${payment.payment_number}: Please enter a valid amount`);
         return;
       }
     }
@@ -141,15 +141,15 @@ export function InstallmentPlanBuilder({
 
       const data = await res.json();
       if (!res.ok) {
-        alert(data.error || 'Plan oluşturulamadı');
+        alert(data.error || 'Failed to create plan');
         return;
       }
 
       onPlanCreated?.({ planId: data.plan_id, installmentCount: totalInstallments });
-      alert('Taksit planı oluşturuldu');
+      alert('Installment plan created');
     } catch (error) {
       console.error('Installment plan create error:', error);
-      alert('Plan oluşturulamadı');
+      alert('Failed to create plan');
     } finally {
       setIsSaving(false);
     }
@@ -159,8 +159,8 @@ export function InstallmentPlanBuilder({
     <div className="space-y-4 rounded-xl border border-border/60 bg-surface/40 p-4">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm font-semibold text-foreground">Taksit Planı</p>
-          <p className="text-xs text-foreground/60">Installment status seçildiğinde plan oluşturmak gerekli</p>
+          <p className="text-sm font-semibold text-foreground">Installment Plan</p>
+          <p className="text-xs text-foreground/60">Required when installment status is selected</p>
         </div>
         <button
           type="button"
@@ -168,13 +168,13 @@ export function InstallmentPlanBuilder({
           onClick={handleGenerateSchedule}
           disabled={!totalInstallments || !firstDueDate || isGenerating}
         >
-          {isGenerating ? 'Oluşturuluyor...' : 'Planı Oluştur'}
+          {isGenerating ? 'Generating...' : 'Generate Plan'}
         </button>
       </div>
 
       <div className="grid gap-3 md:grid-cols-3">
         <label className="text-xs font-semibold text-foreground/70">
-          Toplam Taksit
+          Total Installments
           <input
             type="number"
             min={2}
@@ -185,7 +185,7 @@ export function InstallmentPlanBuilder({
           />
         </label>
         <label className="text-xs font-semibold text-foreground/70">
-          İlk Vade Tarihi
+          First Due Date
           <input
             type="date"
             value={firstDueDate}
@@ -194,7 +194,7 @@ export function InstallmentPlanBuilder({
           />
         </label>
         <label className="text-xs font-semibold text-foreground/70">
-          Vade Aralığı (gün)
+          Interval (days)
           <input
             type="number"
             min={7}
@@ -208,7 +208,7 @@ export function InstallmentPlanBuilder({
 
       <div className="grid gap-3 md:grid-cols-3">
         <label className="text-xs font-semibold text-foreground/70">
-          Toplam Tutar
+          Total Amount
           <input
             type="number"
             step="0.01"
@@ -218,7 +218,7 @@ export function InstallmentPlanBuilder({
           />
         </label>
         <label className="text-xs font-semibold text-foreground/70">
-          Para Birimi
+          Currency
           <input
             type="text"
             value={currency}
@@ -227,13 +227,13 @@ export function InstallmentPlanBuilder({
           />
         </label>
         <div className="text-xs text-foreground/60">
-          <p>Takribi taksit tutarı:</p>
+          <p>Approximate installment amount:</p>
           <p className="font-semibold text-foreground">{amountPerInstallment ? `${amountPerInstallment.toFixed(2)} ${currency}` : '—'}</p>
         </div>
       </div>
 
       <label className="text-xs font-semibold text-foreground/70">
-        Plan Notu
+        Plan Notes
         <textarea
           value={notes}
           onChange={(e) => setNotes(e.target.value)}
@@ -244,15 +244,15 @@ export function InstallmentPlanBuilder({
 
       {!!schedule.length && (
         <div className="space-y-2">
-          <p className="text-xs font-semibold text-foreground/70">Taksit Takvimi</p>
+          <p className="text-xs font-semibold text-foreground/70">Payment Schedule</p>
           <div className="max-h-56 overflow-y-auto rounded-lg border border-border/50">
             <table className="min-w-full text-left text-xs">
               <thead className="bg-surface/60 text-foreground/60">
                 <tr>
                   <th className="px-3 py-2">#</th>
-                  <th className="px-3 py-2">Vade</th>
-                  <th className="px-3 py-2">Tutar</th>
-                  <th className="px-3 py-2">Not</th>
+                  <th className="px-3 py-2">Due Date</th>
+                  <th className="px-3 py-2">Amount</th>
+                  <th className="px-3 py-2">Notes</th>
                 </tr>
               </thead>
               <tbody>
@@ -298,7 +298,7 @@ export function InstallmentPlanBuilder({
         disabled={!schedule.length || isSaving}
         onClick={handleCreatePlan}
       >
-        {isSaving ? 'Kaydediliyor...' : 'Planı Kaydet'}
+        {isSaving ? 'Saving...' : 'Save Plan'}
       </button>
     </div>
   );

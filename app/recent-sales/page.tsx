@@ -127,11 +127,11 @@ export default function RecentSalesPage() {
         fetchSales();
       } else {
         const error = await res.json();
-        alert(error.error || 'İtiraz gönderilemedi');
+        alert(error.error || 'Failed to submit objection');
       }
     } catch (error) {
       console.error('Objection submission error:', error);
-      alert('İtiraz gönderilemedi');
+      alert('Failed to submit objection');
     } finally {
       setSubmittingObjection(false);
     }
@@ -182,7 +182,7 @@ export default function RecentSalesPage() {
               onClick={() => router.push('/my-sales')}
               className="px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-400/40 font-medium rounded-lg hover:bg-emerald-500/30 transition-colors"
             >
-              Benim Satışlarım
+              My Sales
             </button>
             <button
               onClick={() => router.push('/installments')}
@@ -203,9 +203,9 @@ export default function RecentSalesPage() {
 
         {/* Page Title */}
         <div className="mb-6">
-          <h2 className="text-2xl font-bold text-foreground mb-2">Son 120 Saat Satışlar</h2>
+          <h2 className="text-2xl font-bold text-foreground mb-2">Last 120 Hours Sales</h2>
           <p className="text-foreground/60">
-            Claim edilmiş tüm satışlar. İtiraz etmek için butonlara tıklayın.
+            All claimed sales. Click buttons to submit objections.
           </p>
         </div>
 
@@ -214,7 +214,7 @@ export default function RecentSalesPage() {
           <div className="relative max-w-md">
             <input
               type="text"
-              placeholder="Email veya isim ile ara..."
+              placeholder="Search by email or name..."
               value={emailFilter}
               onChange={(e) => setEmailFilter(e.target.value)}
               className="w-full rounded-lg border border-border bg-surface px-4 py-2 pl-10 text-foreground placeholder-foreground/40 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent"
@@ -233,7 +233,7 @@ export default function RecentSalesPage() {
         ) : sales.length === 0 ? (
           <div className="rounded-2xl border border-border/60 bg-surface/90 p-12 text-center">
             <p className="text-lg text-foreground/60">
-              {emailFilter ? 'Filtreye uygun satış bulunamadı.' : 'Son 120 saatte satış bulunamadı.'}
+              {emailFilter ? 'No sales matching filter found.' : 'No sales found in last 120 hours.'}
             </p>
           </div>
         ) : (
@@ -282,16 +282,16 @@ export default function RecentSalesPage() {
             >
               <div className="relative w-full max-w-lg overflow-hidden rounded-3xl border border-border/70 bg-surface/90 p-6 shadow-[0_34px_55px_rgba(0,0,0,0.35)] backdrop-blur">
                 <h2 className="text-2xl font-semibold text-foreground mb-2">
-                  İtiraz Et
+                  Submit Objection
                 </h2>
                 <p className="text-sm text-foreground/60 mb-4">
-                  Subscription #{selectedSubscriptionId} için itiraz sebebini belirt.
+                  State the objection reason for subscription #{selectedSubscriptionId}.
                 </p>
 
                 <textarea
                   value={objectionReason}
                   onChange={(e) => setObjectionReason(e.target.value)}
-                  placeholder="İtiraz sebebinizi yazın..."
+                  placeholder="Write your objection reason..."
                   className="w-full h-32 rounded-lg border border-border bg-background px-4 py-3 text-foreground placeholder-foreground/40 focus:border-accent focus:outline-none focus:ring-1 focus:ring-accent resize-none"
                   disabled={submittingObjection}
                 />
@@ -306,14 +306,14 @@ export default function RecentSalesPage() {
                     disabled={submittingObjection}
                     className="flex-1 px-4 py-2 bg-surface border border-border text-foreground rounded-lg hover:bg-background transition-colors disabled:opacity-50"
                   >
-                    İptal
+                    Cancel
                   </button>
                   <button
                     onClick={submitObjection}
                     disabled={submittingObjection || !objectionReason.trim()}
                     className="flex-1 px-4 py-2 bg-amber-500 text-black font-semibold rounded-lg hover:bg-amber-400 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    {submittingObjection ? 'Gönderiliyor...' : 'Gönder'}
+                    {submittingObjection ? 'Submitting...' : 'Submit'}
                   </button>
                 </div>
               </div>

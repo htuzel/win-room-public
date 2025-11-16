@@ -212,7 +212,7 @@ export async function POST(req: NextRequest, { params }: RouteParams) {
           type: 'streak',
           sellerId: seller_id,
           title: 'Streak',
-          description: `${seller_id} ${newCount} win üst üste yaptı.`,
+          description: `${seller_id} secured ${newCount} wins in a row.`,
           payload: { count: newCount },
           dedupeKey: streakEvent.rows[0]?.id
             ? `event:${streakEvent.rows[0].id}`

@@ -1,46 +1,46 @@
 # WIN ROOM v2.0 - CLAIM ADJUSTMENTS IMPLEMENTATION GUIDE
 
-## ✅ TAMAMLANAN İŞLER
+## ✅ COMPLETED TASKS
 
 ### 1. Database Schema & Materialized View ✅
-**Dosya**: `scripts/db/06_claim_adjustments.sql`
-- ✅ `wr.claim_adjustments` tablosu oluşturuldu
-- ✅ `wr.claim_adjustments_latest` view (en son adjustment)
-- ✅ `wr.claim_adjustments_total` view (toplam adjustments)
+**File**: `scripts/db/06_claim_adjustments.sql`
+- ✅ `wr.claim_adjustments` table created
+- ✅ `wr.claim_adjustments_latest` view (latest adjustment)
+- ✅ `wr.claim_adjustments_total` view (total adjustments)
 - ✅ `wr.claim_metrics_adjusted` materialized view (adjusted metrics)
-- ✅ Trigger fonksiyonu: `notify_adjustment_change()` (auto event)
-- ✅ Helper fonksiyon: `refresh_claim_metrics_adjusted()`
+- ✅ Trigger function: `notify_adjustment_change()` (auto event)
+- ✅ Helper function: `refresh_claim_metrics_adjusted()`
 
-### 2. Types Güncelleme ✅
-**Dosya**: `lib/types/index.ts`
-- ✅ `AdjustmentReason` type eklendi
-- ✅ `EventType` → 'claim.adjusted' eklendi
+### 2. Types Update ✅
+**File**: `lib/types/index.ts`
+- ✅ `AdjustmentReason` type added
+- ✅ `EventType` → 'claim.adjusted' added
 - ✅ `ClaimAdjustment` interface
 - ✅ `ClaimWithMetrics` interface
-- ✅ `Claim` interface → adjustment fields eklendi
-- ✅ `UserMetrics` → original_margin_amount_usd, total_adjustments_usd eklendi
+- ✅ `Claim` interface → adjustment fields added
+- ✅ `UserMetrics` → original_margin_amount_usd, total_adjustments_usd added
 - ✅ `ClaimAdjustmentRequest` interface
 - ✅ `AdminStatsFilter` interface
 
 ### 3. API Endpoints - Adjustment CRUD ✅
-**Dosya**: `app/api/admin/claims/[id]/adjustment/route.ts`
+**File**: `app/api/admin/claims/[id]/adjustment/route.ts`
 - ✅ POST - Add adjustment (validation + materialized view refresh)
 - ✅ DELETE - Remove all adjustments
 - ✅ GET - Get adjustment history
 
-### 4. Admin Claims List Query Güncelleme ✅
-**Dosya**: `app/api/admin/claims/route.ts`
-- ✅ Materialized view JOIN eklendi
-- ✅ Adjusted metrics döndürülüyor
+### 4. Admin Claims List Query Update ✅
+**File**: `app/api/admin/claims/route.ts`
+- ✅ Materialized view JOIN added
+- ✅ Adjusted metrics returned
 
 ---
 
-## 📋 KALAN İMPLEMENTASYONLAR
+## 📋 REMAINING IMPLEMENTATIONS
 
-### 5. Leaderboard Endpoints Güncelleme
+### 5. Leaderboard Endpoints Update
 
 #### 5.1 GET /api/leaderboard/margin/route.ts
-**Mevcut kod:**
+**Current code:**
 ```typescript
 const results = await query<any>(`
   SELECT
@@ -56,7 +56,7 @@ const results = await query<any>(`
 `, [startDate]);
 ```
 
-**YENİ KOD:**
+**NEW CODE:**
 ```typescript
 const results = await query<any>(`
   SELECT
@@ -76,11 +76,11 @@ const results = await query<any>(`
 
 ---
 
-### 6. GET /api/me/metrics Güncelleme
+### 6. GET /api/me/metrics Update
 
-#### 6.1 Dosya: app/api/me/metrics/route.ts
+#### 6.1 File: app/api/me/metrics/route.ts
 
-**Mevcut kod:**
+**Current code:**
 ```typescript
 const metrics = await queryOne<any>(`
   SELECT
@@ -97,7 +97,7 @@ const metrics = await queryOne<any>(`
 `, [user.seller_id, startDate]);
 ```
 
-**YENİ KOD:**
+**NEW CODE:**
 ```typescript
 const metrics = await queryOne<any>(`
   SELECT
@@ -120,13 +120,13 @@ const metrics = await queryOne<any>(`
 `, [user.seller_id, startDate]);
 ```
 
-**AYNISI PREVIOUS METRICS İÇİN DE YAP** (line ~39-52)
+**SAME FOR PREVIOUS METRICS** (line ~39-52)
 
 ---
 
 ### 7. Helper Functions
 
-#### 7.1 Dosya: lib/helpers/adjustments.ts (YENİ DOSYA)
+#### 7.1 File: lib/helpers/adjustments.ts (NEW FILE)
 
 ```typescript
 // Win Room v2.0 - Claim Adjustments Helper Functions
@@ -190,9 +190,9 @@ export async function refreshAdjustedMetrics() {
 
 ---
 
-### 8. Admin Claims List UI Komponenti
+### 8. Admin Claims List UI Component
 
-#### 8.1 Dosya: app/admin/page.tsx (YENİ VEYA GÜNCELLE)
+#### 8.1 File: app/admin/page.tsx (NEW OR UPDATE)
 
 ```typescript
 // Win Room v2.0 - Admin Dashboard
@@ -251,7 +251,7 @@ export default function AdminDashboard() {
 
 ---
 
-#### 8.2 Dosya: components/admin/ClaimsTable.tsx (YENİ)
+#### 8.2 File: components/admin/ClaimsTable.tsx (NEW)
 
 ```typescript
 // Win Room v2.0 - Claims Management Table
@@ -441,7 +441,7 @@ export function ClaimsTable({ token }: ClaimsTableProps) {
 
 ### 9. Adjustment Modal Component
 
-#### 9.1 Dosya: components/admin/AdjustmentModal.tsx (YENİ)
+#### 9.1 File: components/admin/AdjustmentModal.tsx (NEW)
 
 ```typescript
 // Win Room v2.0 - Claim Adjustment Modal
@@ -713,9 +713,9 @@ export function AdjustmentModal({ isOpen, onClose, claim, token, onSuccess }: Ad
 
 ### 10. Sales Overview - Comparison & User Filter
 
-#### 10.1 Dosya: components/stats/AdminStatsPanel.tsx GÜNCELLEME
+#### 10.1 File: components/stats/AdminStatsPanel.tsx UPDATE
 
-**EKLE (yeni state ve filter logic):**
+**ADD (new state and filter logic):**
 
 ```typescript
 const [sellerFilter, setSellerFilter] = useState<string[]>([]);
@@ -766,7 +766,7 @@ const fetchStats = async () => {
 };
 ```
 
-**UI EKLE:**
+**ADD UI:**
 
 ```typescript
 {/* User Filter */}
@@ -855,9 +855,9 @@ const fetchStats = async () => {
 
 ---
 
-### 11. WebSocket Handler Güncelleme
+### 11. WebSocket Handler Update
 
-#### 11.1 Dosya: app/page.tsx EKLE
+#### 11.1 File: app/page.tsx ADD
 
 ```typescript
 socket.on('claim.adjusted', (data) => {
@@ -879,11 +879,11 @@ socket.on('claim.adjusted', (data) => {
 
 ---
 
-### 12. API Endpoint: GET /api/admin/stats (GÜNCELLEME)
+### 12. API Endpoint: GET /api/admin/stats (UPDATE)
 
-#### 12.1 Dosya: app/api/admin/stats/route.ts
+#### 12.1 File: app/api/admin/stats/route.ts
 
-**Query'yi filtre ile güncelle:**
+**Update query with filter:**
 
 ```typescript
 const { searchParams } = new URL(req.url);
@@ -920,28 +920,28 @@ const stats = await queryOne<any>(`
 
 ---
 
-## 🚀 IMPLEMENTASYON SIRASI
+## 🚀 IMPLEMENTATION ORDER
 
-1. ✅ Database migration çalıştır: `scripts/db/06_claim_adjustments.sql`
-2. ✅ Types güncellemesi zaten yapıldı
-3. ✅ API endpoints zaten oluşturuldu
-4. ⏳ Leaderboard endpoints güncelle (5.1)
-5. ⏳ GET /api/me/metrics güncelle (6.1)
-6. ⏳ Helper functions ekle (7.1)
-7. ⏳ Admin page oluştur (8.1)
+1. ✅ Run database migration: `scripts/db/06_claim_adjustments.sql`
+2. ✅ Types update already done
+3. ✅ API endpoints already created
+4. ⏳ Update leaderboard endpoints (5.1)
+5. ⏳ Update GET /api/me/metrics (6.1)
+6. ⏳ Add helper functions (7.1)
+7. ⏳ Create admin page (8.1)
 8. ⏳ ClaimsTable component (8.2)
 9. ⏳ AdjustmentModal component (9.1)
-10. ⏳ AdminStatsPanel güncelle (10.1)
-11. ⏳ WebSocket handler ekle (11.1)
-12. ⏳ Stats API güncelle (12.1)
+10. ⏳ Update AdminStatsPanel (10.1)
+11. ⏳ Add WebSocket handler (11.1)
+12. ⏳ Update Stats API (12.1)
 
 ---
 
-## 🧪 TEST PLANI
+## 🧪 TEST PLAN
 
 1. **Database Test:**
    ```sql
-   -- Test adjustment ekleme
+   -- Test adjustment insertion
    INSERT INTO wr.claim_adjustments (subscription_id, claim_id, additional_cost_usd, reason, adjusted_by)
    VALUES (123, 1, 100, 'commission', 'admin');
 
@@ -970,40 +970,40 @@ const stats = await queryOne<any>(`
    ```
 
 3. **UI Test:**
-   - Admin dashboard'a git
-   - Claims table'da adjustment olmayan bir claim seç
-   - "Add Adj." butonuna tıkla
-   - Adjustment ekle
-   - Liste'nin refresh olduğunu doğrula
-   - Leaderboard'da değişikliği gör
-   - My metrics'te adjustment'ın yansıdığını doğrula
+   - Go to admin dashboard
+   - Select a claim without adjustments in the claims table
+   - Click "Add Adj." button
+   - Add adjustment
+   - Verify the list refreshes
+   - See the change in leaderboard
+   - Verify the adjustment is reflected in my metrics
 
 4. **WebSocket Test:**
-   - İki farklı browser tab aç
-   - Birinde admin olarak adjustment ekle
-   - Diğer tab'da leaderboard'ın otomatik güncellendiğini gör
+   - Open two different browser tabs
+   - Add adjustment as admin in one
+   - See the leaderboard update automatically in the other tab
 
 ---
 
-## 📝 NOTLAR
+## 📝 NOTES
 
-- Materialized view her adjustment'tan sonra refresh edilir (CONCURRENTLY ile blocking olmadan)
-- Validation: Total adjustments original margin'ı aşamaz
-- Audit trail: Tüm adjustments tarihçesi saklanır
-- Event system: claim.adjusted eventi otomatik trigger ile oluşur
-- Seller filter: Admin multiple seller seçebilir
-- Comparison: Previous period ile karşılaştırma otomatik
-
----
-
-## ⚠️ DİKKAT EDİLECEK NOKTALAR
-
-1. **Materialized View Performance**: Çok fazla claim varsa refresh yavaş olabilir → Background job'a çevirebiliriz
-2. **Validation**: Frontend ve backend'de double validation
-3. **WebSocket**: Event trigger'dan emit edilir, manuel emit gerekmez
-4. **Currency**: Tüm adjustments USD cinsinden
-5. **Permissions**: Sadece admin/finance adjustment yapabilir
+- Materialized view is refreshed after each adjustment (with CONCURRENTLY for non-blocking)
+- Validation: Total adjustments cannot exceed original margin
+- Audit trail: All adjustment history is preserved
+- Event system: claim.adjusted event is created automatically via trigger
+- Seller filter: Admin can select multiple sellers
+- Comparison: Automatic comparison with previous period
 
 ---
 
-Bu dosyayı kaydet ve adım adım implementasyona devam edelim! 🚀
+## ⚠️ IMPORTANT CONSIDERATIONS
+
+1. **Materialized View Performance**: If there are too many claims, refresh may be slow → Can be converted to background job
+2. **Validation**: Double validation on frontend and backend
+3. **WebSocket**: Event is emitted from trigger, no manual emit needed
+4. **Currency**: All adjustments are in USD
+5. **Permissions**: Only admin/finance can make adjustments
+
+---
+
+Save this file and continue with step-by-step implementation! 🚀

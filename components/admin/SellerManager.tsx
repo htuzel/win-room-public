@@ -146,7 +146,7 @@ export function SellerManager({ token }: SellerManagerProps) {
         <div>
           <h2 className="text-xl font-bold text-foreground">Sales Team Performance</h2>
           <p className="text-sm text-foreground/60">
-            Tüm satışçıların toplam performansı ve detaylı inceleme.
+            Overall performance of all sales team members and detailed analysis.
           </p>
         </div>
         <input

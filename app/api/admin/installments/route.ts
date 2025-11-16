@@ -98,15 +98,15 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Payment schedule is required' }, { status: 400 });
     }
     if (error?.message === 'PAYMENT_NUMBERS_MUST_BE_SEQUENTIAL') {
-      return NextResponse.json({ error: 'Taksit numaraları 1\'den N\'e sıralı olmalıdır' }, { status: 400 });
+      return NextResponse.json({ error: 'Installment numbers must be sequential from 1 through N' }, { status: 400 });
     }
     if (error?.code === '23505') {
       // PostgreSQL unique violation
-      return NextResponse.json({ error: 'Bu subscription için zaten bir taksit planı var' }, { status: 409 });
+      return NextResponse.json({ error: 'An installment plan already exists for this subscription' }, { status: 409 });
     }
     if (error?.code === '23503') {
       // PostgreSQL foreign key violation
-      return NextResponse.json({ error: 'Geçersiz subscription_id' }, { status: 400 });
+      return NextResponse.json({ error: 'Invalid subscription_id' }, { status: 400 });
     }
     return NextResponse.json({ error: 'Failed to create installment plan' }, { status: 500 });
   }

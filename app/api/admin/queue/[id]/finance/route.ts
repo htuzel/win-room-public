@@ -46,7 +46,7 @@ export async function PATCH(req: NextRequest, { params }: RouteParams) {
     // CRITICAL: If status is installment, plan_id is required
     if (finance_status === 'installment' && !installment_plan_id) {
       return NextResponse.json(
-        { error: 'Taksit durumu için bir taksit planı ilişkilendirilmelidir. Lütfen önce taksit planı oluşturun.' },
+        { error: 'Installment status requires a linked installment plan. Please create the plan first.' },
         { status: 400 }
       );
     }

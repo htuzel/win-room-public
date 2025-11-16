@@ -1,70 +1,70 @@
 # 📢 Promotion Banner System - Setup Guide
 
-## ✅ Tamamlandı!
+## ✅ Complete!
 
-Promotion banner sistemi **database + admin panel** ile tamamen hazır!
+The promotion banner system is fully ready with **database + admin panel**!
 
 ---
 
-## 🚀 Kurulum (One-Time Setup)
+## 🚀 Setup (One-Time Setup)
 
-### 1. Database Migration Çalıştır
+### 1. Run Database Migration
 
-PostgreSQL database'de migration'ı çalıştırın:
+Run the migration in your PostgreSQL database:
 
 ```bash
-# Database'e bağlan
+# Connect to database
 psql -U your_user -d your_database
 
-# veya
+# or
 psql $DATABASE_URL
 
-# Migration dosyasını çalıştır
+# Run migration file
 \i lib/db/migrations/create_promotions_table.sql
 ```
 
-**Alternatif**: SQL client kullanarak (`lib/db/migrations/create_promotions_table.sql` dosyasını execute edin)
+**Alternative**: Execute `lib/db/migrations/create_promotions_table.sql` using a SQL client
 
-Migration şunları yapar:
-- ✅ `promotions` tablosunu oluşturur
-- ✅ Default "Black Friday" promotion'ı ekler
-- ✅ Sadece 1 aktif promotion olabilir kuralını enforce eder (trigger)
-- ✅ Index ekler (performance)
+Migration does the following:
+- ✅ Creates `promotions` table
+- ✅ Adds default "Black Friday" promotion
+- ✅ Enforces only 1 active promotion rule (trigger)
+- ✅ Adds indexes (performance)
 
 ---
 
-## 🎯 Kullanım
+## 🎯 Usage
 
-### Admin Panel'den Yönetim
+### Admin Panel Management
 
-1. **Admin Panel'e Git**
+1. **Go to Admin Panel**
    ```
    https://sales-panel.flalingo.com/admin
    ```
 
-2. **"📢 Promotions" Tab'ine Tıkla**
-   - Sağ tarafta tab listesinde
+2. **Click "📢 Promotions" Tab**
+   - In the tab list on the right side
 
-3. **Promotion Oluştur/Düzenle**
-   - **Başlık**: Kampanya başlığı (örn: "Black Friday! 🔥")
-   - **Mesaj**: Detay mesajı
-   - **Tema**: 4 renk seçeneği
-     - 🎀 Promo (Mor/Pembe) - Kampanyalar için
-     - 💚 Success (Yeşil) - Başarılar için
-     - 💙 Info (Mavi) - Bilgilendirmeler için
-     - 🧡 Warning (Turuncu) - Uyarılar için
-   - **Icon**: Emoji seç (20+ hazır seçenek)
-   - **Aktif**: Banner'ı göster/gizle
+3. **Create/Edit Promotion**
+   - **Title**: Campaign title (e.g., "Black Friday! 🔥")
+   - **Message**: Detail message
+   - **Theme**: 4 color options
+     - 🎀 Promo (Purple/Pink) - For campaigns
+     - 💚 Success (Green) - For achievements
+     - 💙 Info (Blue) - For announcements
+     - 🧡 Warning (Orange) - For warnings
+   - **Icon**: Select emoji (20+ ready options)
+   - **Active**: Show/hide banner
 
-4. **Önizleme**
-   - Sağ panelde canlı preview görürsün
+4. **Preview**
+   - You'll see live preview in the right panel
 
-5. **Kaydet ve Yayınla**
-   - Anında yayınlanır, tüm kullanıcılar görür
+5. **Save and Publish**
+   - Published instantly, all users will see it
 
 ---
 
-## 🏗️ Teknik Mimari
+## 🏗️ Technical Architecture
 
 ### Database
 ```sql
@@ -82,28 +82,28 @@ Table: promotions
 
 ### API Endpoints
 ```
-GET  /api/promotions/current       → Aktif promotion (public, no auth)
-GET  /api/admin/promotions         → Tüm promotions (admin only)
-POST /api/admin/promotions         → Yeni promotion (admin only)
-PUT  /api/admin/promotions         → Güncelle (admin only)
+GET  /api/promotions/current       → Active promotion (public, no auth)
+GET  /api/admin/promotions         → All promotions (admin only)
+POST /api/admin/promotions         → New promotion (admin only)
+PUT  /api/admin/promotions         → Update (admin only)
 ```
 
 ### Pages
 ```
 /admin/promotions                  → Admin panel UI
-/                                  → Dashboard (banner görünür)
-/installments                      → Installments (banner görünür)
+/                                  → Dashboard (banner visible)
+/installments                      → Installments (banner visible)
 ```
 
 ---
 
-## 📂 Dosya Yapısı
+## 📂 File Structure
 
 ```
 lib/
 ├── config/
-│   ├── promotions.ts              ❌ Artık kullanılmıyor (database'e taşındı)
-│   └── PROMOTIONS_README.md       ❌ Eski manuel guide
+│   ├── promotions.ts              ❌ No longer used (moved to database)
+│   └── PROMOTIONS_README.md       ❌ Old manual guide
 ├── db/
 │   └── migrations/
 │       └── create_promotions_table.sql  ✅ Database migration
@@ -129,49 +129,49 @@ components/
 
 ## 🔧 Troubleshooting
 
-### Banner Görünmüyor?
-1. Database migration çalıştı mı?
+### Banner Not Showing?
+1. Did database migration run?
    ```sql
    SELECT * FROM promotions;
    ```
-2. `visible = true` mı?
-3. Browser console'da hata var mı?
+2. Is `visible = true`?
+3. Any errors in browser console?
 
-### Admin Panel Açılmıyor?
-- User role'ü `admin`, `finance` veya `sales_lead` mi?
-- Token geçerli mi?
+### Admin Panel Not Opening?
+- Is user role `admin`, `finance`, or `sales_lead`?
+- Is token valid?
 
-### API 500 Hatası?
-- Database bağlantısı çalışıyor mu?
-- `promotions` tablosu var mı?
+### API 500 Error?
+- Is database connection working?
+- Does `promotions` table exist?
 
 ---
 
-## 🎨 Eski Sistem (Manuel Config) vs Yeni Sistem (Database)
+## 🎨 Old System (Manual Config) vs New System (Database)
 
-### Eski (Manuel)
+### Old (Manual)
 ```typescript
 // lib/config/promotions.ts
 export const currentPromotion = {
   title: 'Black Friday!',
-  message: 'Şov zamanı!',
+  message: 'Showtime!',
   variant: 'promo',
   icon: '🎯',
   visible: true,
 };
 ```
-❌ File edit gerekir
-❌ Code deployment gerekir
-❌ Non-technical admin kullanamaz
+❌ Requires file edit
+❌ Requires code deployment
+❌ Non-technical admins cannot use it
 
-### Yeni (Database + Admin UI)
+### New (Database + Admin UI)
 ```
 Admin Panel → Promotions → Edit → Save
 ```
 ✅ No code change
 ✅ No deployment
-✅ Anında yayınlanır
-✅ Non-technical admin kullanabilir
+✅ Published instantly
+✅ Non-technical admins can use it
 ✅ History tracking
 ✅ Preview
 
@@ -179,10 +179,10 @@ Admin Panel → Promotions → Edit → Save
 
 ## 🚀 Next Steps (Optional Future Features)
 
-- [ ] Promotion history (geçmiş kampanyalar listesi)
-- [ ] Template library (hazır şablonlar)
-- [ ] Schedule (başlangıç/bitiş tarihleri)
-- [ ] Targeting (belirli role'lere göster)
+- [ ] Promotion history (list of past campaigns)
+- [ ] Template library (ready templates)
+- [ ] Schedule (start/end dates)
+- [ ] Targeting (show to specific roles)
 - [ ] A/B testing
 - [ ] Click tracking
 
@@ -190,13 +190,13 @@ Admin Panel → Promotions → Edit → Save
 
 ## 📞 Support
 
-Sorun yaşarsan:
-1. Migration çalıştığından emin ol
-2. Database connection çalışıyor mu kontrol et
-3. Browser console'a bak
-4. API response'ları incele
+If you encounter issues:
+1. Make sure migration ran
+2. Check database connection is working
+3. Look at browser console
+4. Inspect API responses
 
-**Dosya**: `/lib/db/migrations/create_promotions_table.sql`
+**File**: `/lib/db/migrations/create_promotions_table.sql`
 **Admin Panel**: `/admin/promotions`
 **API**: `/api/admin/promotions`
 

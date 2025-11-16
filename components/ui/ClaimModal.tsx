@@ -24,28 +24,28 @@ const claimTypes: Array<{
   {
     value: 'first_sales',
     label: 'First Sales',
-    description: 'Yeni müşteri, sıfırdan kazanılan satış.',
+    description: 'New customer, sale won from scratch.',
     badge: '🆕',
     accentClass: 'ring-emerald-400/60 bg-emerald-500/10 text-emerald-200',
   },
   {
     value: 'remarketing',
     label: 'Remarketing',
-    description: 'İlgisi yeniden yakalanan müşteri.',
+    description: 'Customer re-engaged.',
     badge: '♻️',
     accentClass: 'ring-amber-400/60 bg-amber-500/10 text-amber-200',
   },
   {
     value: 'upgrade',
     label: 'Upgrade',
-    description: 'Paket yükseltmesi veya ek satış.',
+    description: 'Package upgrade or upsell.',
     badge: '⬆️',
     accentClass: 'ring-sky-400/60 bg-sky-500/10 text-sky-200',
   },
   {
     value: 'installment',
     label: 'Installment',
-    description: 'Taksitli veya ödemesi bölünmüş satış.',
+    description: 'Installment or split payment sale.',
     badge: '💳',
     accentClass: 'ring-rose-400/60 bg-rose-500/10 text-rose-200',
   },
@@ -145,7 +145,7 @@ export function ClaimModal({ isOpen, subscriptionId, onClose, onConfirm, token }
                   animate={{ opacity: 1 }}
                   transition={{ delay: 0.2 }}
                 >
-                  Subscription #{subscriptionId}. Claim türünü netle, sonra hold-to-claim ile kilitle.
+                  Subscription #{subscriptionId}. Set the claim type, then lock it with hold-to-claim.
                 </motion.p>
               </div>
 
@@ -209,13 +209,13 @@ export function ClaimModal({ isOpen, subscriptionId, onClose, onConfirm, token }
                 <div className="relative z-10 mt-4 space-y-3 rounded-2xl border border-border/40 bg-surface/40 p-4">
                   {installmentPlan ? (
                     <div className="rounded-lg border border-emerald-500/40 bg-emerald-500/10 px-3 py-2 text-xs text-emerald-200">
-                      Plan #{installmentPlan.planId} oluşturuldu. Finans ekibi takvimi görebilir.
+                      Plan #{installmentPlan.planId} created. Finance team can see the schedule.
                     </div>
                   ) : (
                     <>
-                      <p className="text-sm font-semibold text-foreground">Taksit planı olmadan claim edemezsin.</p>
+                      <p className="text-sm font-semibold text-foreground">Cannot claim without an installment plan.</p>
                       <p className="text-xs text-foreground/60">
-                        Kaç taksit alınacağını ve ödeme planını oluştur, finance ekibine otomatik düşsün.
+                        Create the number of installments and payment plan, it will automatically notify the finance team.
                       </p>
                       <InstallmentPlanBuilder
                         subscriptionId={subscriptionId}

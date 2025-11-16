@@ -1,158 +1,158 @@
-# 📢 Promotion Banner Kullanım Kılavuzu
+# 📢 Promotion Banner Usage Guide
 
-Promotion banner'ı `lib/config/promotions.ts` dosyasından kolayca değiştirebilirsiniz.
+You can easily change the promotion banner from the `lib/config/promotions.ts` file.
 
-## 🚀 Hızlı Başlangıç
+## 🚀 Quick Start
 
-1. `lib/config/promotions.ts` dosyasını aç
-2. `currentPromotion` objesini düzenle
-3. Kaydet - sayfa otomatik refresh olur!
+1. Open `lib/config/promotions.ts` file
+2. Edit the `currentPromotion` object
+3. Save - page auto-refreshes!
 
-## 📝 Parametreler
+## 📝 Parameters
 
-| Parametre | Tür | Açıklama | Örnek |
-|-----------|-----|----------|-------|
-| `title` | string | Başlık (uppercase görünür) | `"Black Friday! 🔥"` |
-| `message` | string | Mesaj metni | `"Şov zamanı! Hızlı karar alın."` |
-| `variant` | select | Renk teması | `"promo"` / `"info"` / `"success"` / `"warning"` |
+| Parameter | Type | Description | Example |
+|-----------|------|-------------|---------|
+| `title` | string | Title (appears in uppercase) | `"Black Friday! 🔥"` |
+| `message` | string | Message text | `"Show time! Make quick decisions."` |
+| `variant` | select | Color theme | `"promo"` / `"info"` / `"success"` / `"warning"` |
 | `icon` | emoji | Emoji icon | `"🎯"` / `"🔥"` / `"✨"` / `"🏆"` |
-| `visible` | boolean | Göster/gizle | `true` / `false` |
+| `visible` | boolean | Show/hide | `true` / `false` |
 
-## 🎨 Renk Temaları (Variants)
+## 🎨 Color Themes (Variants)
 
-### `promo` - Mor/Pembe
-Kampanyalar, özel günler, promosyonlar için.
+### `promo` - Purple/Pink
+For campaigns, special days, promotions.
 ```ts
 variant: 'promo'
 ```
 
-### `success` - Yeşil
-Başarılar, hedef yaklaşımları, pozitif haberler için.
+### `success` - Green
+For achievements, goal approaches, positive news.
 ```ts
 variant: 'success'
 ```
 
-### `info` - Mavi
-Bilgilendirmeler, yeni özellikler, duyurular için.
+### `info` - Blue
+For announcements, new features, updates.
 ```ts
 variant: 'info'
 ```
 
-### `warning` - Turuncu/Sarı
-Dikkat çeken duyurular, bakım bildirimleri için.
+### `warning` - Orange/Yellow
+For attention-grabbing announcements, maintenance notifications.
 ```ts
 variant: 'warning'
 ```
 
-## 📚 Hazır Örnekler
+## 📚 Ready-to-Use Examples
 
 ### Black Friday
 ```ts
 {
-  title: 'Black Friday Başladı! 🔥',
-  message: 'Şov zamanı! Bugün özel indirimler var.',
+  title: 'Black Friday Started! 🔥',
+  message: 'Show time! Special discounts today.',
   variant: 'promo',
   icon: '🎯',
   visible: true,
 }
 ```
 
-### Hedef Yaklaşıyor
+### Goal Approaching
 ```ts
 {
-  title: 'Hedef Yaklaşıyor! 🏆',
-  message: 'Takım hedefine sadece $5K kaldı!',
+  title: 'Goal Approaching! 🏆',
+  message: 'Only $5K left to team goal!',
   variant: 'success',
   icon: '🚀',
   visible: true,
 }
 ```
 
-### Yeni Özellik
+### New Feature
 ```ts
 {
-  title: 'Yeni Özellik ✨',
-  message: 'Taksit sistemi aktif!',
+  title: 'New Feature ✨',
+  message: 'Installment system is now active!',
   variant: 'info',
   icon: '🆕',
   visible: true,
 }
 ```
 
-### Sistem Bakımı
+### System Maintenance
 ```ts
 {
-  title: 'Dikkat! ⚠️',
-  message: 'Saat 18:00\'de bakım olacak.',
+  title: 'Attention! ⚠️',
+  message: 'Maintenance at 6:00 PM.',
   variant: 'warning',
   icon: '🔧',
   visible: true,
 }
 ```
 
-## 🎯 Popüler Emoji'ler
+## 🎯 Popular Emojis
 
-Kampanya/Promo:
-- 🔥 Ateş
-- 🎯 Hedef
-- 💰 Para
-- 🎉 Kutlama
-- 🎁 Hediye
-- ⚡ Şimşek
-- 🚀 Roket
+Campaign/Promo:
+- 🔥 Fire
+- 🎯 Target
+- 💰 Money
+- 🎉 Party
+- 🎁 Gift
+- ⚡ Lightning
+- 🚀 Rocket
 
-Başarı/Hedef:
-- 🏆 Kupa
-- ⭐ Yıldız
-- 💪 Güç
-- 👑 Taç
-- 🥇 Madalya
+Success/Goal:
+- 🏆 Trophy
+- ⭐ Star
+- 💪 Power
+- 👑 Crown
+- 🥇 Medal
 
-Bilgi/Duyuru:
-- ✨ Parıltı
-- 🆕 Yeni
-- 📢 Megafon
-- 💡 Ampul
-- 📣 Duyuru
+Info/Announcement:
+- ✨ Sparkles
+- 🆕 New
+- 📢 Megaphone
+- 💡 Bulb
+- 📣 Announcement
 
-Uyarı/Dikkat:
-- ⚠️ Uyarı
-- 🔧 Bakım
-- ⏰ Saat
-- 🛠️ Araçlar
+Warning/Alert:
+- ⚠️ Warning
+- 🔧 Maintenance
+- ⏰ Clock
+- 🛠️ Tools
 
-## 🎬 Banner'ı Gizleme
+## 🎬 Hiding the Banner
 
-Banner'ı tamamen gizlemek için:
+To completely hide the banner:
 ```ts
 visible: false
 ```
 
-## 💡 İpuçları
+## 💡 Tips
 
-1. **Kısa ve öz mesajlar** kullanın - uzun metinler okunmuyor
-2. **Emoji'yi başlıkta** da kullanabilirsiniz (örn: "Black Friday! 🔥")
-3. **Variant'ı mesaja göre** seçin (kampanya = promo, başarı = success, vs.)
-4. **Test edin** - farklı variant'ları deneyip en iyisini seçin
+1. **Use short and concise messages** - long texts don't get read
+2. **Use emoji in title** too (e.g., "Black Friday! 🔥")
+3. **Choose variant based on message** (campaign = promo, success = success, etc.)
+4. **Test it** - try different variants and pick the best one
 
-## 🔄 Değişiklik Örnekleri
+## 🔄 Change Examples
 
-### Örnek 1: Black Friday → Yılbaşı
+### Example 1: Black Friday → New Year
 ```diff
-- title: 'Black Friday Başladı! 🔥',
-+ title: 'Yılbaşı Kampanyası 🎄',
-- message: 'Şov zamanı! Bugün özel indirimler var.',
-+ message: 'Yeni yıla özel fırsatlar!',
+- title: 'Black Friday Started! 🔥',
++ title: 'New Year Campaign 🎄',
+- message: 'Show time! Special discounts today.',
++ message: 'Special offers for the new year!',
   variant: 'promo',
 - icon: '🎯',
 + icon: '🎅',
   visible: true,
 ```
 
-### Örnek 2: Banner'ı geçici gizle
+### Example 2: Temporarily hide banner
 ```diff
-  title: 'Black Friday Başladı! 🔥',
-  message: 'Şov zamanı!',
+  title: 'Black Friday Started! 🔥',
+  message: 'Show time!',
   variant: 'promo',
   icon: '🎯',
 - visible: true,
@@ -161,4 +161,4 @@ visible: false
 
 ---
 
-**Dosya Konumu:** `/lib/config/promotions.ts`
+**File Location:** `/lib/config/promotions.ts`

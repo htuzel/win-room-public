@@ -1,77 +1,77 @@
-# 📚 Win Room v2.0 - Tam Proje Dokümantasyonu
+# 📚 Win Room v2.0 - Complete Project Documentation
 
-**Versiyon**: 2.0.0
-**Son Güncelleme**: 2025-10-24
-**Sahip**: Product + Engineering
-**Dil**: Türkçe/İngilizce
+**Version**: 2.0.0
+**Last Updated**: 2025-10-24
+**Owner**: Product + Engineering
+**Language**: English
 
 ---
 
-## 📖 İçindekiler
+## 📖 Table of Contents
 
-1. [Proje Özeti](#1-proje-özeti)
-2. [Özellikler](#2-özellikler)
-3. [Teknoloji Yığını](#3-teknoloji-yığını)
-4. [Mimari](#4-mimari)
-5. [Veri Modeli](#5-veri-modeli)
-6. [Yerel Kurulum ve Çalıştırma](#6-yerel-kurulum-ve-çalıştırma)
+1. [Project Summary](#1-project-summary)
+2. [Features](#2-features)
+3. [Technology Stack](#3-technology-stack)
+4. [Architecture](#4-architecture)
+5. [Data Model](#5-data-model)
+6. [Local Setup and Execution](#6-local-setup-and-execution)
 7. [API Endpoints](#7-api-endpoints)
 8. [WebSocket Events](#8-websocket-events)
-9. [Gizlilik ve Güvenlik](#9-gizlilik-ve-güvenlik)
-10. [Hesaplama Kuralları](#10-hesaplama-kuralları)
+9. [Privacy and Security](#9-privacy-and-security)
+10. [Calculation Rules](#10-calculation-rules)
 11. [Deployment](#11-deployment)
 12. [Troubleshooting](#12-troubleshooting)
 
 ---
 
-## 1. Proje Özeti
+## 1. Project Summary
 
-**Win Room v2.0** - Privacy-first (gizlilik-ilk), oyunlaştırılmış, şeffaf ve adil bir satış odası sistemi.
+**Win Room v2.0** - A privacy-first, gamified, transparent, and fair sales room system.
 
-### Ana Amaçlar:
+### Main Objectives:
 
-- ✅ **Gerçek zamanlı satış takibi**: WebSocket ile anlık updates
-- ✅ **Gizlilik-ilk tasarım**: Satışçılar kendi rakamlarını görür, başkalarının sadece sıralamasını
-- ✅ **Claim sistemi**: Zorunlu claim ile kim hangi satışı aldı net
-- ✅ **İtiraz yönetimi**: Satışçılar itiraz raiseable, admins resolve edebilir
-- ✅ **Marj takibi**: Otomatik marj hesaplama
-- ✅ **Hedefler**: Global ve kişisel hedefler tracking
-- ✅ **Jackpot ödülleri**: 30,000 TRY üzeri satışlar için özel event
+- ✅ **Real-time sales tracking**: Instant updates via WebSocket
+- ✅ **Privacy-first design**: Sales users see their own numbers, others see only rankings
+- ✅ **Claim system**: Mandatory claim clarifies who took which sale
+- ✅ **Objection management**: Sales users can raise objections, admins can resolve them
+- ✅ **Margin tracking**: Automatic margin calculation
+- ✅ **Goals**: Global and personal goal tracking
+- ✅ **Jackpot rewards**: Special event for sales over 30,000 TRY
 
 ---
 
-## 2. Özellikler
+## 2. Features
 
-### 2.1 Temel Features
+### 2.1 Core Features
 
-| Feature | Açıklama | Kto Kullanır |
-|---------|----------|-------------|
-| **Queue Management** | Pending satışların live queue'su | Sales Users |
-| **Claim System** | Satış claim etme (first_sales, remarketing, upgrade, installment) | Sales Users |
-| **Installment Management** | Taksit planı oluşturma, ödeme takibi, dondurma/tolerans akışları | Admin + Finance + Sales |
-| **Lead Conversion Tracking** | Pipedrive owner bazlı lead ataması ve conversion rate leaderboard'u | Admin + Sales |
-| **Leaderboards** | Wins ve Margin leaderboards (bar-only) | Sales Users |
-| **Personal Metrics** | Kendi revenue, wins, margin analytics | Sales Users |
-| **Goals Tracking** | Global ve kişisel hedefler progress | Sales Users |
-| **Objections** | Satış itirazı ve admin çözümü | Sales + Admin |
+| Feature | Description | Who Uses It |
+|---------|-------------|-------------|
+| **Queue Management** | Live queue of pending sales | Sales Users |
+| **Claim System** | Claim a sale (first_sales, remarketing, upgrade, installment) | Sales Users |
+| **Installment Management** | Installment plan creation, payment tracking, freeze/tolerance workflows | Admin + Finance + Sales |
+| **Lead Conversion Tracking** | Pipedrive owner-based lead assignment and conversion rate leaderboard | Admin + Sales |
+| **Leaderboards** | Wins and Margin leaderboards (bar-only) | Sales Users |
+| **Personal Metrics** | Own revenue, wins, margin analytics | Sales Users |
+| **Goals Tracking** | Global and personal goals progress | Sales Users |
+| **Objections** | Sale objection and admin resolution | Sales + Admin |
 | **Admin Panel** | Queue exclude, reassign, goal management | Admin Only |
-| **Real-time Updates** | Socket.IO ile live push | All Users |
+| **Real-time Updates** | Live push via Socket.IO | All Users |
 | **Dark Theme** | Professional dark UI | All Users |
 | **Audio/Confetti** | Claim, streak, jackpot celebrations | Sales Users |
 
-### 2.2 Gizlilik Kuralları
+### 2.2 Privacy Rules
 
-- **Sales User**: Kendi satışları (tam rakam), başkaları (bar + rank sadece)
-- **Admin/Finance**: Tüm detaylar (sayılar, yüzdeler, marj)
-- **Global Goals**: Sadece % gösterilir
-- **Personal Goals**: Sadece owner görebilir
+- **Sales User**: Own sales (full numbers), others (bar + rank only)
+- **Admin/Finance**: All details (numbers, percentages, margin)
+- **Global Goals**: Only % is shown
+- **Personal Goals**: Only the owner can see
 
 ---
 
-## 3. Teknoloji Yığını
+## 3. Technology Stack
 
 ### Frontend
-- **Next.js 14** - React 19 ile
+- **Next.js 14** - With React 19
 - **Tailwind CSS 4** - Dark theme
 - **Socket.IO Client** - Real-time connection
 - **Framer Motion** - Smooth animations
@@ -98,7 +98,7 @@
 
 ---
 
-## 4. Mimari
+## 4. Architecture
 
 ### 4.1 System Architecture
 
@@ -137,7 +137,7 @@
 - CORS handling
 
 #### **Poller Worker** (background)
-- Every 2 seconds: subscriptions table'ını poll
+- Every 2 seconds: Polls the subscriptions table
 - Fingerprint-based duplicate detection
 - Metrics calculation (revenue, margin)
 - Event generation
@@ -145,77 +145,77 @@
 
 ---
 
-## 5. Veri Modeli
+## 5. Data Model
 
 ### 5.1 Core Schema (READ-ONLY)
 
 ```
-Dış sistemden senkronize edilmiş:
-- subscriptions     → Satış verileri
-- users            → Kullanıcı profilleri
-- campaigns        → Kampanya bilgileri
-- pipedrive_users  → Pipedrive entegrasyonu
-- custom_settings  → İş ayarları (USD/TRY rate vb)
+Synchronized from external system:
+- subscriptions     → Sales data
+- users            → User profiles
+- campaigns        → Campaign information
+- pipedrive_users  → Pipedrive integration
+- custom_settings  → Business settings (USD/TRY rate, etc)
 ```
 
-### 5.2 WR Schema (READ-WRITE) - Ana Data
+### 5.2 WR Schema (READ-WRITE) - Main Data
 
-#### **wr.queue** - Canlı satış sırası
+#### **wr.queue** - Live sales queue
 ```sql
 id, subscription_id, user_id, status, fingerprint, created_at
 Status: pending, claimed, excluded, expired, refunded
 ```
 
-#### **wr.claims** - Claim kayıtları
+#### **wr.claims** - Claim records
 ```sql
 id, subscription_id, claimed_by, claim_type, claimed_at
 Claim types: first_sales, remarketing, upgrade, installment
 ```
 
-#### **wr.attribution** - Satış atıfı
+#### **wr.attribution** - Sale attribution
 ```sql
 subscription_id, closer_seller_id, resolved_from, resolved_at
 Resolved from: claim, pipedrive_owner, core_sales_person, manual
 ```
 
-#### **wr.sellers** - Satışçı kimlik eşleme
+#### **wr.sellers** - Seller identity mapping
 ```sql
 seller_id, display_name, email, pipedrive_owner_id, is_active
 ```
 
-#### **wr.sales_goals** - Global hedefler
+#### **wr.sales_goals** - Global goals
 ```sql
 id, period_type (day/15d/month), target_type, target_value
 Visibility: admin_only, sales_percent_only
 ```
 
-#### **wr.personal_goals** - Kişisel hedefler
+#### **wr.personal_goals** - Personal goals
 ```sql
 id, seller_id, period_type, target_type, target_value
 Visibility: owner_only (default)
 ```
 
-#### **wr.objections** - İtiraz workflow
+#### **wr.objections** - Objection workflow
 ```sql
 id, subscription_id, raised_by, reason, status, admin_note
 Reasons: wrong_owner, duplicate, refund, other
 Status: pending, accepted, rejected
 ```
 
-#### **wr.subscription_metrics** - Hesaplanan metrikler
+#### **wr.subscription_metrics** - Calculated metrics
 ```sql
 subscription_id, revenue_usd, cost_usd, margin_amount_usd,
 margin_percent, is_jackpot, computed_at
 ```
 
-#### **wr.events** - Event log (Socket broadcast için)
+#### **wr.events** - Event log (for Socket broadcast)
 ```sql
 id, type, subscription_id, actor, payload, created_at
 Types: queue.new, claimed, streak, jackpot, goal.progress,
        queue.excluded, refund.applied, objection.*, ...
 ```
 
-#### **Diğer tablolar**
+#### **Other tables**
 ```
 wr.progress_cache        → Goal progress % cache
 wr.cache_kv              → General purpose KV cache
@@ -226,58 +226,58 @@ wr.streak_state          → Current streak state
 
 ---
 
-## 6. Yerel Kurulum ve Çalıştırma
+## 6. Local Setup and Execution
 
-### 6.1 Ön Koşullar
+### 6.1 Prerequisites
 
 ```
 - Node.js 18+
 - PostgreSQL 14+
 - Git
-- npm veya yarn
+- npm or yarn
 ```
 
-### 6.2 Kurulum Adımları
+### 6.2 Setup Steps
 
-#### Adım 1: Repository Clone
+#### Step 1: Clone Repository
 ```bash
 git clone https://github.com/yourorg/win-room.git
 cd win-room
 npm install
 ```
 
-#### Adım 2: Environment Variables
+#### Step 2: Environment Variables
 ```bash
 cp .env.example .env
-# .env düzenle:
+# Edit .env:
 # DATABASE_URL=postgresql://user:pass@localhost:5432/winroom
 # JWT_SECRET=your-secret-key
 # NODE_ENV=development
 ```
 
-#### Adım 3: Database Setup
+#### Step 3: Database Setup
 ```bash
-# PostgreSQL'e bağlan
+# Connect to PostgreSQL
 psql -U your_user -d your_db
 
-# SQL scripts'leri sırayla çalıştır
+# Run SQL scripts in order
 \i scripts/db/01_create_schema.sql
 \i scripts/db/02_create_tables.sql
 \i scripts/db/03_create_functions.sql
 ```
 
-#### Adım 4: Admin Kullanıcı Oluştur
+#### Step 4: Create Admin User
 ```bash
 # Quick method (development)
 npm run admin:create:quick
-# Oluşturur: admin@winroom.local / admin role
+# Creates: admin@winroom.local / admin role
 
 # Interactive method (production)
 npm run admin:create
-# Seller ID, email, password, role vs. sorar
+# Will ask for: Seller ID, email, password, role, etc.
 ```
 
-#### Adım 5: Test Kullanıcıları Ekle (Opsiyonel)
+#### Step 5: Add Test Users (Optional)
 ```bash
 npm run admin:create
 # seller_id: merve, role: sales
@@ -286,9 +286,9 @@ npm run admin:create
 # seller_id: sait, role: sales
 ```
 
-### 6.3 Development Mode Çalıştırma
+### 6.3 Running Development Mode
 
-**3 ayrı terminal gerekir:**
+**Requires 3 separate terminals:**
 
 ```bash
 # Terminal 1: Next.js App (port 3000)
@@ -301,10 +301,10 @@ npm run dev:socket
 npm run dev:worker
 ```
 
-### 6.4 Production Mode Çalıştırma
+### 6.4 Running Production Mode
 
 ```bash
-# Build önce
+# Build first
 npm run build
 
 # Terminal 1: Next.js
@@ -317,7 +317,7 @@ npm run start:socket
 npm run start:worker
 ```
 
-### 6.5 Test Komutları
+### 6.5 Test Commands
 
 ```bash
 # Type check
@@ -347,7 +347,7 @@ Headers: Authorization: Bearer {token}
 ### 7.2 Sales User Endpoints
 
 #### GET `/api/queue?limit=50`
-Pending satışları getir
+Get pending sales
 ```
 Response: [{
   subscription_id, user_id, tts (time-to-sale),
@@ -356,7 +356,7 @@ Response: [{
 ```
 
 #### POST `/api/claim`
-Satış claim et
+Claim a sale
 ```
 Body: { subscription_id, claimed_by, claim_type }
 claim_type: first_sales | remarketing | upgrade | installment
@@ -365,7 +365,7 @@ Response: { success, claimed_at }
 ```
 
 #### GET `/api/me/metrics?period=today|15d|month`
-Kendi metriklerini getir
+Get own metrics
 ```
 Response: {
   wins, revenue_usd, margin_amount_usd, avg_margin_percent
@@ -373,7 +373,7 @@ Response: {
 ```
 
 #### GET `/api/me/goals`
-Kendi kişisel hedefleri getir
+Get own personal goals
 ```
 Response: [{
   id, target_type, target_value, current_progress, percent
@@ -397,7 +397,7 @@ Response: [{
 ```
 
 #### GET `/api/goals/progress`
-Global hedeflerin progress % getir
+Get global goals progress %
 ```
 Response: [{
   goal_id, target_type, period, percent
@@ -405,7 +405,7 @@ Response: [{
 ```
 
 #### POST `/api/objections`
-Objection oluştur
+Create objection
 ```
 Body: { subscription_id, reason, details }
 reason: wrong_owner | duplicate | refund | other
@@ -416,28 +416,28 @@ Response: { id, status, created_at }
 ### 7.3 Admin Endpoints
 
 #### GET/POST `/api/admin/goals`
-Global hedefler CRUD
+Global goals CRUD
 
 #### GET/POST `/api/admin/personal-goals`
-Kişisel hedefler CRUD
+Personal goals CRUD
 
 #### POST `/api/admin/queue/exclude`
-Satışı exclude et
+Exclude a sale
 ```
 Body: { subscription_id, reason, note }
 ```
 
 #### POST `/api/admin/queue/restore`
-Excluded satışı restore et
+Restore excluded sale
 
 #### POST `/api/admin/reassign`
-Satışı farklı satışçıya atayacak
+Reassign sale to different seller
 ```
 Body: { subscription_id, new_seller_id }
 ```
 
 #### PATCH `/api/admin/objections/:id`
-Objection çöz
+Resolve objection
 ```
 Body: { status, action, admin_note }
 action: reassign | exclude | refund
@@ -446,7 +446,7 @@ Response: { status, resolved_at }
 ```
 
 #### GET `/api/admin/metrics/subscription/:id`
-Detaylı subscription metrikleri
+Detailed subscription metrics
 ```
 Response: {
   subscription_id, revenue_usd, cost_usd, margin_amount_usd,
@@ -470,22 +470,22 @@ const socket = io('http://localhost:3001', {
 
 ### 8.2 Server → Client Events
 
-| Event | Payload | Açıklama |
-|-------|---------|----------|
-| `queue.new` | `{ subscription_id, user_id, margin_percent, suggested_seller }` | Yeni satış queue'ya eklendi |
-| `claimed` | `{ subscription_id, claimed_by, claim_type }` | Satış claim edildi |
-| `streak` | `{ claimer, count }` | 3 üst üste claim (streak) |
-| `jackpot` | `{ subscription_id, claimed_by, revenue_usd }` | 30k+ TRY satış |
-| `goal.progress` | `{ goal_id, percent, target_type }` | Global hedef % güncellendi |
-| `queue.excluded` | `{ subscription_id, reason }` | Satış exclude edildi |
-| `refund.applied` | `{ subscription_id }` | Refund tespit edildi |
-| `objection.created` | `{ objection_id, subscription_id, reason }` | Yeni objection |
-| `objection.resolved` | `{ objection_id, status }` | Objection çözüldü |
+| Event | Payload | Description |
+|-------|---------|-------------|
+| `queue.new` | `{ subscription_id, user_id, margin_percent, suggested_seller }` | New sale added to queue |
+| `claimed` | `{ subscription_id, claimed_by, claim_type }` | Sale claimed |
+| `streak` | `{ claimer, count }` | 3 consecutive claims (streak) |
+| `jackpot` | `{ subscription_id, claimed_by, revenue_usd }` | 30k+ TRY sale |
+| `goal.progress` | `{ goal_id, percent, target_type }` | Global goal % updated |
+| `queue.excluded` | `{ subscription_id, reason }` | Sale excluded |
+| `refund.applied` | `{ subscription_id }` | Refund detected |
+| `objection.created` | `{ objection_id, subscription_id, reason }` | New objection |
+| `objection.resolved` | `{ objection_id, status }` | Objection resolved |
 
 ### 8.3 Client → Server Events
 
 ```typescript
-// Sunucu otomatik broadcast yapar, client genelde listen eder
+// Server automatically broadcasts, client typically listens
 socket.on('queue.new', (data) => {
   console.log('New sale:', data);
 });
@@ -493,37 +493,37 @@ socket.on('queue.new', (data) => {
 
 ---
 
-## 9. Gizlilik ve Güvenlik
+## 9. Privacy and Security
 
-### 9.1 Gizlilik Kuralları
+### 9.1 Privacy Rules
 
-#### Sales User Görünürlüğü
+#### Sales User Visibility
 ```
-KENDİ SATIŞLARI:
+OWN SALES:
 - Revenue (TRY/USD)
 - Wins (count)
 - Margin amount (USD)
 - Margin percent (%)
 
-BAŞKALARIN SATIŞLARI:
-- Rank (sıra)
+OTHERS' SALES:
+- Rank (position)
 - Bar length (normalized 0..1)
 - ❌ NO numbers, percentages
 - ❌ NO revenue details
 - ❌ NO margin data
 ```
 
-#### Admin/Finance Görünürlüğü
+#### Admin/Finance Visibility
 ```
-✅ Tüm metrikler (detaylı)
-✅ Tüm kullanıcılara ait data
-✅ Query param ?detailed=true ile sayılar
+✅ All metrics (detailed)
+✅ All users' data
+✅ Query param ?detailed=true for numbers
 ```
 
-#### Global Goals Görünürlüğü
+#### Global Goals Visibility
 ```
-Sales: Sadece % (0-100)
-Admin: Tam rakamlar ve %)
+Sales: Only % (0-100)
+Admin: Full numbers and %
 ```
 
 ### 9.2 Security Measures
@@ -536,17 +536,17 @@ Admin: Tam rakamlar ve %)
 - **CORS** - Origin whitelist
 - **Input Validation** - All endpoints validate input
 - **SQL Injection Prevention** - Parameterized queries
-- **Logging** - PII ve financial values maskelenir
+- **Logging** - PII and financial values are masked
 
 ---
 
-## 10. Hesaplama Kuralları
+## 10. Calculation Rules
 
-### 10.1 USD/TRY Kuru
+### 10.1 USD/TRY Exchange Rate
 
-**Kaynak**: `custom_settings` tablo → `name='dolar'`
+**Source**: `custom_settings` table → `name='dolar'`
 
-**Cache**: 1 gün (wr.cache_kv)
+**Cache**: 1 day (wr.cache_kv)
 
 ```sql
 select wr_get_usd_try_rate() returns numeric
@@ -562,7 +562,7 @@ IF currency = "TRY" OR "TR" THEN
   revenue_usd = subs_amount / wr_get_usd_try_rate()
 ```
 
-### 10.3 Cost USD (Kampanya maliyeti)
+### 10.3 Cost USD (Campaign cost)
 
 ```
 Lesson price:
@@ -588,12 +588,12 @@ END
 ```
 Threshold: 30,000 TRY
 
-Şartlar:
+Conditions:
 - is_free = 0
-- payment_channel != "Hediye"
+- payment_channel != "Hediye" (Gift)
 - status IN ('paid', 'active')
 
-USD kontrolü: 30000 / wr_get_usd_try_rate()
+USD check: 30000 / wr_get_usd_try_rate()
 ```
 
 ### 10.6 Statistics Date Calculation
@@ -636,18 +636,18 @@ SHA256(
   paypal_sub_id
 )
 
-Aynı fingerprint 24h içinde tekrarsa: EXCLUDE
+If same fingerprint repeats within 24h: EXCLUDE
 ```
 
 ---
 
 ## 11. Deployment
 
-### 11.1 Deployment Yöntemi: DigitalOcean App Platform
+### 11.1 Deployment Method: DigitalOcean App Platform
 
-#### Gereksinimler
+#### Requirements
 - GitHub repo
-- DigitalOcean hesabı
+- DigitalOcean account
 - PostgreSQL database (already setup)
 
 #### 3 Component Deploy
@@ -658,7 +658,7 @@ Aynı fingerprint 24h içinde tekrarsa: EXCLUDE
 | socket-server | Worker | 3001 | `npm run start:socket` |
 | poller-worker | Worker | - | `npm run start:worker` |
 
-#### Deployment Adımları (Özet)
+#### Deployment Steps (Summary)
 
 ```bash
 # 1. Git push
@@ -666,19 +666,19 @@ git add .
 git commit -m "Ready for deployment"
 git push origin main
 
-# 2. App Platform'a git
+# 2. Go to App Platform
 # → Create App
-# → GitHub repo seç
-# → 3 component configure et
-# → Environment variables ekle
+# → Select GitHub repo
+# → Configure 3 components
+# → Add environment variables
 # → Create Resources
 
-# 3. 5-10 dakika bekle
+# 3. Wait 5-10 minutes
 
 # 4. Health check
 curl https://your-app.ondigitalocean.app/api/health
 
-# 5. Database setup (ilk kez)
+# 5. Database setup (first time)
 npm run admin:create
 ```
 
@@ -709,7 +709,7 @@ RATE_LIMIT_CLAIM=10
 NODE_ENV=production
 ```
 
-#### Maliyet Tahmini
+#### Cost Estimate
 
 ```
 Basic instances:
@@ -717,89 +717,89 @@ Basic instances:
   Socket: $5/mo
   Poller: $5/mo
   ────────────
-  TOPLAM: $15/mo
+  TOTAL: $15/mo
 ```
 
-### 11.2 Detaylı Deployment Guide
+### 11.2 Detailed Deployment Guide
 
-Bkz. [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md) - Türkçe
+See [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
 
 ### 11.3 Deployment Checklist
 
-Bkz. [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md) - Türkçe
+See [DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)
 
 ---
 
 ## 12. Troubleshooting
 
-### 12.1 Build Hatası
+### 12.1 Build Error
 
 ```
 Error: Module not found
 
-Çözüm:
+Solution:
 npm install
 npm run build
-# Local'de test et, sonra push
+# Test locally, then push
 ```
 
-### 12.2 Health Check Başarısız
+### 12.2 Health Check Failed
 
 ```
 Error: /api/health not found
 
-Çözüm:
-# app/api/health/route.ts oluştur
+Solution:
+# Create app/api/health/route.ts
 ```
 
-### 12.3 Socket.IO Bağlantı Hatası
+### 12.3 Socket.IO Connection Error
 
 ```
 Error: CORS origin not allowed
 
-Çözüm:
-# SOCKET_CORS_ORIGIN env variable kontrol et
-# services/socket/server.ts'deki CORS config
+Solution:
+# Check SOCKET_CORS_ORIGIN env variable
+# Check CORS config in services/socket/server.ts
 ```
 
-### 12.4 Database Bağlantı Hatası
+### 12.4 Database Connection Error
 
 ```
 Error: connect ECONNREFUSED
 
-Çözüm:
-1. DATABASE_URL doğru mu?
+Solution:
+1. Is DATABASE_URL correct?
 2. Database firewall: Add Trusted Source
-3. SSL mode: ?sslmode=require ekle
+3. SSL mode: Add ?sslmode=require
 ```
 
-### 12.5 Poller Worker Çalışmıyor
+### 12.5 Poller Worker Not Working
 
 ```
-Logs'ta hiç output yok
+No output in logs
 
-Çözüm:
-1. DATABASE_URL kontrol et
-2. POLLER_INTERVAL_MS set edilmiş mi?
-3. Worker component logs kontrol et
+Solution:
+1. Check DATABASE_URL
+2. Is POLLER_INTERVAL_MS set?
+3. Check worker component logs
 ```
 
-### 12.6 Out of Memory Hatası
+### 12.6 Out of Memory Error
 
 ```
 Error: JavaScript heap out of memory
 
-Çözüm:
-1. Instance size büyüt (Professional)
-2. Memory leak debugla
-3. Batch size azalt (POLLER_BATCH_SIZE)
+Solution:
+1. Increase instance size (Professional)
+2. Debug memory leak
+3. Reduce batch size (POLLER_BATCH_SIZE)
 ```
 
 ---
 
-## 📋 Hızlı Referans
+## 📋 Quick Reference
 
-### Dosya Yapısı
+### File Structure
 ```
 win-room/
 ├── app/                    # Next.js app
@@ -820,46 +820,46 @@ win-room/
 ├── package.json
 ├── tsconfig.json
 ├── next.config.js
-└── PROJECT.md             # Bu dosya
+└── PROJECT.md             # This file
 ```
 
-### İmportant Notes
+### Important Notes
 
 ⚠️ **Database Safety**
 - Core schema READ-ONLY
-- Tüm yeni tables `wr` schema'sında
-- SQL'i review et before production çalıştırma
+- All new tables in `wr` schema
+- Review SQL before running in production
 
 ⚠️ **JWT Secret**
-- Production'da değiştir!
-- Strong random string kullan
+- Change in production!
+- Use strong random string
 - Never commit to Git
 
 ⚠️ **Rate Limiting**
 - General: 60 rpm
 - Claim: 10 rpm
-- User-based, IP-based kombine
+- User-based, IP-based combined
 
-### Kontrol Listesi: Production Deploy
+### Checklist: Production Deploy
 
 - [ ] Git repo setup (GitHub)
 - [ ] `.env` → `.gitignore`
 - [ ] Database setup (PostgreSQL)
-- [ ] Migrations çalıştırıldı
-- [ ] Admin user oluşturuldu
-- [ ] `npm run build` başarılı
-- [ ] `npm run lint` temiz
+- [ ] Migrations executed
+- [ ] Admin user created
+- [ ] `npm run build` successful
+- [ ] `npm run lint` clean
 - [ ] Environment variables ready
-- [ ] Health check endpoint var
-- [ ] 3 component configured
+- [ ] Health check endpoint exists
+- [ ] 3 components configured
 - [ ] Trusted sources added
-- [ ] Deploy başladı
+- [ ] Deploy started
 
 ---
 
-## 🤝 Katkıda Bulunma
+## 🤝 Contributing
 
-Kod değişiklikleri TSD.md'deki spesifikasyonlara uymalıdır.
+Code changes must comply with specifications in TSD.md.
 
 ## 📄 License
 
@@ -867,7 +867,7 @@ Private - Internal Use Only
 
 ---
 
-**Daha fazla bilgi için**:
+**For more information**:
 - Technical Details: [TSD.md](./TSD.md)
 - Deployment: [DEPLOYMENT_GUIDE.md](./DEPLOYMENT_GUIDE.md)
 - Quick Deploy: [DEPLOYMENT_QUICK_START.md](./DEPLOYMENT_QUICK_START.md)

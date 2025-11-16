@@ -1,25 +1,25 @@
 # 🚀 Win Room v2.0 - Deployment Quick Start
 
-**5 dakikada deployment!** ⚡
+**Deploy in 5 minutes!** ⚡
 
 ---
 
-## ✅ Ön Kontrol
+## ✅ Pre-Check
 
 ```bash
-# 1. Git repository push edilmiş mi?
+# 1. Is the Git repository pushed?
 git status
 git push origin main
 
-# 2. .env dosyası .gitignore'da mı?
+# 2. Is the .env file in .gitignore?
 cat .gitignore | grep .env
 ```
 
 ---
 
-## 📝 Component Configuration (Özet)
+## 📝 Component Configuration (Summary)
 
-App Platform'da **3 Component** oluştur:
+Create **3 Components** on App Platform:
 
 ### 1️⃣ Web Service
 ```yaml
@@ -29,7 +29,7 @@ Build: npm install && npm run build
 Run: npm start
 Port: 3000
 Route: /
-Size: Basic ($5) veya Professional ($12)
+Size: Basic ($5) or Professional ($12)
 ```
 
 ### 2️⃣ Socket.IO Worker
@@ -50,13 +50,13 @@ Run: npm run start:worker
 Size: Basic ($5)
 ```
 
-**Toplam Maliyet**: $15/ay (Basic) veya $30/ay (Professional)
+**Total Cost**: $15/month (Basic) or $30/month (Professional)
 
 ---
 
 ## 🔐 Environment Variables
 
-**TÜMÜNE EKLE** (tüm componentler için aynı):
+**ADD TO ALL** (same for all components):
 
 ```env
 DATABASE_URL=postgresql://<db_user>:<db_password>@<db_host>:<db_port>/<db_name>?sslmode=require
@@ -78,36 +78,36 @@ NODE_ENV=production
 
 ### Component-Specific Variables:
 
-**Sadece `web` componentine:**
+**Only for `web` component:**
 ```env
 NEXT_PUBLIC_SOCKET_URL=https://your-app-name.ondigitalocean.app
 ```
 
-**Sadece `socket-server` componentine:**
+**Only for `socket-server` component:**
 ```env
 SOCKET_CORS_ORIGIN=https://your-app-name.ondigitalocean.app
 ```
 
-> **Not**: `your-app-name` yerine actual app name'inizi yazın!
+> **Note**: Replace `your-app-name` with your actual app name!
 
 ---
 
 ## 🗄️ Database Setup
 
-### 1. Trusted Sources Ekle
+### 1. Add Trusted Sources
 
 ```
 DigitalOcean → Databases → Settings → Trusted Sources
 → Add Trusted Source → App Platform → Select: win-room
 ```
 
-### 2. WR Schema Oluştur (eğer yoksa)
+### 2. Create WR Schema (if it doesn't exist)
 
 ```bash
-# Lokal'den veya psql ile:
+# From local or via psql:
 psql $DATABASE_URL
 
-# Script'leri sırayla çalıştır:
+# Run scripts in order:
 \i scripts/db/01_create_schema.sql
 \i scripts/db/02_create_tables.sql
 \i scripts/db/03_create_functions.sql
@@ -115,32 +115,32 @@ psql $DATABASE_URL
 
 ---
 
-## 🎯 Deployment Adımları
+## 🎯 Deployment Steps
 
-### Adım 1: Repository Hazırla
+### Step 1: Prepare Repository
 ```bash
 git add .
 git commit -m "Prepare for deployment"
 git push origin main
 ```
 
-### Adım 2: App Platform'a Git
+### Step 2: Go to App Platform
 1. https://cloud.digitalocean.com/apps
 2. **Create App**
-3. GitHub repo seç: `win-room`
+3. Select GitHub repo: `win-room`
 4. Branch: `main`
 5. **Next**
 
-### Adım 3: Components Düzenle
-1. **Edit Plan** → 3 component ekle (yukarıdaki config'e göre)
-2. Environment variables ekle (tümüne)
+### Step 3: Configure Components
+1. **Edit Plan** → Add 3 components (according to config above)
+2. Add environment variables (to all)
 3. **Review** → **Create Resources**
 
-### Adım 4: Deploy Bekle
-- 5-10 dakika sürer
-- **Logs** tab'ından takip et
+### Step 4: Wait for Deployment
+- Takes 5-10 minutes
+- Monitor from **Logs** tab
 
-### Adım 5: Test Et
+### Step 5: Test
 ```bash
 # Health check
 curl https://your-app-name.ondigitalocean.app/api/health
@@ -153,44 +153,44 @@ curl https://your-app-name.ondigitalocean.app/api/health
 
 ## ✅ Post-Deployment Checklist
 
-- [ ] Web app açılıyor mu? → `https://your-app-name.ondigitalocean.app`
-- [ ] Health check çalışıyor mu? → `/api/health`
-- [ ] Socket.IO bağlanıyor mu? → Browser console test
-- [ ] Poller worker logları görünüyor mu? → Logs tab
-- [ ] Database bağlantısı başarılı mı? → Logs kontrol
+- [ ] Is the web app opening? → `https://your-app-name.ondigitalocean.app`
+- [ ] Is health check working? → `/api/health`
+- [ ] Is Socket.IO connecting? → Browser console test
+- [ ] Are poller worker logs visible? → Logs tab
+- [ ] Is database connection successful? → Check logs
 
 ---
 
-## 🐛 Hızlı Troubleshooting
+## 🐛 Quick Troubleshooting
 
-### Build hatası?
+### Build error?
 ```bash
-# Lokal'de test et:
+# Test locally:
 npm install
 npm run build
 
-# Çalışıyorsa:
+# If it works:
 git push origin main
 ```
 
-### Health check başarısız?
-- Health check endpoint oluşturuldu mu? → `app/api/health/route.ts`
+### Health check failing?
+- Is health check endpoint created? → `app/api/health/route.ts`
 
-### Socket.IO bağlanmıyor?
-- CORS origin doğru mu? → Environment variables kontrol
-- Socket server çalışıyor mu? → Logs kontrol
+### Socket.IO not connecting?
+- Is CORS origin correct? → Check environment variables
+- Is socket server running? → Check logs
 
-### Database bağlanamıyor?
-- Trusted sources eklendi mi? → Database settings kontrol
-- Connection string doğru mu? → Environment variables kontrol
+### Cannot connect to database?
+- Are trusted sources added? → Check database settings
+- Is connection string correct? → Check environment variables
 
-### Poller worker çalışmıyor?
-- Logs görünüyor mu? → `poller-worker` component logs
-- Database bağlantısı var mı? → Connection string kontrol
+### Poller worker not working?
+- Are logs visible? → `poller-worker` component logs
+- Is there a database connection? → Check connection string
 
 ---
 
-## 📊 Logs Kontrol
+## 📊 Log Monitoring
 
 ```bash
 # Web component:
@@ -203,74 +203,74 @@ App Platform → Components → socket-server → Runtime Logs
 App Platform → Components → poller-worker → Runtime Logs
 ```
 
-**Beklenen çıktılar:**
+**Expected outputs:**
 - **Web**: `ready - started server on 0.0.0.0:3000`
 - **Socket**: `Server listening on port 3001`
 - **Poller**: `Poller worker started`
 
 ---
 
-## 🔄 Yeniden Deploy
+## 🔄 Redeploy
 
-### Otomatik (önerilen):
+### Automatic (recommended):
 ```bash
 git push origin main
-# App Platform otomatik deploy eder
+# App Platform deploys automatically
 ```
 
-### Manuel:
+### Manual:
 ```
 App Platform → Components → ... → Force Rebuild & Deploy
 ```
 
 ---
 
-## 🌐 Domain Bağlama
+## 🌐 Domain Binding
 
 1. **App Settings** → **Domains** → **Add Domain**
-2. Domain gir: `winroom.yourdomain.com`
-3. CNAME kaydı ekle:
+2. Enter domain: `winroom.yourdomain.com`
+3. Add CNAME record:
    ```
    Type: CNAME
    Name: winroom
    Value: win-room-xxxxx.ondigitalocean.app.
    ```
-4. SSL otomatik oluşur (~10 dk)
+4. SSL is created automatically (~10 min)
 
 ---
 
-## 💰 Maliyet Optimizasyonu
+## 💰 Cost Optimization
 
-**Development için:**
+**For Development:**
 ```
 Web: Basic ($5)
 Socket: Basic ($5)
 Poller: Basic ($5)
 ────────────────
-Total: $15/ay
+Total: $15/month
 ```
 
-**Production için:**
+**For Production:**
 ```
 Web: Professional ($12) x 2 instances
 Socket: Professional ($12)
 Poller: Basic ($5)
 ─────────────────────────────
-Total: $41/ay
+Total: $41/month
 ```
 
-**Auto-scaling ile:**
+**With Auto-scaling:**
 ```
-Web: 1-3 instances (load'a göre)
+Web: 1-3 instances (based on load)
 Socket: 1 instance
 Poller: 1 instance
 ```
 
 ---
 
-## 📞 Yardım Gerekirse
+## 📞 If You Need Help
 
-**Detaylı guide**: `DEPLOYMENT_GUIDE.md`
+**Detailed guide**: `DEPLOYMENT_GUIDE.md`
 
 **DigitalOcean Docs**: https://docs.digitalocean.com/products/app-platform/
 
@@ -280,13 +280,13 @@ Poller: 1 instance
 
 ## 🎉 Done!
 
-Deployment tamamlandı! 🚀
+Deployment complete! 🚀
 
 **App URL**: https://your-app-name.ondigitalocean.app
 
 **Next Steps**:
-1. 🧪 Tüm features'ları test et
-2. 📊 Monitoring setup yap
-3. 🔒 Production JWT secret değiştir
-4. 🌐 Custom domain ekle
-5. 📈 Scaling ayarlarını optimize et
+1. 🧪 Test all features
+2. 📊 Set up monitoring
+3. 🔒 Change production JWT secret
+4. 🌐 Add custom domain
+5. 📈 Optimize scaling settings

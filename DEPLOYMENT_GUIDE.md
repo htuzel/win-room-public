@@ -1,75 +1,75 @@
 # 🚀 Win Room v2.0 - DigitalOcean App Platform Deployment Guide
 
-**Süre**: ~30 dakika
-**Zorluk**: Kolay
-**Maliyet**: ~$12-18/ay
+**Duration**: ~30 minutes
+**Difficulty**: Easy
+**Cost**: ~$12-18/month
 
 ---
 
-## 📋 İçindekiler
+## 📋 Table of Contents
 
-1. [Ön Hazırlık](#1-ön-hazırlık)
-2. [Git Repository Hazırlama](#2-git-repository-hazırlama)
-3. [App Platform'da Yeni App Oluşturma](#3-app-platformda-yeni-app-oluşturma)
-4. [Component Konfigürasyonu](#4-component-konfigürasyonu)
+1. [Prerequisites](#1-prerequisites)
+2. [Preparing Git Repository](#2-preparing-git-repository)
+3. [Creating New App on App Platform](#3-creating-new-app-on-app-platform)
+4. [Component Configuration](#4-component-configuration)
 5. [Environment Variables](#5-environment-variables)
 6. [Deployment](#6-deployment)
-7. [Post-Deployment Kontroller](#7-post-deployment-kontroller)
-8. [Domain Bağlama (Opsiyonel)](#8-domain-bağlama-opsiyonel)
+7. [Post-Deployment Checks](#7-post-deployment-checks)
+8. [Domain Binding (Optional)](#8-domain-binding-optional)
 9. [Troubleshooting](#9-troubleshooting)
 
 ---
 
-## 1. Ön Hazırlık
+## 1. Prerequisites
 
-### 1.1 Gereksinimler Kontrolü
+### 1.1 Requirements Check
 
-- ✅ DigitalOcean hesabı ([kaydol](https://cloud.digitalocean.com/registrations/new))
-- ✅ PostgreSQL veritabanı hazır (zaten var!)
+- ✅ DigitalOcean account ([sign up](https://cloud.digitalocean.com/registrations/new))
+- ✅ PostgreSQL database ready (already available!)
 - ✅ Git repository (GitHub/GitLab)
-- ✅ Proje local'de çalışıyor
+- ✅ Project working locally
 
-### 1.2 Proje Analizi
+### 1.2 Project Analysis
 
-Win Room v2.0 **3 ayrı process** gerektirir:
+Win Room v2.0 requires **3 separate processes**:
 
-| Process | Port | Komut | Açıklama |
-|---------|------|-------|----------|
-| **Next.js App** | 3000 | `npm start` | Web UI ve API endpoints |
+| Process | Port | Command | Description |
+|---------|------|---------|-------------|
+| **Next.js App** | 3000 | `npm start` | Web UI and API endpoints |
 | **Socket.IO Server** | 3001 | `npm run start:socket` | WebSocket real-time updates |
-| **Poller Worker** | - | `npm run start:worker` | Database sync (2sn interval) |
+| **Poller Worker** | - | `npm run start:worker` | Database sync (2s interval) |
 
-> **App Platform Stratejisi**: 3 ayrı "Component" olarak deploy edeceğiz
+> **App Platform Strategy**: We will deploy as 3 separate "Components"
 
 ---
 
-## 2. Git Repository Hazırlama
+## 2. Preparing Git Repository
 
-### 2.1 Eğer repository yoksa oluştur
+### 2.1 Create repository if it doesn't exist
 
 ```bash
-# Terminal'de proje dizininde
+# In project directory in terminal
 cd /Users/admin/Documents/Projects/win-room
 
-# Git init (eğer yoksa)
+# Git init (if not exists)
 git init
 
-# GitHub'da yeni repo oluştur
-# Örnek: https://github.com/kullaniciadin/win-room
+# Create new repo on GitHub
+# Example: https://github.com/yourusername/win-room
 
-# Remote ekle
-git remote add origin https://github.com/kullaniciadin/win-room.git
+# Add remote
+git remote add origin https://github.com/yourusername/win-room.git
 
-# Commit ve push
+# Commit and push
 git add .
 git commit -m "Initial commit for deployment"
 git branch -M main
 git push -u origin main
 ```
 
-### 2.2 `.gitignore` Kontrolü
+### 2.2 `.gitignore` Check
 
-`.gitignore` dosyasında bunların olduğundan emin ol:
+Make sure these are in `.gitignore` file:
 
 ```
 node_modules/
@@ -80,9 +80,9 @@ node_modules/
 .DS_Store
 ```
 
-### 2.3 `package.json` Production Scripts Kontrolü
+### 2.3 `package.json` Production Scripts Check
 
-Zaten mevcut, ama kontrol et:
+Already available, but verify:
 
 ```json
 {
@@ -95,35 +95,35 @@ Zaten mevcut, ama kontrol et:
 }
 ```
 
-✅ Hazır!
+✅ Ready!
 
 ---
 
-## 3. App Platform'da Yeni App Oluşturma
+## 3. Creating New App on App Platform
 
-### 3.1 DigitalOcean'a Giriş
+### 3.1 Login to DigitalOcean
 
-1. [DigitalOcean App Platform](https://cloud.digitalocean.com/apps) sayfasına git
-2. **"Create App"** butonuna tıkla
+1. Go to [DigitalOcean App Platform](https://cloud.digitalocean.com/apps)
+2. Click **"Create App"** button
 
-### 3.2 Repository Bağlama
+### 3.2 Connect Repository
 
-1. **Source**: GitHub seç
-2. **Authorize DigitalOcean** butonuna tıkla (ilk kez ise)
-3. Repository'ni seç: `kullaniciadin/win-room`
-4. **Branch**: `main` seç
-5. **Autodeploy**: ✅ aktif bırak (her push'ta otomatik deploy)
-6. **Next** butonuna tıkla
+1. **Source**: Select GitHub
+2. Click **Authorize DigitalOcean** button (if first time)
+3. Select your repository: `yourusername/win-room`
+4. **Branch**: Select `main`
+5. **Autodeploy**: ✅ Keep active (auto deploy on every push)
+6. Click **Next** button
 
 ---
 
-## 4. Component Konfigürasyonu
+## 4. Component Configuration
 
-App Platform otomatik algılama yapacak. **3 Component manuel ekleyeceğiz**:
+App Platform will auto-detect. **We will manually add 3 Components**:
 
 ### 4.1 Component 1: Next.js Web Service
 
-**Edit Plan** butonuna tıkla, sonra:
+Click **Edit Plan** button, then:
 
 #### Component Settings:
 - **Component Name**: `web`
@@ -139,14 +139,14 @@ App Platform otomatik algılama yapacak. **3 Component manuel ekleyeceğiz**:
   ```
 - **HTTP Port**: `3000`
 - **HTTP Route**: `/`
-- **Instance Size**: `Basic ($5/mo)` veya `Professional ($12/mo)`
+- **Instance Size**: `Basic ($5/mo)` or `Professional ($12/mo)`
 - **Instance Count**: `1`
 
 #### Health Check:
-- **Path**: `/api/health` (bunu oluşturacağız)
+- **Path**: `/api/health` (we will create this)
 - **Initial Delay**: `30 seconds`
 
-**Save** butonuna tıkla.
+Click **Save** button.
 
 ---
 
@@ -169,9 +169,9 @@ App Platform otomatik algılama yapacak. **3 Component manuel ekleyeceğiz**:
 - **Instance Size**: `Basic ($5/mo)`
 - **Instance Count**: `1`
 
-> **ÖNEMLİ**: Worker type seçiyoruz çünkü HTTP route gerektirmiyor, ama port 3001'i dinleyecek
+> **IMPORTANT**: We're selecting Worker type because it doesn't require HTTP route, but will listen on port 3001
 
-**Save** butonuna tıkla.
+Click **Save** button.
 
 ---
 
@@ -194,17 +194,17 @@ App Platform otomatik algılama yapacak. **3 Component manuel ekleyeceğiz**:
 - **Instance Size**: `Basic ($5/mo)`
 - **Instance Count**: `1`
 
-**Save** butonuna tıkla.
+Click **Save** button.
 
 ---
 
 ## 5. Environment Variables
 
-### 5.1 Environment Variables Ekleme
+### 5.1 Adding Environment Variables
 
-**App Settings** → **Environment Variables** bölümüne git.
+Go to **App Settings** → **Environment Variables** section.
 
-**TÜMÜNE EKLE** (her 3 component için):
+**ADD TO ALL** (for all 3 components):
 
 ```env
 # Database Configuration (copy from DigitalOcean connection details)
@@ -237,27 +237,27 @@ RATE_LIMIT_CLAIM=10
 NODE_ENV=production
 ```
 
-### 5.2 Socket.IO URL (Component'e özel)
+### 5.2 Socket.IO URL (Component-specific)
 
-**Sadece `web` component'ine** ekle:
+Add **only to `web` component**:
 
 ```env
 NEXT_PUBLIC_SOCKET_URL=${socket-server.PRIVATE_URL}
 ```
 
-> **Açıklama**: `${socket-server.PRIVATE_URL}` App Platform'un internal networking'ini kullanır. Socket server'a doğrudan erişim sağlar.
+> **Explanation**: `${socket-server.PRIVATE_URL}` uses App Platform's internal networking. Provides direct access to socket server.
 
-**VEYA** daha basit (public URL):
+**OR** simpler (public URL):
 
 ```env
 NEXT_PUBLIC_SOCKET_URL=https://your-app-name.ondigitalocean.app
 ```
 
-> **Not**: Public URL kullanırsan socket server için HTTP route eklemen gerekir
+> **Note**: If you use public URL, you need to add HTTP route for socket server
 
-### 5.3 CORS Ayarı (Component'e özel)
+### 5.3 CORS Setting (Component-specific)
 
-**Sadece `socket-server` component'ine** ekle:
+Add **only to `socket-server` component**:
 
 ```env
 SOCKET_CORS_ORIGIN=${web.PUBLIC_URL}
@@ -267,27 +267,27 @@ SOCKET_CORS_ORIGIN=${web.PUBLIC_URL}
 
 ## 6. Deployment
 
-### 6.1 İlk Deployment
+### 6.1 Initial Deployment
 
-1. **Review** butonuna tıkla
-2. Tüm ayarları kontrol et:
-   - ✅ 3 component görünüyor
-   - ✅ Environment variables eklenmiş
-   - ✅ Build ve run commands doğru
-3. **Create Resources** butonuna tıkla
+1. Click **Review** button
+2. Check all settings:
+   - ✅ 3 components visible
+   - ✅ Environment variables added
+   - ✅ Build and run commands correct
+3. Click **Create Resources** button
 
-### 6.2 Deployment Süreci
+### 6.2 Deployment Process
 
-**Deployment yaklaşık 5-10 dakika sürer**:
+**Deployment takes approximately 5-10 minutes**:
 
 1. ✅ Building... (npm install + build)
-2. ✅ Deploying... (containers oluşturuluyor)
+2. ✅ Deploying... (creating containers)
 3. ✅ Running health checks...
 4. ✅ Live!
 
-**Logs** tab'ından real-time takip edebilirsin.
+You can follow real-time from **Logs** tab.
 
-### 6.3 Beklenen Log Çıktıları
+### 6.3 Expected Log Outputs
 
 #### Web Component:
 ```
@@ -310,11 +310,11 @@ Connecting to database...
 
 ---
 
-## 7. Post-Deployment Kontroller
+## 7. Post-Deployment Checks
 
-### 7.1 Health Check Endpoint Oluştur
+### 7.1 Create Health Check Endpoint
 
-Local'de bu dosyayı oluştur:
+Create this file locally:
 
 **`app/api/health/route.ts`**:
 
@@ -329,7 +329,7 @@ export async function GET() {
 }
 ```
 
-Push et:
+Push it:
 
 ```bash
 git add app/api/health/route.ts
@@ -337,19 +337,19 @@ git commit -m "Add health check endpoint"
 git push
 ```
 
-App Platform **otomatik yeniden deploy** edecek.
+App Platform will **automatically redeploy**.
 
-### 7.2 App URL'i Al
+### 7.2 Get App URL
 
-Deployment tamamlandıktan sonra:
+After deployment completes:
 
 1. **App Platform** → **Settings** → **Domains**
-2. Default URL'i kopyala:
+2. Copy default URL:
    ```
    https://win-room-xxxxx.ondigitalocean.app
    ```
 
-### 7.3 Manuel Test
+### 7.3 Manual Test
 
 #### Test 1: Web UI
 ```bash
@@ -368,71 +368,71 @@ socket.on('disconnect', () => console.log('Disconnected!'));
 
 #### Test 3: Database Connection
 ```bash
-# App Platform logs'tan kontrol et
+# Check from App Platform logs
 # Component: poller-worker
 # Log: "Connected to database successfully"
 ```
 
 ---
 
-## 8. Domain Bağlama (Opsiyonel)
+## 8. Domain Binding (Optional)
 
-### 8.1 Custom Domain Ekle
+### 8.1 Add Custom Domain
 
 1. **App Platform** → **Settings** → **Domains**
-2. **Add Domain** butonuna tıkla
-3. Domain'i gir: `winroom.yourdomain.com`
-4. DigitalOcean'ın verdiği **CNAME** kaydını domain provider'ına ekle:
+2. Click **Add Domain** button
+3. Enter domain: `winroom.yourdomain.com`
+4. Add the **CNAME** record provided by DigitalOcean to your domain provider:
    ```
    Type: CNAME
    Name: winroom
    Value: win-room-xxxxx.ondigitalocean.app.
    ```
-5. DNS propagation bekle (~10-60 dakika)
-6. DigitalOcean otomatik SSL sertifikası oluşturur
+5. Wait for DNS propagation (~10-60 minutes)
+6. DigitalOcean will automatically create SSL certificate
 
 ---
 
 ## 9. Troubleshooting
 
-### 9.1 "Build Failed" Hatası
+### 9.1 "Build Failed" Error
 
-**Logs kontrolü**:
+**Check logs**:
 ```
 Component: web
 Error: Module not found: Can't resolve 'xyz'
 ```
 
-**Çözüm**:
+**Solution**:
 ```bash
-# Local'de test et
+# Test locally
 npm install
 npm run build
 
-# Sorun yoksa push et
+# If no issues, push
 git push
 ```
 
 ---
 
-### 9.2 "Health Check Failed" Hatası
+### 9.2 "Health Check Failed" Error
 
-**Sebep**: `/api/health` endpoint yok
+**Reason**: `/api/health` endpoint doesn't exist
 
-**Çözüm**: Yukarıdaki 7.1'i uygula
+**Solution**: Apply 7.1 above
 
 ---
 
-### 9.3 Socket.IO Bağlantı Hatası
+### 9.3 Socket.IO Connection Error
 
-**Logs kontrolü**:
+**Check logs**:
 ```
 Component: socket-server
 Error: CORS origin not allowed
 ```
 
-**Çözüm**:
-1. `services/socket/server.ts` dosyasında CORS ayarını kontrol et:
+**Solution**:
+1. Check CORS setting in `services/socket/server.ts` file:
    ```typescript
    const io = new Server(server, {
      cors: {
@@ -442,110 +442,110 @@ Error: CORS origin not allowed
    });
    ```
 
-2. Environment variable'ı doğru ayarla (bkz. 5.3)
+2. Set environment variable correctly (see 5.3)
 
 ---
 
-### 9.4 Database Bağlantı Hatası
+### 9.4 Database Connection Error
 
-**Logs kontrolü**:
+**Check logs**:
 ```
 Error: connect ECONNREFUSED
 ```
 
-**Sebep**: Database firewall kuralları
+**Reason**: Database firewall rules
 
-**Çözüm**:
+**Solution**:
 1. **DigitalOcean** → **Databases** → **Settings** → **Trusted Sources**
 2. **Add Trusted Source** → **App Platform**
-3. App'ini seç: `win-room`
+3. Select your app: `win-room`
 4. Save
 
-> App Platform otomatik IP range'ini ekler
+> App Platform automatically adds its IP range
 
 ---
 
-### 9.5 Poller Worker Çalışmıyor
+### 9.5 Poller Worker Not Running
 
-**Logs kontrolü**:
+**Check logs**:
 ```
 Component: poller-worker
 No logs appear
 ```
 
-**Çözüm**:
-1. `services/poller/worker.ts` dosyasında `console.log` ekle:
+**Solution**:
+1. Add `console.log` in `services/poller/worker.ts` file:
    ```typescript
    console.log('Poller worker started at:', new Date().toISOString());
    ```
 
-2. Environment variables kontrol et:
-   - `DATABASE_URL` doğru mu?
-   - `POLLER_INTERVAL_MS` ayarlanmış mı?
+2. Check environment variables:
+   - Is `DATABASE_URL` correct?
+   - Is `POLLER_INTERVAL_MS` set?
 
 ---
 
-### 9.6 "Out of Memory" Hatası
+### 9.6 "Out of Memory" Error
 
-**Çözüm**: Instance size'ı büyüt
+**Solution**: Increase instance size
 
-1. **App Settings** → **Components** → **web** (veya sorunlu component)
-2. **Instance Size**: `Professional ($12/mo)` seç
-3. Save ve redeploy
+1. **App Settings** → **Components** → **web** (or problematic component)
+2. **Instance Size**: Select `Professional ($12/mo)`
+3. Save and redeploy
 
 ---
 
-## 10. Monitoring ve Scaling
+## 10. Monitoring and Scaling
 
 ### 10.1 App Platform Metrics
 
-**Insights** tab'ından şunları izle:
+Monitor these from **Insights** tab:
 - CPU usage
 - Memory usage
 - Request rate
 - Response time
 
-### 10.2 Alerts Kurma
+### 10.2 Setting Up Alerts
 
 1. **Settings** → **Alerts**
 2. **Create Alert**
-3. Metrik seç (örn. "CPU > 80%")
-4. Email/Slack webhook ekle
+3. Select metric (e.g., "CPU > 80%")
+4. Add Email/Slack webhook
 
 ### 10.3 Auto-scaling
 
-**Professional plan** ile:
+With **Professional plan**:
 1. **Components** → **web** → **Scaling**
-2. **Auto-scaling**: Aktif et
+2. **Auto-scaling**: Enable
 3. **Min instances**: 1
 4. **Max instances**: 3
 5. **CPU threshold**: 70%
 
 ---
 
-## 11. Maliyetler
+## 11. Costs
 
-| Component | Instance Size | Maliyet/ay |
+| Component | Instance Size | Cost/month |
 |-----------|---------------|------------|
 | Web | Basic | $5 |
 | Socket Server | Basic | $5 |
 | Poller Worker | Basic | $5 |
-| **TOPLAM** | | **$15/ay** |
+| **TOTAL** | | **$15/month** |
 
-> **Professional** instance kullanırsan: $12 x 3 = **$36/ay**
+> If using **Professional** instances: $12 x 3 = **$36/month**
 
 ---
 
-## 12. Sonraki Adımlar
+## 12. Next Steps
 
-✅ **Deployment tamamlandı!**
+✅ **Deployment complete!**
 
-Şimdi:
-1. 🧪 **Test et**: Tüm features çalışıyor mu?
-2. 📊 **Monitoring**: Metrics ve logs takip et
-3. 🔒 **Güvenlik**: JWT secrets production'a özel değiştir
-4. 🌐 **Domain**: Custom domain ekle
-5. 📈 **Scaling**: Trafiğe göre instance sayısını ayarla
+Now:
+1. 🧪 **Test**: Are all features working?
+2. 📊 **Monitoring**: Track metrics and logs
+3. 🔒 **Security**: Change JWT secrets specific to production
+4. 🌐 **Domain**: Add custom domain
+5. 📈 **Scaling**: Adjust instance count based on traffic
 
 ---
 
@@ -553,15 +553,15 @@ No logs appear
 
 ### 12.1 Create Admin User
 
-Deployment tamamlandıktan sonra **ilk admin kullanıcınızı** oluşturun:
+After deployment completes, create **your first admin user**:
 
-#### Method 1: Local'den Remote Database'e
+#### Method 1: From Local to Remote Database
 
 ```bash
-# 1. Production database URL'ini DigitalOcean panelinden kopyala
+# 1. Copy production database URL from DigitalOcean panel
 export DATABASE_URL="postgresql://<db_user>:<db_password>@<db_host>:<db_port>/<db_name>?sslmode=require"
 
-# 2. Admin oluştur
+# 2. Create admin
 npm run admin:create
 
 # Seller ID: admin
@@ -579,7 +579,7 @@ npm run admin:create
 4. Paste SQL:
 
 ```sql
--- Önce password hash oluştur (local'de)
+-- First create password hash (locally)
 -- node scripts/hash-password.js YourStrongPassword123
 
 INSERT INTO wr.sellers (
@@ -593,7 +593,7 @@ INSERT INTO wr.sellers (
   'admin',
   'Admin User',
   'admin@yourcompany.com',
-  '$2a$10$[HASH_BURAYA]',
+  '$2a$10$[HASH_HERE]',
   'admin',
   true
 );
@@ -604,7 +604,7 @@ INSERT INTO wr.sellers (
 ```bash
 # App Platform → Components → web → Console
 
-# Console'da:
+# In console:
 cd /workspace
 npm run admin:create:quick
 ```
@@ -635,7 +635,7 @@ Expected response:
 
 ### 12.3 Add Sales Users
 
-Aynı şekilde sales users ekle:
+Add sales users the same way:
 
 ```bash
 npm run admin:create
@@ -645,68 +645,68 @@ npm run admin:create
 # seller_id: sait, role: sales
 ```
 
-**Detaylı guide**: [`scripts/ADMIN_SETUP.md`](./scripts/ADMIN_SETUP.md)
+**Detailed guide**: [`scripts/ADMIN_SETUP.md`](./scripts/ADMIN_SETUP.md)
 
 ---
 
-## 13. Faydalı Komutlar
+## 13. Useful Commands
 
-### Logs İzleme
+### Monitoring Logs
 
 ```bash
-# CLI ile (DigitalOcean CLI gerektirir)
+# Via CLI (requires DigitalOcean CLI)
 doctl apps logs <app-id> --type run --follow
 
-# Veya web interface:
-# App Platform → Logs → Component seç → Tail Logs
+# Or web interface:
+# App Platform → Logs → Select component → Tail Logs
 ```
 
-### Yeniden Deploy
+### Redeploy
 
 ```bash
-# Git push ile otomatik
+# Automatic with git push
 git push origin main
 
-# Manuel (App Platform UI)
+# Manual (App Platform UI)
 # Components → ... → Force Rebuild & Deploy
 ```
 
-### Environment Variables Güncelleme
+### Updating Environment Variables
 
 ```bash
-# UI'dan:
+# From UI:
 # App Settings → Environment Variables → Edit → Save
 
-# CLI ile:
+# Via CLI:
 doctl apps update <app-id> --spec spec.yaml
 ```
 
 ---
 
-## 📞 Yardım
+## 📞 Help
 
-Sorun yaşarsan:
-1. **Logs** kontrol et (her component için ayrı ayrı)
-2. **Health checks** çalışıyor mu?
-3. **Database connection** ayakta mı?
-4. **Environment variables** doğru mu?
+If you encounter issues:
+1. **Check logs** (separately for each component)
+2. Are **health checks** working?
+3. Is **database connection** up?
+4. Are **environment variables** correct?
 
-**DigitalOcean Destek**: https://cloud.digitalocean.com/support
+**DigitalOcean Support**: https://cloud.digitalocean.com/support
 
 ---
 
 ## ✅ Checklist
 
-Deployment öncesi kontrol listesi:
+Pre-deployment checklist:
 
-- [ ] Git repository hazır
-- [ ] `.env` dosyası `.gitignore`'da
-- [ ] PostgreSQL database hazır ve erişilebilir
-- [ ] `package.json` scripts doğru
-- [ ] Health check endpoint oluşturuldu
-- [ ] Environment variables hazır
-- [ ] 3 component ayarlandı (web, socket, poller)
-- [ ] CORS ayarları yapıldı
-- [ ] Database trusted sources eklendi
+- [ ] Git repository ready
+- [ ] `.env` file in `.gitignore`
+- [ ] PostgreSQL database ready and accessible
+- [ ] `package.json` scripts correct
+- [ ] Health check endpoint created
+- [ ] Environment variables ready
+- [ ] 3 components configured (web, socket, poller)
+- [ ] CORS settings configured
+- [ ] Database trusted sources added
 
-**Hepsini yaptıysan, deployment'a hazırsın! 🚀**
+**If you've done all of these, you're ready for deployment! 🚀**

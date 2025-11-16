@@ -83,25 +83,25 @@ export default function AdminPromotionsPage() {
       });
 
       if (res.ok) {
-        alert('Promotion kaydedildi!');
+        alert('Promotion saved!');
         fetchCurrentPromotion();
       } else {
         const error = await res.json();
-        alert(error.error || 'Hata oluştu');
+        alert(error.error || 'An error occurred');
       }
     } catch (error) {
       console.error('Save promotion error:', error);
-      alert('Hata oluştu');
+      alert('An error occurred');
     } finally {
       setSaving(false);
     }
   };
 
   const variantOptions: { value: Variant; label: string; emoji: string }[] = [
-    { value: 'promo', label: 'Promo (Mor/Pembe)', emoji: '🎀' },
-    { value: 'success', label: 'Success (Yeşil)', emoji: '💚' },
-    { value: 'info', label: 'Info (Mavi)', emoji: '💙' },
-    { value: 'warning', label: 'Warning (Turuncu)', emoji: '🧡' },
+    { value: 'promo', label: 'Promo (Purple/Pink)', emoji: '🎀' },
+    { value: 'success', label: 'Success (Green)', emoji: '💚' },
+    { value: 'info', label: 'Info (Blue)', emoji: '💙' },
+    { value: 'warning', label: 'Warning (Orange)', emoji: '🧡' },
   ];
 
   const popularIcons = ['🎯', '🔥', '✨', '🏆', '💰', '🎉', '🎁', '⚡', '🚀', '⭐', '💪', '👑', '🥇', '🆕', '📢', '💡', '⚠️', '🔧', '⏰', '🎄', '🎅'];
@@ -123,7 +123,7 @@ export default function AdminPromotionsPage() {
             />
             <div>
               <h1 className="text-3xl font-bold text-foreground mb-1">📢 Promotion Banner</h1>
-              <p className="text-sm text-foreground/60">Kampanya ve duyuru banner'ını buradan yönetin</p>
+              <p className="text-sm text-foreground/60">Manage campaign and announcement banners from here</p>
             </div>
           </div>
           <button
@@ -137,19 +137,19 @@ export default function AdminPromotionsPage() {
         <div className="grid gap-6 lg:grid-cols-2">
           {/* Form */}
           <div className="rounded-3xl border border-border/60 bg-surface/70 p-6 shadow-[0_24px_45px_rgba(0,0,0,0.25)]">
-            <h2 className="text-xl font-bold text-foreground mb-6">Banner Ayarları</h2>
+            <h2 className="text-xl font-bold text-foreground mb-6">Banner Settings</h2>
 
             <form onSubmit={handleSubmit} className="space-y-5">
               {/* Title */}
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-2">
-                  Başlık *
+                  Title *
                 </label>
                 <input
                   type="text"
                   value={form.title}
                   onChange={(e) => setForm({ ...form, title: e.target.value })}
-                  placeholder="Örn: Black Friday Başladı! 🔥"
+                  placeholder="E.g: Black Friday Started! 🔥"
                   className="w-full rounded-lg border border-border/60 bg-background/50 px-4 py-3 text-foreground placeholder:text-foreground/40 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   required
                 />
@@ -158,12 +158,12 @@ export default function AdminPromotionsPage() {
               {/* Message */}
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-2">
-                  Mesaj *
+                  Message *
                 </label>
                 <textarea
                   value={form.message}
                   onChange={(e) => setForm({ ...form, message: e.target.value })}
-                  placeholder="Örn: Şov zamanı! Bugün özel indirimler var."
+                  placeholder="E.g: Show time! Special discounts today."
                   rows={3}
                   className="w-full rounded-lg border border-border/60 bg-background/50 px-4 py-3 text-foreground placeholder:text-foreground/40 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   required
@@ -173,7 +173,7 @@ export default function AdminPromotionsPage() {
               {/* Variant */}
               <div>
                 <label className="block text-sm font-semibold text-foreground mb-2">
-                  Tema (Renk) *
+                  Theme (Color) *
                 </label>
                 <select
                   value={form.variant}
@@ -197,7 +197,7 @@ export default function AdminPromotionsPage() {
                   type="text"
                   value={form.icon}
                   onChange={(e) => setForm({ ...form, icon: e.target.value })}
-                  placeholder="Örn: 🎯"
+                  placeholder="E.g: 🎯"
                   maxLength={10}
                   className="w-full rounded-lg border border-border/60 bg-background/50 px-4 py-3 text-foreground placeholder:text-foreground/40 focus:border-accent focus:outline-none focus:ring-2 focus:ring-accent/20"
                   required
@@ -228,7 +228,7 @@ export default function AdminPromotionsPage() {
                   className="h-5 w-5 rounded border-border/60 bg-background/50 text-accent focus:ring-2 focus:ring-accent/20"
                 />
                 <label htmlFor="visible" className="text-sm font-semibold text-foreground cursor-pointer">
-                  Banner'ı göster (aktif)
+                  Show banner (active)
                 </label>
               </div>
 
@@ -238,39 +238,39 @@ export default function AdminPromotionsPage() {
                 disabled={saving}
                 className="w-full rounded-lg bg-accent px-6 py-3 font-semibold text-black hover:bg-accent-hover transition-colors disabled:opacity-50"
               >
-                {saving ? 'Kaydediliyor...' : 'Kaydet ve Yayınla'}
+                {saving ? 'Saving...' : 'Save and Publish'}
               </button>
             </form>
           </div>
 
           {/* Preview */}
           <div className="rounded-3xl border border-border/60 bg-surface/70 p-6 shadow-[0_24px_45px_rgba(0,0,0,0.25)]">
-            <h2 className="text-xl font-bold text-foreground mb-6">Önizleme</h2>
+            <h2 className="text-xl font-bold text-foreground mb-6">Preview</h2>
             <div className="space-y-4">
-              <p className="text-sm text-foreground/60">Banner şu şekilde görünecek:</p>
+              <p className="text-sm text-foreground/60">The banner will look like this:</p>
               <PromotionBanner
-                title={form.title || 'Başlık buraya gelecek'}
-                message={form.message || 'Mesaj buraya gelecek'}
+                title={form.title || 'Title goes here'}
+                message={form.message || 'Message goes here'}
                 variant={form.variant}
                 icon={form.icon || '🎯'}
                 visible={true}
               />
               {!form.visible && (
                 <div className="rounded-lg border border-amber-400/40 bg-amber-500/10 px-4 py-3 text-sm text-amber-200">
-                  ⚠️ Banner şu anda gizli (aktif değil). Kullanıcılara gösterilmeyecek.
+                  ⚠️ Banner is currently hidden (inactive). It will not be shown to users.
                 </div>
               )}
             </div>
 
             <div className="mt-6 rounded-lg border border-border/40 bg-background/30 p-4">
-              <h3 className="text-sm font-semibold text-foreground mb-3">💡 İpuçları</h3>
+              <h3 className="text-sm font-semibold text-foreground mb-3">💡 Tips</h3>
               <ul className="space-y-2 text-xs text-foreground/70">
-                <li>• <strong>Başlık</strong>: Kısa ve çarpıcı olmalı (max 50 karakter)</li>
-                <li>• <strong>Mesaj</strong>: Net ve anlaşılır (max 150 karakter)</li>
-                <li>• <strong>Promo</strong>: Kampanyalar için (mor/pembe)</li>
-                <li>• <strong>Success</strong>: Başarılar için (yeşil)</li>
-                <li>• <strong>Info</strong>: Bilgilendirmeler için (mavi)</li>
-                <li>• <strong>Warning</strong>: Uyarılar için (turuncu)</li>
+                <li>• <strong>Title</strong>: Should be short and catchy (max 50 characters)</li>
+                <li>• <strong>Message</strong>: Clear and understandable (max 150 characters)</li>
+                <li>• <strong>Promo</strong>: For campaigns (purple/pink)</li>
+                <li>• <strong>Success</strong>: For achievements (green)</li>
+                <li>• <strong>Info</strong>: For announcements (blue)</li>
+                <li>• <strong>Warning</strong>: For warnings (orange)</li>
               </ul>
             </div>
           </div>

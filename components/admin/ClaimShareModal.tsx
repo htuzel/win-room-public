@@ -99,7 +99,7 @@ export function ClaimShareModal({
       })
       .catch((err) => {
         console.error('Share modal seller fetch failed:', err);
-        setError('Satıcı listesi alınamadı. Yine de manuel ID girerek kaydedebilirsin.');
+        setError('Failed to load sellers list. You can still save by entering manual ID.');
       })
       .finally(() => setLoadingSellers(false));
   }, [isOpen, token, sellers.length]);
@@ -184,14 +184,14 @@ export function ClaimShareModal({
 
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
-        throw new Error(body.error || 'Paylaşım güncellenemedi');
+        throw new Error(body.error || 'Failed to update share');
       }
 
       onSuccess?.();
       onClose();
     } catch (err) {
       console.error('Share update failed:', err);
-      setError(err instanceof Error ? err.message : 'Bilinmeyen bir hata oluştu');
+      setError(err instanceof Error ? err.message : 'An unknown error occurred');
     } finally {
       setSaving(false);
     }
@@ -217,7 +217,7 @@ export function ClaimShareModal({
             Subscription #{claim.subscription_id}
           </h3>
           <p className="mt-1 text-sm text-foreground/60">
-            Closer ve assisted satıcı arasında kazanımı böl.
+            Split revenue between closer and assisted seller.
           </p>
         </header>
 
@@ -349,7 +349,7 @@ export function ClaimShareModal({
           >
             <span>Total</span>
             <span className="font-mono text-sm">{totalPercent.toFixed(2)}%</span>
-            <span>{isBalanced ? '✓ Balanced' : '⚠ 100% olmalı'}</span>
+            <span>{isBalanced ? '✓ Balanced' : '⚠ Must be 100%'}</span>
           </div>
 
           <div className="flex items-center justify-end gap-3 pt-2">
@@ -386,7 +386,7 @@ export function ClaimShareModal({
         </form>
 
         <p className="mt-4 text-xs text-foreground/40">
-          Not: Paylar toplamı 100% olmalıdır. Assisted seller boş bırakılırsa tüm kredi closer kişisine verilir.
+          Note: Shares must total 100%. If assisted seller is left empty, all credit goes to the closer.
         </p>
       </div>
     </div>

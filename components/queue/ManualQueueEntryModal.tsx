@@ -45,7 +45,7 @@ const PAYMENT_CHANNELS = [
   { value: 'wise', label: 'Wise' },
   { value: 'stripe', label: 'Stripe' },
   { value: 'paypal', label: 'Paypal' },
-  { value: 'other', label: 'Other (Manuel Giriş)' },
+  { value: 'other', label: 'Other (Manual Entry)' },
 ];
 
 const CURRENCIES = [
@@ -237,7 +237,7 @@ export function ManualQueueEntryModal({
           <div>
             <h2 className="text-2xl font-bold text-foreground">Manual Queue Entry</h2>
             <p className="text-sm text-foreground/60 mt-1">
-              Tüm alanları detaylı doldur. Bu giriş sistem tarafından <span className="font-semibold text-accent">MANUEL</span> olarak işaretlenecek.
+              Fill all fields in detail. This entry will be marked as <span className="font-semibold text-accent">MANUAL</span> by the system.
             </p>
           </div>
           <button
@@ -285,7 +285,7 @@ export function ManualQueueEntryModal({
                   type="text"
                   value={form.custom_payment_channel}
                   onChange={(e) => handleChange('custom_payment_channel', e.target.value)}
-                  placeholder="Payment channel ismini girin (örn: iyzico, paypal)"
+                  placeholder="Enter payment channel name (e.g., iyzico, paypal)"
                   className="mt-2 w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
                 />
               )}
@@ -319,7 +319,7 @@ export function ManualQueueEntryModal({
                 className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
               />
               <p className="text-xs text-foreground/50 mt-1">
-                Para birimindeki abonelik tutarı
+                Subscription amount in selected currency
               </p>
             </div>
           </div>
@@ -337,7 +337,7 @@ export function ManualQueueEntryModal({
                 className="w-full rounded-xl border border-border bg-background/50 px-4 py-3 text-foreground/80 cursor-not-allowed focus:outline-none focus:ring-2 focus:ring-accent/50"
               />
               <p className="text-xs text-emerald-400/80 mt-1">
-                ✓ Currency ve Subscription Amount'tan otomatik hesaplanıyor
+                ✓ Auto-calculated from Currency and Subscription Amount
               </p>
             </div>
             <div>
@@ -351,7 +351,7 @@ export function ManualQueueEntryModal({
                 className="w-full rounded-xl border border-border bg-background px-4 py-3 text-foreground focus:outline-none focus:ring-2 focus:ring-accent"
               />
               <p className="text-xs text-cyan-400/80 mt-1">
-                💡 Hesaplama: Paket uzunluğu (ay) × 4 × (25 dk cinsten ders sayısı * 5) / taksit sayısı 
+                💡 Calculation: Package length (months) × 4 × (number of lessons in 25 min * 5) / installment count
               </p>
             </div>
           </div>

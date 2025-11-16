@@ -50,18 +50,18 @@ export default function MyInstallmentsPage() {
   const submitPayment = async (payment: InstallmentPayment) => {
     if (!token) return;
     const defaultAmount = payment.amount && typeof payment.amount === 'number' ? payment.amount.toString() : '';
-    const paidAmountStr = window.prompt('Ödenen tutar', defaultAmount);
+    const paidAmountStr = window.prompt('Amount paid', defaultAmount);
     if (paidAmountStr === null) return; // User cancelled
 
     // Validate amount
     const paidAmount = paidAmountStr ? parseFloat(paidAmountStr) : undefined;
     if (paidAmount !== undefined && (!Number.isFinite(paidAmount) || paidAmount <= 0)) {
-      alert('Lütfen geçerli bir tutar girin (pozitif sayı)');
+      alert('Please enter a valid amount (positive number)');
       return;
     }
 
-    const paymentChannel = window.prompt('Ödeme kanalı (havale vb.)', payment.payment_channel || '');
-    const note = window.prompt('Not (opsiyonel)', payment.notes || '');
+    const paymentChannel = window.prompt('Payment channel (wire transfer, etc.)', payment.payment_channel || '');
+    const note = window.prompt('Notes (optional)', payment.notes || '');
 
     try {
       const res = await fetch(`/api/installments/payments/${payment.id}/submit`, {
@@ -74,14 +74,14 @@ export default function MyInstallmentsPage() {
       });
       const data = await res.json();
       if (!res.ok) {
-        alert(data.error || 'Gönderilemedi');
+        alert(data.error || 'Submission failed');
         return;
       }
-      alert('Finance onayı için gönderildi');
+      alert('Submitted for finance approval');
       fetchPlans();
     } catch (error) {
       console.error('Submit installment payment error', error);
-      alert('Gönderilemedi');
+      alert('Submission failed');
     }
   };
 
@@ -116,13 +116,13 @@ export default function MyInstallmentsPage() {
               onClick={() => router.push('/recent-sales')}
               className="px-4 py-2 bg-amber-500/20 text-amber-400 border border-amber-400/40 font-medium rounded-lg hover:bg-amber-500/30 transition-colors"
             >
-              Tüm Satışlar (120h)
+              All Sales (120h)
             </button>
             <button
               onClick={() => router.push('/my-sales')}
               className="px-4 py-2 bg-emerald-500/20 text-emerald-400 border border-emerald-400/40 font-medium rounded-lg hover:bg-emerald-500/30 transition-colors"
             >
-              Benim Satışlarım
+              My Sales
             </button>
             {['admin', 'finance', 'sales_lead'].includes(user?.role || '') && (
               <button
@@ -144,12 +144,12 @@ export default function MyInstallmentsPage() {
         {/* Content */}
         <div className="space-y-6">
           <div>
-            <h2 className="text-xl font-bold text-foreground">Taksit Takibi</h2>
-            <p className="text-sm text-foreground/60">Öğrenci taksitleri ve finance onay durumları</p>
+            <h2 className="text-xl font-bold text-foreground">Installment Tracking</h2>
+            <p className="text-sm text-foreground/60">Student installments and finance approval statuses</p>
           </div>
 
-          {loading && <p className="text-sm text-foreground/60">Yükleniyor...</p>}
-          {!loading && plans.length === 0 && <p className="text-sm text-foreground/60">Aktif taksit planın bulunmuyor.</p>}
+          {loading && <p className="text-sm text-foreground/60">Loading...</p>}
+          {!loading && plans.length === 0 && <p className="text-sm text-foreground/60">You do not have any active installment plans.</p>}
 
           <div className="space-y-4">
             {plans.map((plan) => (
@@ -157,8 +157,8 @@ export default function MyInstallmentsPage() {
                 <div className="flex flex-wrap items-center justify-between gap-2">
                   <div>
                     <p className="text-xs uppercase tracking-widest text-foreground/60">Subscription #{plan.subscription_id}</p>
-                    <p className="text-lg font-semibold text-foreground">{plan.customer_name || 'Müşteri'}</p>
-                    <p className="text-xs text-foreground/60">{plan.paid_count ?? 0}/{plan.total_payments ?? plan.total_installments} ödendi</p>
+                    <p className="text-lg font-semibold text-foreground">{plan.customer_name || 'Customer'}</p>
+                    <p className="text-xs text-foreground/60">{plan.paid_count ?? 0}/{plan.total_payments ?? plan.total_installments} paid</p>
                   </div>
                   <span className="rounded-full px-3 py-1 text-xs font-semibold capitalize bg-foreground/10 text-foreground/80">{plan.status}</span>
                 </div>
@@ -182,10 +182,10 @@ export default function MyInstallmentsPage() {
                           className="mt-3 w-full rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-black"
                           onClick={() => submitPayment(payment)}
                         >
-                          Ödendi olarak gönder
+                          Submit as paid
                         </button>
                       )}
-                      {payment.notes && <p className="mt-2 text-xs text-foreground/60">Finance notu: {payment.notes}</p>}
+                      {payment.notes && <p className="mt-2 text-xs text-foreground/60">Finance note: {payment.notes}</p>}
                     </div>
                   ))}
                 </div>

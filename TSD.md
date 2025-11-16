@@ -1,62 +1,62 @@
 TSD - Win Room v2.0 (Privacy-first, Claim Types, Objections, Personal Goals, Margin)
 
-Sürüm: 2.0
-Tarih: 2025-10-24
-Sahip: Product + Eng
+Version: 2.0
+Date: 2025-10-24
+Owner: Product + Eng
 
-1) Amaç ve İlkeler
+1) Purpose and Principles
 
-Amaç: Anlık, oyunlaştırılmış, şeffaf ve adil bir satış odası kurmak.
+Purpose: To establish an instant, gamified, transparent and fair sales room.
 
-Gizlilik:
+Privacy:
 
-Kullanıcı kendi satışlarını rakam olarak görür.
+Users see their own sales as numbers.
 
-Başkalarının satışlarını yalnız sıralama ve bar uzunluğu ile görür. Yüzde veya sayı yok.
+They see others' sales only through ranking and bar length. No percentages or numbers.
 
-Ciro görünürlüğü:
+Revenue visibility:
 
-Toplam ciro ekip görünümünde yok.
+Total revenue is not shown in team view.
 
-Günlük/15gün/ay hedefleri yalnız yüzde olarak gösterilir.
+Daily/15-day/monthly goals are shown only as percentages.
 
-Şeffaf atıf:
+Transparent attribution:
 
-Claim zorunlu. Kim hangi satışı aldı net.
+Claim is mandatory. Who took which sale is clear.
 
-Pipedrive verileri öneri ve assist için kullanılır.
+Pipedrive data is used for suggestions and assists.
 
-Core izolasyonu:
+Core isolation:
 
-Core tablolar değişmez. Tüm oyunlaştırma "wr" şemasında tutulur.
+Core tables are not modified. All gamification is kept in "wr" schema.
 
-Core’dan okur, wr’ye yazarız.
+Read from core, write to wr.
 
-2) Rollerin Yetkileri
+2) Role Permissions
 
 Sales:
 
-Kendi satışları: miktar, marj yüzdesi ve marj tutarı (yalnız kendisi için).
+Own sales: amount, margin percentage and margin amount (only for themselves).
 
-Diğerleri: bar-only görünüm, sayı ve yüzde yok.
+Others: bar-only view, no numbers and percentages.
 
-Claim, itiraz oluşturma, kendi hedefini görme.
+Claim, create objection, view own goal.
 
 Sales Lead:
 
-Sales ile aynı, ekip filtreleri eklenir. Bar-only kuralı geçerli.
+Same as Sales, with team filters added. Bar-only rule applies.
 
 Admin/Finance:
 
-Tüm hedef ve itiraz yönetimi, exclusion/restore, reassign, refund işaretleme.
+All goal and objection management, exclusion/restore, reassign, refund marking.
 
-Marj ve gelir tutarları dahil tüm detaylara erişim.
+Access to all details including margin and revenue amounts.
 
 System:
 
-Poller Worker ile core’dan veri toplar, wr’de işler, WS ile yayınlar.
+Collects data from core with Poller Worker, processes in wr, broadcasts via WS.
 
-3) Mimari
+3) Architecture
 
 Frontend: Next.js 14, Tailwind dark theme, Framer Motion, Howler, canvas-confetti.
 
@@ -68,24 +68,24 @@ DB:
 
 Core read-only: subscriptions, campaigns, users, pipedrive_users, custom_settings.
 
-wr read-write: queue, claims, attribution, events, goals, personal goals, objections, exclusions, refunds, sellers, cache_kv, metrics vb.
+wr read-write: queue, claims, attribution, events, goals, personal goals, objections, exclusions, refunds, sellers, cache_kv, metrics etc.
 
 Deploy:
 
-WebSocket için Node runtime (VM/k8s). Vercel kullanılıyorsa WS ayrı host.
+Node runtime for WebSocket (VM/k8s). If using Vercel, WS hosted separately.
 
-4) Veri Modeli - wr şeması
+4) Data Model - wr schema
 
-Not: Core şemaya dokunmadan tüm yeni yapılar wr’ye.
+Note: All new structures go to wr without touching core schema.
 
-4.1) wr.queue - canlı yığın
+4.1) wr.queue - live queue
 create table if not exists wr.queue (
   id bigserial primary key,
   subscription_id bigint not null unique,
   user_id bigint not null,                       -- subscriptions.user_id
   source_created_at timestamptz not null,        -- subscriptions.created_at
   status text not null check (status in ('pending','claimed','excluded','expired','refunded')),
-  fingerprint text null,                         -- duplicate/reopen tespiti
+  fingerprint text null,                         -- duplicate/reopen detection
   created_at timestamptz not null default now(),
   excluded_by text null,
   excluded_at timestamptz null,
@@ -94,11 +94,11 @@ create table if not exists wr.queue (
 create index on wr.queue(status);
 create index on wr.queue(created_at);
 
-4.2) wr.claims - claim kayıtları
+4.2) wr.claims - claim records
 create table if not exists wr.claims (
   id bigserial primary key,
   subscription_id bigint not null unique,
-  claimed_by text not null,                      -- panel görünen adı veya seller_id
+  claimed_by text not null,                      -- panel display name or seller_id
   claim_type text not null check (claim_type in ('first_sales','remarketing','upgrade','installment')),
   claimed_at timestamptz not null default now(),
   attribution_source text not null default 'claim'  -- 'claim'|'auto'|'admin'
@@ -106,7 +106,7 @@ create table if not exists wr.claims (
 create index on wr.claims(claimed_by);
 create index on wr.claims(claimed_at);
 
-4.3) wr.attribution - kime yazıldı
+4.3) wr.attribution - who got credited
 create table if not exists wr.attribution (
   subscription_id bigint primary key,
   closer_seller_id text not null,                -- wr.sellers.seller_id
@@ -115,7 +115,7 @@ create table if not exists wr.attribution (
   assisted_seller_id text null
 );
 
-4.4) wr.sellers - kimlik eşleme
+4.4) wr.sellers - identity mapping
 create table if not exists wr.sellers (
   seller_id text primary key,                    -- stable slug
   display_name text not null,
@@ -127,7 +127,7 @@ create table if not exists wr.sellers (
 create unique index if not exists wr_sellers_owner_uidx on wr.sellers(pipedrive_owner_id) where pipedrive_owner_id is not null;
 create index if not exists wr_sellers_core_idx on wr.sellers(core_sales_person);
 
-4.5) wr.events - yayınlanacak olaylar
+4.5) wr.events - events to be broadcast
 create table if not exists wr.events (
   id bigserial primary key,
   type text not null,                            -- 'queue.new','claimed','streak','jackpot','goal.progress','queue.excluded','refund.applied','objection.created','objection.resolved'
@@ -139,7 +139,7 @@ create table if not exists wr.events (
 create index on wr.events(created_at);
 create index on wr.events(type);
 
-4.6) wr.sales_goals - genel hedefler (day, 15d, month)
+4.6) wr.sales_goals - general goals (day, 15d, month)
 create table if not exists wr.sales_goals (
   id bigserial primary key,
   period_type text check (period_type in ('day','15d','month')) not null,
@@ -153,7 +153,7 @@ create table if not exists wr.sales_goals (
 );
 create index on wr.sales_goals(period_start, period_end);
 
-4.7) wr.personal_goals - kişisel hedefler
+4.7) wr.personal_goals - personal goals
 create table if not exists wr.personal_goals (
   id bigserial primary key,
   seller_id text not null references wr.sellers(seller_id) on update cascade,
@@ -168,7 +168,7 @@ create table if not exists wr.personal_goals (
 );
 create index on wr.personal_goals(seller_id, period_start, period_end);
 
-4.8) wr.progress_cache - yüzde cache
+4.8) wr.progress_cache - percentage cache
 create table if not exists wr.progress_cache (
   goal_scope text not null,                      -- 'global'|'personal'
   goal_id bigint not null,
@@ -178,11 +178,11 @@ create table if not exists wr.progress_cache (
   primary key (goal_scope, goal_id, as_of_date)
 );
 
-4.9) wr.objections - itiraz akışı
+4.9) wr.objections - objection flow
 create table if not exists wr.objections (
   id bigserial primary key,
   subscription_id bigint not null,
-  raised_by text not null,                       -- seller_id veya display
+  raised_by text not null,                       -- seller_id or display
   reason text not null,                          -- 'wrong_owner','duplicate','refund','other'
   details text null,
   status text not null default 'pending' check (status in ('pending','accepted','rejected')),
@@ -193,27 +193,27 @@ create table if not exists wr.objections (
 create index on wr.objections(subscription_id);
 create index on wr.objections(status);
 
-4.10) wr.exclusions ve wr.refunds - yönetim kayıtları
+4.10) wr.exclusions and wr.refunds - management records
 
-Aynen v1.2’deki gibi kullanılır. (Mevcut DDL geçerlidir.)
+Used exactly as in v1.2. (Existing DDL applies.)
 
-4.11) wr.streak_state - global üst üste state
+4.11) wr.streak_state - global consecutive state
 
-Aynen v1.2’deki gibi kullanılır. (Mevcut DDL geçerlidir.)
+Used exactly as in v1.2. (Existing DDL applies.)
 
-4.12) wr.cache_kv - genel amaçlı cache
+4.12) wr.cache_kv - general purpose cache
 create table if not exists wr.cache_kv (
   key text primary key,
   value jsonb not null,
   updated_at timestamptz not null default now(),
-  ttl_seconds int not null default 86400         -- varsayılan 1 gün
+  ttl_seconds int not null default 86400         -- default 1 day
 );
 
-4.13) wr.subscription_metrics - hesaplanan metrikler
+4.13) wr.subscription_metrics - calculated metrics
 create table if not exists wr.subscription_metrics (
   subscription_id bigint primary key,
-  revenue_usd numeric null,                      -- subs_amount USD'e çevrilmiş
-  cost_usd numeric null,                         -- kampanya maliyeti
+  revenue_usd numeric null,                      -- subs_amount converted to USD
+  cost_usd numeric null,                         -- campaign cost
   margin_amount_usd numeric null,
   margin_percent numeric null,                   -- 0..1
   is_jackpot boolean not null default false,
@@ -223,20 +223,20 @@ create table if not exists wr.subscription_metrics (
 );
 create index on wr.subscription_metrics(computed_at);
 
-5) Hesaplama Kuralları
-5.1) USD kuru
+5) Calculation Rules
+5.1) USD rate
 
-Kaynak: core.custom_settings tablosu, name="dolar", value = TRY per 1 USD.
+Source: core.custom_settings table, name="dolar", value = TRY per 1 USD.
 
-Günlük cache:
+Daily cache:
 
 wr.cache_kv.key = "usd_try_rate"
 
-value: {"rate": 42} gibi
+value: like {"rate": 42}
 
-ttl: 86400 sn
+ttl: 86400 sec
 
-Fonksiyon:
+Function:
 
 create or replace function wr_get_usd_try_rate() returns numeric
 language plpgsql as $$
@@ -251,7 +251,7 @@ begin
     return r;
   end if;
 
-  -- cache miss: core.custom_settings'tan oku
+  -- cache miss: read from core.custom_settings
   select (value::numeric) into r
   from custom_settings
   where name = 'dolar'
@@ -259,7 +259,7 @@ begin
   limit 1;
 
   if r is null then
-    -- güvenli varsayılan, opsiyonel env override
+    -- safe default, optional env override
     r := 42;
   end if;
 
@@ -272,27 +272,27 @@ begin
 end;
 $$;
 
-5.2) Gelir USD
+5.2) Revenue USD
 
-subs_amount ve subscriptions.currency kullanılır.
+subs_amount and subscriptions.currency are used.
 
-Desteklenen para birimleri: "USD" ve "TRY".
+Supported currencies: "USD" and "TRY".
 
-Dönüşüm:
+Conversion:
 
-Eğer currency = "USD" -> revenue_usd = subs_amount.
+If currency = "USD" -> revenue_usd = subs_amount.
 
-Eğer currency = "TRY" veya "TR" -> revenue_usd = subs_amount / wr_get_usd_try_rate().
+If currency = "TRY" or "TR" -> revenue_usd = subs_amount / wr_get_usd_try_rate().
 
-Diğerleri görülürse not düş ve admin incelemesi için events "currency.unknown" üret (opsiyonel).
+If others are seen, note and generate events "currency.unknown" for admin review (optional).
 
-5.3) Maliyet USD
+5.3) Cost USD
 
-campaigns üzerinden:
+From campaigns:
 
-ders ücreti USD: 25 dk = 5, 50 dk = 10. Diğer süreler için tablo:
+lesson fee USD: 25 min = 5, 50 min = 10. Table for other durations:
 
-20 dk -> 4, 40 dk -> 8 (opsiyonel). Şimdilik 25 ve 50 destek.
+20 min -> 4, 40 min -> 8 (optional). For now support 25 and 50.
 
 cost_usd = campaign_lenght * per_week * 4 * lesson_price_usd.
 
@@ -300,7 +300,7 @@ Join:
 
 subscriptions.campaign_id -> campaigns.id.
 
-5.4) Marj
+5.4) Margin
 
 margin_amount_usd = max(revenue_usd - cost_usd, 0).
 
@@ -308,114 +308,114 @@ margin_percent = case when revenue_usd > 0 then margin_amount_usd / revenue_usd 
 
 5.5) Jackpot
 
-Eşik: 30000 TRY üzeri satışlar.
+Threshold: Sales over 30000 TRY.
 
-Kontrol USD tarafında: threshold_usd = 30000 / wr_get_usd_try_rate().
+Check on USD side: threshold_usd = 30000 / wr_get_usd_try_rate().
 
-Şartlar:
+Conditions:
 
 is_free = 0
 
 payment_channel != "Hediye"
 
-status uygun (örn. 'paid','active'). "waiting" ise bilgilendirme ama jackpot sayma.
+status appropriate (e.g. 'paid','active'). If "waiting" notify but don't count jackpot.
 
 5.6) Time-to-sale
 
 tts = subscriptions.created_at - users.created_at
 
-Kartta "TTS: 2g 4s" şeklinde gösterilir.
+Displayed on card as "TTS: 2d 4h".
 
-5.7) İstatistik Tarihleri
+5.7) Statistics Dates
 
-**ÖNEMLİ**: Tüm istatistikler (leaderboard, metrics, stats) **queue creation date** (wr.queue.created_at) üzerinden hesaplanır.
+**IMPORTANT**: All statistics (leaderboard, metrics, stats) are calculated based on **queue creation date** (wr.queue.created_at).
 
-Mantık:
-- Lead kuyruğa girdiği tarihe göre sayılır
-- Claim tarihi (wr.attribution.resolved_at) sıralama için kullanılır
-- Raporlama: queue.created_at filtreler
-- UI: Her iki tarih de gösterilir (queue + claim date)
+Logic:
+- Lead is counted by the date it entered the queue
+- Claim date (wr.attribution.resolved_at) is used for ordering
+- Reporting: queue.created_at filters
+- UI: Both dates are shown (queue + claim date)
 
-Sebep:
-- Lead'in sisteme girdiği tarih daha anlamlı
-- Geç claim edilen leadler doğru periyoda düşer
-- Gerçek performans lead creation zamanına göre ölçülür
+Reason:
+- Lead entry date to system is more meaningful
+- Late claimed leads fall into the correct period
+- Real performance is measured by lead creation time
 
-Örnek:
-- 5 Kasım'da kuyruğa giren lead → 7 Kasım'da claim edilse bile 5 Kasım istatistiklerine sayılır
+Example:
+- Lead entering queue on Nov 5 → counts in Nov 5 statistics even if claimed on Nov 7
 
-6) Veri Akışı - Poller Worker
+6) Data Flow - Poller Worker
 
-Aralık: 2 sn.
+Interval: 2 sec.
 
-Akış:
+Flow:
 
 subscriptions where updated_at > last_checkpoint order by updated_at asc limit 500.
 
-fingerprint üret:
+Generate fingerprint:
 
 sha256(user_id + campaign_id + date_trunc('hour', created_at) + coalesce(stripe_sub_id,'') + coalesce(paypal_sub_id,''))
 
-Duplicate/reopen kuralı:
+Duplicate/reopen rule:
 
-Kısa pencerede aynı fingerprint tekrar ise wr.queue "excluded" ve wr.exclusions kaydı.
+If same fingerprint repeats in short window, wr.queue "excluded" and wr.exclusions record.
 
 wr.queue insert pending.
 
-campaigns join ile cost_usd, currency ile revenue_usd, marj hesapla, wr.subscription_metrics upsert.
+Calculate cost_usd with campaigns join, revenue_usd with currency, margin, wr.subscription_metrics upsert.
 
-Jackpot kontrol et -> wr.events "jackpot".
+Check jackpot -> wr.events "jackpot".
 
-Refund tespiti -> wr.refunds upsert, wr.queue.status="refunded", wr.events "refund.applied".
+Refund detection -> wr.refunds upsert, wr.queue.status="refunded", wr.events "refund.applied".
 
-pipedrive_users ile owner_id bul, wr.sellers ile eşle, wr.attribution assisted_seller_id set edilebilir (claim yoksa suggested).
+Find owner_id with pipedrive_users, map with wr.sellers, wr.attribution assisted_seller_id can be set (suggested if no claim).
 
-Checkpoint güncelle.
+Update checkpoint.
 
-7) Claim ve Streak
+7) Claim and Streak
 
 POST /api/claim:
 
 Body: { subscription_id, claimed_by, claim_type }
 
-İşlem:
+Operation:
 
-wr.claims insert, claim_type doğrula.
+wr.claims insert, validate claim_type.
 
 wr.attribution upsert closer_seller_id = mapSeller(claimed_by), resolved_from='claim'.
 
 wr.queue status 'claimed'.
 
-wr.events "claimed" yayınla.
+wr.events broadcast "claimed".
 
-wr.streak_state güncelle:
+wr.streak_state update:
 
-Aynı claimer ise count += 1, değilse 1.
+If same claimer count += 1, else 1.
 
-3 olduğunda wr.events "streak" payload {"threshold":3,"claimer":...}.
+When reaches 3, wr.events "streak" payload {"threshold":3,"claimer":...}.
 
-8) Hedefler
-8.1) Global hedefler
+8) Goals
+8.1) Global goals
 
-wr.sales_goals - progress yalnız yüzde.
+wr.sales_goals - progress only percentage.
 
-Daily progress "revenue" tipi için backend net revenue_usd from subscriptions - refunds ile hesaplar ve yüzde yayınlar. Sales UI yalnız yüzde görür.
+Daily progress for "revenue" type, backend calculates net revenue_usd from subscriptions - refunds and broadcasts percentage. Sales UI sees only percentage.
 
-8.2) Kişisel hedefler
+8.2) Personal goals
 
-wr.personal_goals - owner_only görünür.
+wr.personal_goals - visible owner_only.
 
 Progress:
 
-count: claim sayısı.
+count: number of claims.
 
-revenue: kendi revenue_usd toplamı - refunds.
+revenue: own revenue_usd total - refunds.
 
-margin_amount: kendi margin_amount_usd toplamı.
+margin_amount: own margin_amount_usd total.
 
-API, giriş yapan seller_id için tek scope döndürür.
+API returns single scope for logged-in seller_id.
 
-9) İtiraz Akışı
+9) Objection Flow
 
 Sales POST /api/objections:
 
@@ -427,16 +427,16 @@ Admin PATCH /api/admin/objections/:id:
 
 Accept:
 
-Aksiyonlardan biri:
-a) Reassign: wr.attribution.closer_seller_id değiştir, wr.claims.claimed_by güncelle.
-b) Exclude: wr.queue.status "excluded", gerekirse wr.claims sil veya soft delete.
+One of the actions:
+a) Reassign: change wr.attribution.closer_seller_id, update wr.claims.claimed_by.
+b) Exclude: wr.queue.status "excluded", delete or soft delete wr.claims if needed.
 c) Refund: wr.refunds upsert.
 
 wr.events "objection.resolved".
 
-Reject: status "rejected", admin_note set.
+Reject: status "rejected", set admin_note.
 
-10) API Tasarımı
+10) API Design
 
 Auth: JWT + role. Rate limit: 60 rpm, claim 10 rpm.
 
@@ -444,9 +444,9 @@ Sales UI:
 
 GET /api/queue?limit=50
 
-Döner: pending satırlar. Alanlar: subscription_id, user_id, tts, claim_suggested_seller, margin_percent, status.
+Returns: pending rows. Fields: subscription_id, user_id, tts, claim_suggested_seller, margin_percent, status.
 
-Not: margin_percent herkes için görünebilir, ancak revenue/cost alanları dönmez.
+Note: margin_percent can be visible to everyone, but revenue/cost fields are not returned.
 
 POST /api/claim
 
@@ -454,26 +454,26 @@ Body: { subscription_id, claimed_by, claim_type }
 
 GET /api/me/metrics?period=today|15d|month
 
-Döner: { wins, revenue_usd, margin_amount_usd, avg_margin_percent } - sadece giriş yapan kullanıcıya.
+Returns: { wins, revenue_usd, margin_amount_usd, avg_margin_percent } - only to logged-in user.
 
 GET /api/leaderboard/wins?period=...
 
-Döner: bar-only veri yapısı:;
+Returns: bar-only data structure:
 [{ seller_id, rank, bar_value_norm, you?: boolean }]
 
-Numeric value ve yüzde içermez.
+Contains no numeric value or percentage.
 
 GET /api/leaderboard/margin?period=...
 
-Aynı, bar-only. Admin için query param "detailed=true" ile sayılar eklenebilir.
+Same, bar-only. For admin, query param "detailed=true" can add numbers.
 
 GET /api/goals/progress
 
-Global yüzdeler.
+Global percentages.
 
 GET /api/me/goals
 
-Kişisel hedef ve yüzde.
+Personal goal and percentage.
 
 POST /api/objections
 
@@ -493,123 +493,123 @@ POST /api/admin/reassign
 
 PATCH /api/admin/objections/:id
 
-GET /api/admin/metrics/subscription/:id (detay - revenue_usd, cost_usd, margin vs.)
+GET /api/admin/metrics/subscription/:id (detail - revenue_usd, cost_usd, margin etc.)
 
-WebSocket event’leri:
+WebSocket events:
 
 queue.new, claimed, streak, jackpot, goal.progress, queue.excluded, refund.applied, objection.created, objection.resolved.
 
-11) UI - Gizlilik ve Görsel Davranış
+11) UI - Privacy and Visual Behavior
 
 Live Queue:
 
-Kart: ID, channel badge, status, TTS, Suggested seller, margin_percent badge, Claim butonu.
+Card: ID, channel badge, status, TTS, Suggested seller, margin_percent badge, Claim button.
 
-Claim sonrası kart animasyonla kayar.
+After claim, card slides away with animation.
 
 Leaderboard - Wins:
 
-Sadece rank ve bar uzunluğu. Kendi barının üzerinde küçük "you" etiketi ve tooltip ile kendi sayıları gösterilebilir.
+Only rank and bar length. Small "you" label on own bar and own numbers can be shown in tooltip.
 
 Leaderboard - Margin:
 
-Bar-only aynı kural. Kendi için tooltipte margin_amount_usd gösterilebilir.
+Bar-only same rule. For self, margin_amount_usd can be shown in tooltip.
 
 Daily Goal:
 
-Progress bar yalnız yüzde + durum etiketi.
+Progress bar only percentage + status label.
 
-Kişisel Panel:
+Personal Panel:
 
-"My wins", "My revenue USD", "My margin USD", "My avg margin %" kartları - sadece user için görünür.
+"My wins", "My revenue USD", "My margin USD", "My avg margin %" cards - visible only for user.
 
-Objection modali:
+Objection modal:
 
-Gerekçe alanı - "wrong_owner","duplicate","refund","other".
+Reason field - "wrong_owner","duplicate","refund","other".
 
-Tema: Dark - bg #0A0A0A, surface #121212, border #2A2A2A, accent #22C55E.
+Theme: Dark - bg #0A0A0A, surface #121212, border #2A2A2A, accent #22C55E.
 
-12) Güvenlik
+12) Security
 
-Sales uçlarında hiçbir yerde başkasına ait revenue veya margin_amount sayısı dönmez.
+Sales endpoints never return revenue or margin_amount numbers belonging to others.
 
-wr.subscription_metrics yalnız admin uçlarında kapsamlı döndürülür; sales uçlarında yalnız margin_percent dönebilir.
+wr.subscription_metrics returned comprehensively only in admin endpoints; in sales endpoints only margin_percent can be returned.
 
-Ayrı DB rolleri:
+Separate DB roles:
 
-core_ro: core tablolara SELECT.
+core_ro: SELECT on core tables.
 
-wr_rw: wr şemasına R/W.
+wr_rw: R/W on wr schema.
 
-Loglarda PII ve finansal değer maskeleme.
+PII and financial value masking in logs.
 
-CSRF ve rate limit aktif.
+CSRF and rate limit active.
 
-13) Test Planı
+13) Test Plan
 
-Gizlilik:
+Privacy:
 
-Sales kullanıcı A, kullanıcı B’nin satışlarında numeric değer görmüyor. API payload kontrolü.
+Sales user A doesn't see numeric values in user B's sales. API payload check.
 
 Claim:
 
-Concurrency - aynı subscription için iki claim denemesinde biri 409.
+Concurrency - one of two claim attempts for same subscription gets 409.
 
-claim_type doğrulama.
+claim_type validation.
 
 Streak:
 
-Aynı claimer 3 üst üste -> "streak" event.
+Same claimer 3 consecutive -> "streak" event.
 
 Jackpot:
 
-TRY 30000 eşiğini USD e çevirerek doğru tetikleme.
+Correct triggering by converting TRY 30000 threshold to USD.
 
 Goals:
 
-Global yüzde - refunds sonrası düşüyor.
+Global percentage - decreases after refunds.
 
-Personal goals yalnız owner’a görünüyor.
+Personal goals visible only to owner.
 
 Margin:
 
-cost_usd formülü kampanya alanlarıyla doğru hesaplanıyor.
+cost_usd formula calculated correctly with campaign fields.
 
-revenue_usd dönüşüm USD/TRY ile doğru.
+revenue_usd conversion correct with USD/TRY.
 
-margin leaderboard bar-only kuralına uyuyor.
+margin leaderboard follows bar-only rule.
 
 Objections:
 
-Create -> pending -> accepted with reassign/exclude/refund -> events yayınlanıyor.
+Create -> pending -> accepted with reassign/exclude/refund -> events broadcast.
 
 Cache:
 
-wr_get_usd_try_rate günlük cache davranışı - aynı gün ikinci çağrıda DB okumuyor.
+wr_get_usd_try_rate daily cache behavior - doesn't read DB on second call same day.
 
-14) Kabul Kriterleri
+14) Acceptance Criteria
 
-Sales kullanıcı, kendi satışlarını rakam olarak görür; başkaları için sayı ve yüzde görmez, yalnız bar ve rank görür.
+Sales user sees their own sales as numbers; for others doesn't see numbers and percentages, only sees bar and rank.
 
-Claim ekranında satış türü seçilmeden claim tamamlanamaz.
+Claim cannot be completed without selecting sale type on claim screen.
 
-İtiraz akışı admin’de sonuçlandırılabilir ve sonuçlar leaderboard ve queue’ya yansır.
+Objection flow can be finalized in admin and results reflect in leaderboard and queue.
 
-Global hedefler yalnız yüzde gösterir.
+Global goals show only percentage.
 
-Kişisel hedefler yalnız owner’a görünür.
+Personal goals visible only to owner.
 
-Marj her subscription için hesaplanır, kartta margin_percent gösterilir.
+Margin calculated for each subscription, margin_percent shown on card.
 
-Marj bazlı leaderboard çalışır; gizlilik kuralları korunur.
+Margin-based leaderboard works; privacy rules preserved.
 
-USD kuru custom_settings.name="dolar" değerinden alınıp bir gün cache’lenir.
+USD rate taken from custom_settings.name="dolar" value and cached for one day.
 
-Jackpot TRY 30000 eşiğinde doğru tetiklenir.
+Jackpot correctly triggered at TRY 30000 threshold.
 
-Core şemada DDL değişikliği yoktur.
+No DDL changes in core schema.
 
-15) Örnek SQL - Maliyet ve Marj Hesabı
+15) Sample SQL - Cost and Margin Calculation
 -- lesson price USD
 with c as (
   select s.id as subscription_id,
@@ -663,7 +663,7 @@ select
        else 0 end as margin_percent
 from calc;
 
-16) Bar-only Leaderboard Response Örneği
+16) Bar-only Leaderboard Response Example
 [
   { "seller_id": "merve", "rank": 1, "bar_value_norm": 1.0, "you": true },
   { "seller_id": "sait", "rank": 2, "bar_value_norm": 0.72 },
@@ -671,34 +671,34 @@ from calc;
 ]
 
 
-"bar_value_norm" 0..1 arası normalize değer. Numeric tutar veya yüzde içermez.
+"bar_value_norm" normalized value between 0..1. Contains no numeric amount or percentage.
 
-Kullanıcı kendi satırını hover’da rakam olarak görebilir. Diğerleri için hover da rakam yok.
+User can see their own row as number on hover. No numbers on hover for others.
 
-17) UI İpuçları
+17) UI Tips
 
-Queue kartında margin_percent rozetini yeşil tonlarda göster.
+Show margin_percent badge on queue card in green tones.
 
 Claim modal:
 
-Seçenekler: first_sales, remarketing, upgrade, installment.
+Options: first_sales, remarketing, upgrade, installment.
 
-Onaylandığında claim sfx, streak kontrolü.
+On confirm claim sfx, streak check.
 
 Jackpot event:
 
-Büyük üst banner 3 sn, özel sfx.
+Large top banner 3 sec, special sfx.
 
-Rakam gösterme yok. Sadece "Jackpot" etiketi ve claim eden kişi adı.
+No numbers shown. Only "Jackpot" label and name of person who claimed.
 
 Personal dashboard:
 
 Cards: "My wins", "My revenue USD", "My margin USD", "My avg margin %".
 
-Admin ekranı:
+Admin screen:
 
-Queue Manager: exclude/restore, reason, not.
+Queue Manager: exclude/restore, reason, note.
 
-Objection Center: pending list, accept/reject, reassign hedefi seç.
+Objection Center: pending list, accept/reject, select reassign target.
 
-Canlı veritabanında çalışıyorsun. Sakın ama sakın, veritabanında benden çalıştıracağın SQL kodu konusunda onay almadan silme, update vs. işlemi yapma!
+You are working on a live database. Never, ever perform delete, update etc. operations without getting my approval on the SQL code you will run on the database!
