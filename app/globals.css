@@ -1,0 +1,102 @@
+@import "tailwindcss";
+
+/* Win Room v2.0 - Dark Theme */
+:root {
+  --background: #050505;
+  --foreground: #ededed;
+  --surface: rgba(14, 17, 23, 0.82);
+  --border: rgba(70, 82, 110, 0.2);
+  --accent: #22c55e;
+  --accent-hover: #16a34a;
+  --accent-upgrade: #38bdf8;
+  --accent-remarketing: #facc15;
+  --accent-installment: #fb7185;
+  --error: #ef4444;
+  --warning: #f59e0b;
+  --success: #22c55e;
+  --energy-level: 0.35;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-surface: var(--surface);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-error: var(--error);
+  --color-warning: var(--warning);
+  --color-success: var(--success);
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+}
+
+body {
+  background: radial-gradient(
+      circle at 20% 20%,
+      rgba(34, 197, 94, 0.08),
+      transparent 55%
+    ),
+    radial-gradient(
+      circle at 80% 0%,
+      rgba(59, 130, 246, 0.08),
+      transparent 50%
+    ),
+    var(--background);
+  color: var(--foreground);
+  font-family: Arial, Helvetica, sans-serif;
+  min-height: 100vh;
+  position: relative;
+}
+
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: linear-gradient(
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(255, 255, 255, 0.02) 1px,
+      transparent 1px
+    );
+  background-size: 32px 32px;
+  opacity: calc(0.4 + (var(--energy-level)));
+  pointer-events: none;
+  z-index: -2;
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 120%,
+    rgba(34, 197, 94, 0.15 * (1 + var(--energy-level))),
+    transparent 60%
+  );
+  filter: blur(40px);
+  pointer-events: none;
+  z-index: -1;
+}
+
+/* Custom scrollbar for dark theme */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--background);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--surface);
+}
